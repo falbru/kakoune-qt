@@ -1,0 +1,5 @@
+.cache/
+.qt/
+build/
+
+compile_commands.json

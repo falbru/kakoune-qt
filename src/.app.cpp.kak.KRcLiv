@@ -1,0 +1,5 @@
+#include "app.h"
+
+QkakApp::QkakApp() {
+	this()
+}
