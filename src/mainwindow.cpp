@@ -10,7 +10,4 @@ MainWindow::MainWindow(QWidget *parent)
 	setCentralWidget(kakwindow);
 }
 
-MainWindow::~MainWindow()
-{
-
-}
+MainWindow::~MainWindow() { }
