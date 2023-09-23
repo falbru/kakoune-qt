@@ -1,6 +1,7 @@
 #ifndef KAKOUNEWINDOW_H
 #define KAKOUNEWINDOW_H
 
+#include "kakouneclient.h"
 #include <QtWidgets>
 
 class KakouneWidget : public QWidget {
@@ -10,6 +11,8 @@ public:
     ~KakouneWidget();
 protected:
 	void paintEvent(QPaintEvent* ev) override;
+private:
+    KakouneClient* m_client;
 };
 
 #endif
