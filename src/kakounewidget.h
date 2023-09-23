@@ -11,6 +11,8 @@ public:
     ~KakouneWidget();
 protected:
 	void paintEvent(QPaintEvent* ev) override;
+private slots:
+    void handleRequest(QJsonObject request);
 private:
     KakouneClient* m_client;
 };

@@ -8,6 +8,8 @@ class KakouneClient : public QObject {
 public:
     KakouneClient();
     ~KakouneClient();
+signals:
+    void handleRequest(QJsonObject request);
 private:
     QProcess m_process;
 };

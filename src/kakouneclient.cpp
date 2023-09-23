@@ -1,13 +1,5 @@
 #include "kakouneclient.h"
 
-void handleRequest(QByteArray request) {
-    QJsonObject requestObject = QJsonDocument::fromJson(request).object();
-
-    QString method = requestObject["method"].toString();
-
-    // TODO
-}
-
 KakouneClient::KakouneClient() {
     connect(&m_process, &QProcess::readyReadStandardOutput, [=] () {
         QByteArray buffer = m_process.readAllStandardOutput();
@@ -15,7 +7,7 @@ KakouneClient::KakouneClient() {
         QList<QByteArray> requests = buffer.split('\n');
         for (QByteArray request : requests) {
             if (request == "") continue;
-            handleRequest(request);
+            emit handleRequest(QJsonDocument::fromJson(request).object());
         }
     });
 
