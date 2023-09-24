@@ -8,6 +8,8 @@ class KakouneClient : public QObject {
 public:
     KakouneClient();
     ~KakouneClient();
+
+    void sendKeys(const QString& key);
 signals:
     void handleRequest(QJsonObject request);
 private:

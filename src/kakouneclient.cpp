@@ -21,3 +21,12 @@ KakouneClient::KakouneClient() {
 KakouneClient::~KakouneClient() {
     m_process.close();
 }
+
+void KakouneClient::sendKeys(const QString& key) {
+    QJsonObject req{
+        {{"jsonrpc", "2.0"}, {"method", "keys"}, {"params", QJsonArray{key}}}
+    };
+
+    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
+    m_process.write(rpc);
+}

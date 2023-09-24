@@ -6,8 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	resize(1024, 768);
 
-	KakouneWidget* kakwindow = new KakouneWidget();
-	setCentralWidget(kakwindow);
+	KakouneWidget* kakwidget = new KakouneWidget();
+	setCentralWidget(kakwidget);
+	kakwidget->setFocusPolicy(Qt::StrongFocus);
 }
 
 MainWindow::~MainWindow() { }
