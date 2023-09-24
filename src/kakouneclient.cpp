@@ -30,3 +30,12 @@ void KakouneClient::sendKeys(const QString& key) {
     QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
     m_process.write(rpc);
 }
+
+void KakouneClient::resize(int rows, int columns) {
+    QJsonObject req{
+        {{"jsonrpc", "2.0"}, {"method", "resize"}, {"params", QJsonArray{rows, columns}}}
+    };
+
+    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
+    m_process.write(rpc);
+}

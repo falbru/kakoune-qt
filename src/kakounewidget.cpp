@@ -33,7 +33,8 @@ void KakouneWidget::setFont(const QString& font_name, int font_size) {
     m_font = QFont(font_name, font_size);
 
     QFontMetrics font_metrics(m_font);
-    m_cell_size = QSize(font_metrics.averageCharWidth(), font_metrics.height()); // FIXME only works for monospaced fonts
+    QRect boundingBoxSingleChar = font_metrics.boundingRect("A");
+    m_cell_size = QSize(boundingBoxSingleChar.width(), boundingBoxSingleChar.height()); // FIXME only works for monospaced fonts
 }
 
 QColor KakouneWidget::getColor(RPC::Color color, bool bg) {
@@ -184,4 +185,9 @@ void KakouneWidget::keyPressEvent(QKeyEvent* ev) {
     if (key == "") return;
 
     m_client->sendKeys(key);
+}
+
+void KakouneWidget::resizeEvent(QResizeEvent* ev) {
+    qDebug() << "Resize event";
+    m_client->resize(height() / m_cell_size.height(), width() / m_cell_size.width());
 }

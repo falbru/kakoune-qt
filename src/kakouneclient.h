@@ -10,6 +10,7 @@ public:
     ~KakouneClient();
 
     void sendKeys(const QString& key);
+    void resize(int rows, int columns);
 signals:
     void handleRequest(QJsonObject request);
 private:
