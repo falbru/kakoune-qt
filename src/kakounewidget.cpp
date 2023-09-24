@@ -39,9 +39,23 @@ void KakouneWidget::setFont(const QString& font_name, int font_size) {
 QColor KakouneWidget::getColor(RPC::Color color, bool bg) {
     if (color == "default") {
         color = bg ? m_default_face.bg : m_default_face.fg; 
+    } else if (color == "black" || color == "bright-black") {
+        return Qt::gray;
+    } else if (color == "red" || color == "bright-red") {
+        return Qt::red;
+    } else if (color == "green" || color == "bright-green") {
+        return Qt::green;
+    } else if (color == "yellow" || color == "bright-yellow") {
+        return Qt::yellow;
+    } else if (color == "blue" || color == "bright-blue") {
+        return Qt::blue;
+    } else if (color == "magenta" || color == "bright-magenta") {
+        return Qt::magenta;
+    } else if (color == "cyan" || color == "bright-cyan") {
+        return Qt::cyan;
+    } else if (color == "white" || color == "bright-white") {
+        return Qt::white;
     }
-
-    // TODO: add support for color literals like black, red etc.
 
     QString hexCode = color.mid(color.indexOf(":")+1);
     return QColor("#" + hexCode);
