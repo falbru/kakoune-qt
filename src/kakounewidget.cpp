@@ -22,7 +22,7 @@ KakouneWidget::KakouneWidget(QWidget *parent) : QWidget(parent) {
     m_client = new KakouneClient();
     connect(m_client, &KakouneClient::handleRequest, this, &KakouneWidget::handleRequest);
 
-    setFont("monospace", 12);
+    setFont("monospace", 11);
 }
 
 KakouneWidget::~KakouneWidget() {
@@ -33,7 +33,7 @@ void KakouneWidget::setFont(const QString& font_name, int font_size) {
     m_font = QFont(font_name, font_size);
 
     QFontMetrics font_metrics(m_font);
-    m_cell_size = QSize(font_metrics.maxWidth(), font_metrics.height()); // FIXME only works for monospaced fonts
+    m_cell_size = QSize(font_metrics.averageCharWidth(), font_metrics.height()); // FIXME only works for monospaced fonts
 }
 
 QColor KakouneWidget::getColor(RPC::Color color, bool bg) {
@@ -73,10 +73,9 @@ void KakouneWidget::drawAtom(QPainter& painter, RPC::Atom atom, QPoint position)
 }
 
 void KakouneWidget::drawLine(QPainter& painter, RPC::Line line, QPoint position) {
-    QFontMetrics font_metrics(m_font);
     for (RPC::Atom atom : line) {
         drawAtom(painter, atom, position);
-        position.setX(position.x() + font_metrics.averageCharWidth() * atom.contents.size());
+        position.setX(position.x() + QFontMetrics(m_font).size(Qt::TextSingleLine, atom.contents).width());
     }
 }
 
