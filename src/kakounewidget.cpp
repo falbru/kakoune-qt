@@ -11,6 +11,12 @@ void KakouneWidget::handleRequest(QJsonObject request) {
         m_default_face = request.default_face;
         m_padding_face = request.padding_face;
         repaint();
+    } else if(method == "draw_status") {
+        RPC::DrawStatusRequest request = RPC::deserializeDrawStatusRequest(request_params);
+        m_status_line = request.status_line;
+        m_mode_line = request.mode_line;
+        m_status_default_face = request.default_face;
+        repaint();
     }else {
         qDebug() << "Unkown method: " << method;
     }
@@ -37,9 +43,9 @@ void KakouneWidget::setFont(const QString& font_name, int font_size) {
     m_cell_size = QSize(boundingBoxSingleChar.width(), boundingBoxSingleChar.height()); // FIXME only works for monospaced fonts
 }
 
-QColor KakouneWidget::getColor(RPC::Color color, bool bg) {
+QColor KakouneWidget::getColor(RPC::Color color, RPC::Color default_color) {
     if (color == "default") {
-        color = bg ? m_default_face.bg : m_default_face.fg; 
+        color = default_color; 
     } else if (color == "black" || color == "bright-black") {
         return Qt::gray;
     } else if (color == "red" || color == "bright-red") {
@@ -62,9 +68,9 @@ QColor KakouneWidget::getColor(RPC::Color color, bool bg) {
     return QColor("#" + hexCode);
 }
 
-void KakouneWidget::drawAtom(QPainter& painter, RPC::Atom atom, QPoint position) {
-    QColor fg = getColor(atom.face.fg, false);
-    QColor bg = getColor(atom.face.bg, true);
+void KakouneWidget::drawAtom(QPainter& painter, RPC::Atom atom, QPoint position, const RPC::Face& default_face) {
+    QColor fg = getColor(atom.face.fg, default_face.fg);
+    QColor bg = getColor(atom.face.bg, default_face.bg);
 
     int inf = 999;
 
@@ -73,9 +79,9 @@ void KakouneWidget::drawAtom(QPainter& painter, RPC::Atom atom, QPoint position)
     painter.drawText(QRect(position.x(), position.y(), inf, inf), Qt::AlignTop, atom.contents);
 }
 
-void KakouneWidget::drawLine(QPainter& painter, RPC::Line line, QPoint position) {
+void KakouneWidget::drawLine(QPainter& painter, RPC::Line line, QPoint position, const RPC::Face& default_face) {
     for (RPC::Atom atom : line) {
-        drawAtom(painter, atom, position);
+        drawAtom(painter, atom, position, default_face);
         position.setX(position.x() + QFontMetrics(m_font).size(Qt::TextSingleLine, atom.contents).width());
     }
 }
@@ -85,12 +91,22 @@ void KakouneWidget::paintEvent(QPaintEvent *) {
 
     QPainter painter(this);
     painter.setFont(m_font);
-    painter.fillRect(rect(), getColor(m_default_face.bg, true));
+    painter.fillRect(rect(), getColor(m_default_face.bg, m_default_face.bg));
 
     for (int i = 0; i < m_lines.size(); ++i) {
         QPoint position(0, i * m_cell_size.height());
-        drawLine(painter, m_lines[i], position);
+        drawLine(painter, m_lines[i], position, m_default_face);
     }
+
+    // draw status
+    painter.fillRect(QRect(0, rect().bottom() - m_cell_size.height(), rect().width(), m_cell_size.height()), getColor(m_status_default_face.bg, m_status_default_face.bg));
+    drawLine(painter, m_status_line, QPoint(0, rect().bottom() - m_cell_size.height()), m_default_face);
+
+    int length = 0;
+    for (auto atom : m_mode_line) {
+        length += atom.contents.size();
+    }
+    drawLine(painter, m_mode_line, QPoint(rect().width() - m_cell_size.width() * length, rect().bottom() - m_cell_size.height()), m_status_default_face);
 }
 
 QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
@@ -189,5 +205,5 @@ void KakouneWidget::keyPressEvent(QKeyEvent* ev) {
 
 void KakouneWidget::resizeEvent(QResizeEvent* ev) {
     qDebug() << "Resize event";
-    m_client->resize(height() / m_cell_size.height(), width() / m_cell_size.width());
+    m_client->resize(height() / m_cell_size.height() - 1, width() / m_cell_size.width());
 }

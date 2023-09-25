@@ -19,9 +19,9 @@ private slots:
 private:
     void setFont(const QString& font_name, int font_size);
 
-    QColor getColor(RPC::Color color, bool bg);
-    void drawAtom(QPainter& painter, RPC::Atom atom, QPoint position);
-    void drawLine(QPainter& painter, RPC::Line line, QPoint position);
+    QColor getColor(RPC::Color color, RPC::Color default_color);
+    void drawAtom(QPainter& painter, RPC::Atom atom, QPoint position, const RPC::Face& default_face);
+    void drawLine(QPainter& painter, RPC::Line line, QPoint position, const RPC::Face& default_face);
 
     KakouneClient* m_client;
 
@@ -31,6 +31,10 @@ private:
     QList<RPC::Line> m_lines;
     RPC::Face m_default_face;
     RPC::Face m_padding_face;
+
+    RPC::Line m_status_line;
+    RPC::Line m_mode_line;
+    RPC::Face m_status_default_face;
 };
 
 #endif

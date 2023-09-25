@@ -37,4 +37,16 @@ namespace RPC {
         request.padding_face = deserializeFace(serialized_padding_face);
         return request;
     }
+
+    DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params) {
+        QJsonArray serialized_status_line = request_params.at(0).toArray();
+        QJsonArray serialized_mode_line = request_params.at(1).toArray();
+        QJsonObject serialized_default_face = request_params.at(2).toObject();
+
+        DrawStatusRequest request;
+        request.status_line = deserializeLine(serialized_status_line);
+        request.mode_line = deserializeLine(serialized_mode_line);
+        request.default_face = deserializeFace(serialized_default_face);
+        return request;
+    }
 }

@@ -46,11 +46,18 @@ namespace RPC
         Face padding_face;
     };
 
+    struct DrawStatusRequest {
+        Line status_line;
+        Line mode_line;
+        Face default_face;
+    };
+
     Atom deserializeAtom(QJsonObject serialized_atom);
     Line deserializeLine(QJsonArray serialized_line);
     Face deserializeFace(QJsonObject serialized_face);
 
     DrawRequest deserializeDrawRequest(QJsonArray request_params);
+    DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
 }
 
 #endif
