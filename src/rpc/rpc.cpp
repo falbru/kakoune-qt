@@ -1,53 +1,61 @@
 #include "rpc.h"
 
 namespace RPC {
-    Atom deserializeAtom(QJsonObject serialized_atom) {
+    Atom deserializeAtom(QJsonObject atom_serialized) {
         return Atom{
-            deserializeFace(serialized_atom["face"].toObject()),
-            serialized_atom["contents"].toString()
+            deserializeFace(atom_serialized["face"].toObject()),
+            atom_serialized["contents"].toString()
         };
     }
 
-    Line deserializeLine(QJsonArray serialized_line) {
+    Line deserializeLine(QJsonArray line_serialized) {
         QList<Atom> atoms;
-        for (const QJsonValue& serialized_atom : serialized_line) {
-            atoms.append(deserializeAtom(serialized_atom.toObject()));
+        for (const QJsonValue& atom_serialized : line_serialized) {
+            atoms.append(deserializeAtom(atom_serialized.toObject()));
         }
         return Line(atoms);
     }
 
-    Face deserializeFace(QJsonObject serialized_face) {
+    Face deserializeFace(QJsonObject face_serialized) {
         return Face{
-            serialized_face["fg"].toString(),
-            serialized_face["bg"].toString(),
+            face_serialized["fg"].toString(),
+            face_serialized["bg"].toString(),
             QList<Attribute>()
         };
     }
 
     DrawRequest deserializeDrawRequest(QJsonArray request_params) {
-        QJsonArray serialized_lines = request_params.at(0).toArray();
-        QJsonObject serialized_default_face = request_params.at(1).toObject();
-        QJsonObject serialized_padding_face = request_params.at(2).toObject();
+        QJsonArray lines_serialized = request_params.at(0).toArray();
+        QJsonObject default_face_serialized = request_params.at(1).toObject();
+        QJsonObject padding_face_serialized = request_params.at(2).toObject();
 
-        DrawRequest request;
-        for (const QJsonValue& serialized_line : serialized_lines) {
-            request.lines.append(deserializeLine(serialized_line.toArray()));
+        QList<Line> lines;
+        for (const QJsonValue& line_serialized : lines_serialized) {
+            lines.append(deserializeLine(line_serialized.toArray()));
         }
 
-        request.default_face = deserializeFace(serialized_default_face);
-        request.padding_face = deserializeFace(serialized_padding_face);
-        return request;
+        return DrawRequest {
+            lines,
+            deserializeFace(default_face_serialized),
+            deserializeFace(padding_face_serialized)
+        };
     }
 
     DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params) {
-        QJsonArray serialized_status_line = request_params.at(0).toArray();
-        QJsonArray serialized_mode_line = request_params.at(1).toArray();
-        QJsonObject serialized_default_face = request_params.at(2).toObject();
+        QJsonArray status_line_serialized = request_params.at(0).toArray();
+        QJsonArray mode_line_serialized = request_params.at(1).toArray();
+        QJsonObject default_face_serialized = request_params.at(2).toObject();
 
-        DrawStatusRequest request;
-        request.status_line = deserializeLine(serialized_status_line);
-        request.mode_line = deserializeLine(serialized_mode_line);
-        request.default_face = deserializeFace(serialized_default_face);
-        return request;
+        return DrawStatusRequest{
+            deserializeLine(status_line_serialized),
+            deserializeLine(mode_line_serialized),
+            deserializeFace(default_face_serialized)
+        };
+    }
+
+    RefreshRequest deserializeRefreshRequest(QJsonArray request_params) {
+        return RefreshRequest{
+            request_params.at(0).toBool()
+        };
     }
 }

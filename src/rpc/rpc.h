@@ -27,12 +27,17 @@ namespace RPC
         Face default_face;
     };
 
+    struct RefreshRequest {
+        bool force;
+    };
+
     Atom deserializeAtom(QJsonObject serialized_atom);
     Line deserializeLine(QJsonArray serialized_line);
     Face deserializeFace(QJsonObject serialized_face);
 
     DrawRequest deserializeDrawRequest(QJsonArray request_params);
     DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
+    RefreshRequest deserializeRefreshRequest(QJsonArray request_params);
 }
 
 #endif

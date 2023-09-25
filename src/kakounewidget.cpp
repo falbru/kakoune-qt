@@ -9,12 +9,13 @@ void KakouneWidget::handleRequest(QJsonObject request) {
         m_lines = request.lines;
         m_default_face = request.default_face;
         m_padding_face = request.padding_face;
-        repaint();
     } else if(method == "draw_status") {
         RPC::DrawStatusRequest request = RPC::deserializeDrawStatusRequest(request_params);
         m_status_line = request.status_line;
         m_mode_line = request.mode_line;
         m_status_default_face = request.default_face;
+    }else if (method == "refresh"){
+        RPC::RefreshRequest request = RPC::deserializeRefreshRequest(request_params);
         repaint();
     }else {
         qDebug() << "Unkown method: " << method;
