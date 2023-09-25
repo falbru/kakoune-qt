@@ -6,35 +6,10 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+#include "line.h"
+
 namespace RPC
 {
-    typedef QString Color;
-
-    enum Attribute {
-        underline,
-        reverse,
-        blink,
-        bold,
-        dim,
-        italic,
-        final_fg,
-        final_bg,
-        final_attr
-    };
-
-    struct Face {
-        Color fg;
-        Color bg;
-        QList<Attribute> attributes;
-    };
-
-    struct Atom {
-        Face face;
-        QString contents;
-    };
-
-    typedef QList<Atom> Line;
-
     struct Coord {
         int line;
         int column;

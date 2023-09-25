@@ -10,7 +10,12 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 qt_standard_project_setup()
 
 qt_add_executable(kak-qt
-    src/rpc.cpp
+    src/rpc/line.cpp
+    src/rpc/atom.cpp
+    src/rpc/face.cpp
+    src/rpc/color.cpp
+    src/rpc/attribute.h
+    src/rpc/rpc.cpp
     src/kakouneclient.cpp
     src/kakounewidget.cpp
     src/mainwindow.cpp

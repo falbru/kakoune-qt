@@ -2,25 +2,26 @@
 
 namespace RPC {
     Atom deserializeAtom(QJsonObject serialized_atom) {
-        Atom atom;
-        atom.face = deserializeFace(serialized_atom["face"].toObject());
-        atom.contents = serialized_atom["contents"].toString();
-        return atom;
+        return Atom{
+            deserializeFace(serialized_atom["face"].toObject()),
+            serialized_atom["contents"].toString()
+        };
     }
 
     Line deserializeLine(QJsonArray serialized_line) {
-        Line line;
+        QList<Atom> atoms;
         for (const QJsonValue& serialized_atom : serialized_line) {
-            line.append(deserializeAtom(serialized_atom.toObject()));
+            atoms.append(deserializeAtom(serialized_atom.toObject()));
         }
-        return line;
+        return Line(atoms);
     }
 
     Face deserializeFace(QJsonObject serialized_face) {
-        Face face;
-        face.fg = serialized_face["fg"].toString();
-        face.bg = serialized_face["bg"].toString();
-        return face;
+        return Face{
+            serialized_face["fg"].toString(),
+            serialized_face["bg"].toString(),
+            QList<Attribute>()
+        };
     }
 
     DrawRequest deserializeDrawRequest(QJsonArray request_params) {
