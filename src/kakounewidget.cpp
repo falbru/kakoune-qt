@@ -26,6 +26,7 @@ KakouneWidget::KakouneWidget(QWidget *parent) : QWidget(parent) {
 
     m_client = new KakouneClient();
     connect(m_client, &KakouneClient::handleRequest, this, &KakouneWidget::handleRequest);
+    connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
 
     setFont("monospace", 11);
 }

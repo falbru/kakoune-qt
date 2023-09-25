@@ -13,6 +13,7 @@ public:
     void resize(int rows, int columns);
 signals:
     void handleRequest(QJsonObject request);
+    void finished();
 private:
     QProcess m_process;
 };

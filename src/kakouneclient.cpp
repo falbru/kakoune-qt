@@ -15,6 +15,8 @@ KakouneClient::KakouneClient() {
         qFatal() << "KakouneClient: " << m_process.readAllStandardError();
     });
 
+    connect(&m_process, &QProcess::finished, this, &KakouneClient::finished);
+
     m_process.start("kak", {"-ui", "json"});
 }
 

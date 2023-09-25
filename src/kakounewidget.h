@@ -16,6 +16,8 @@ protected:
 	void resizeEvent(QResizeEvent* ev) override;
 private slots:
     void handleRequest(QJsonObject request);
+signals:
+    void finished();
 private:
     void setFont(const QString& font_name, int font_size);
 
