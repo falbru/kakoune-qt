@@ -68,77 +68,45 @@ void KakouneWidget::paintEvent(QPaintEvent *) {
 }
 
 QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
-    QString key;
-    bool isSpecial = true;
-
-    switch(keyCode) {
-        case Qt::Key_Return:
-            key = "ret";
-            break;
-        case Qt::Key_Space:
-            key = "space";
-            break;
-        case Qt::Key_Tab:
-            key = "tab";
-            break;
-        case Qt::Key_BracketLeft:
-            key = "lt";
-            break;
-        case Qt::Key_BracketRight:
-            key = "gt";
-            break;
-        case Qt::Key_Backspace:
-            key = "backspace";
-            break;
-        case Qt::Key_Escape:
-            key = "esc";
-            break;
-        case Qt::Key_Up:
-            key = "up";
-            break;
-        case Qt::Key_Down:
-            key = "down";
-            break;
-        case Qt::Key_Left:
-            key = "left";
-            break;
-        case Qt::Key_Right:
-            key = "right";
-            break;
-        case Qt::Key_PageUp:
-            key = "pageup";
-            break;
-        case Qt::Key_PageDown:
-            key = "pagedown";
-            break;
-        case Qt::Key_Home:
-            key = "home";
-            break;
-        case Qt::Key_End:
-            key = "end";
-            break;
-        case Qt::Key_Backtab:
-            key = "backtab";
-            break;
-        case Qt::Key_Delete:
-            key = "del";
-            break;
-        default:
-            key = QKeySequence(keyCode).toString();
-            isSpecial = false;
-            break;
+    static QMap<int, QString> special_keys;
+    if (special_keys.empty()) {
+        special_keys[Qt::Key_Return] = "ret";
+        special_keys[Qt::Key_Space] = "space";
+        special_keys[Qt::Key_Tab] = "tab";
+        special_keys[Qt::Key_BracketLeft] = "lt";
+        special_keys[Qt::Key_BracketRight] = "gt";
+        special_keys[Qt::Key_Backspace] = "backspace";
+        special_keys[Qt::Key_Escape] = "esc";
+        special_keys[Qt::Key_Up] = "up";
+        special_keys[Qt::Key_Down] = "down";
+        special_keys[Qt::Key_Left] = "left";
+        special_keys[Qt::Key_Right] = "right";
+        special_keys[Qt::Key_PageUp] = "pageup";
+        special_keys[Qt::Key_PageDown] = "pagedown";
+        special_keys[Qt::Key_Home] = "home";
+        special_keys[Qt::Key_End] = "end";
+        special_keys[Qt::Key_Backtab] = "backtab";
+        special_keys[Qt::Key_Delete] = "del";
     }
 
-    if (!isSpecial && keyCode > 0x0ff) {
+    QString key;
+
+    auto special_keys_it = special_keys.find(keyCode);
+    if (special_keys_it == special_keys.end()) {
+        key = QKeySequence(keyCode).toString();
+    }else {
+        key = special_keys_it.value();
+    }
+
+    if (special_keys_it == special_keys.end() && keyCode > 0x0ff) {
         return "";
     }
-
 
     bool has_shift = modifiers.testFlag(Qt::KeyboardModifier::ShiftModifier);
     bool has_ctrl = modifiers.testFlag(Qt::KeyboardModifier::ControlModifier);
     bool has_alt = modifiers.testFlag(Qt::KeyboardModifier::AltModifier);
 
-    if (!isSpecial && !has_shift) {
+    if (special_keys_it == special_keys.end() && !has_shift) {
         key = key.toLower();
     }
     if (has_ctrl) {
@@ -147,7 +115,7 @@ QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
     if (has_alt) {
         key = "a-" + key;
     }
-    if (isSpecial || has_alt || has_ctrl) {
+    if (special_keys_it != special_keys.end() || has_alt || has_ctrl) {
         key = "<" + key + ">";
     }
 
