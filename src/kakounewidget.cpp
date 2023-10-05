@@ -131,6 +131,53 @@ void KakouneWidget::keyPressEvent(QKeyEvent* ev) {
     m_client->sendKeys(key);
 }
 
+void KakouneWidget::mouseMoveEvent(QMouseEvent* ev) {
+    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+    m_client->sendMouseMove(localMousePosition.y(), localMousePosition.x());
+}
+
+void KakouneWidget::mousePressEvent(QMouseEvent* ev) {
+    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+
+    QString button;
+    switch(ev->button()) {
+        case Qt::LeftButton:
+            button = "left";
+            break;
+        case Qt::MiddleButton:
+            button = "middle";
+            break;
+        case Qt::RightButton:
+            button = "right";
+            break;
+        default:
+            return;
+    }
+
+    m_client->sendMousePress(button, localMousePosition.y(), localMousePosition.x());
+}
+
+void KakouneWidget::mouseReleaseEvent(QMouseEvent* ev) {
+    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+
+    QString button;
+    switch(ev->button()) {
+        case Qt::LeftButton:
+            button = "left";
+            break;
+        case Qt::MiddleButton:
+            button = "middle";
+            break;
+        case Qt::RightButton:
+            button = "right";
+            break;
+        default:
+            return;
+    }
+
+    m_client->sendMouseRelease(button, localMousePosition.y(), localMousePosition.x());
+}
+
 void KakouneWidget::resizeEvent(QResizeEvent* ev) {
     qDebug() << "Resize event";
     m_client->resize(height() / m_cell_size.height() - 1, width() / m_cell_size.width());

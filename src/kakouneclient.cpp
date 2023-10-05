@@ -33,6 +33,33 @@ void KakouneClient::sendKeys(const QString& key) {
     m_process.write(rpc);
 }
 
+void KakouneClient::sendMouseMove(int line, int column) {
+    QJsonObject req{
+        {{"jsonrpc", "2.0"}, {"method", "mouse_move"}, {"params", QJsonArray{line, column}}}
+    };
+
+    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
+    m_process.write(rpc);
+}
+
+void KakouneClient::sendMousePress(const QString& button, int line, int column) {
+    QJsonObject req{
+        {{"jsonrpc", "2.0"}, {"method", "mouse_press"}, {"params", QJsonArray{button, line, column}}}
+    };
+
+    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
+    m_process.write(rpc);
+}
+
+void KakouneClient::sendMouseRelease(const QString& button, int line, int column) {
+    QJsonObject req{
+        {{"jsonrpc", "2.0"}, {"method", "mouse_release"}, {"params", QJsonArray{button, line, column}}}
+    };
+
+    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
+    m_process.write(rpc);
+}
+
 void KakouneClient::resize(int rows, int columns) {
     QJsonObject req{
         {{"jsonrpc", "2.0"}, {"method", "resize"}, {"params", QJsonArray{rows, columns}}}

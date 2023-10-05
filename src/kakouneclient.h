@@ -10,6 +10,9 @@ public:
     ~KakouneClient();
 
     void sendKeys(const QString& key);
+    void sendMouseMove(int line, int column);
+    void sendMousePress(const QString& button, int line, int column);
+    void sendMouseRelease(const QString& button, int line, int column);
     void resize(int rows, int columns);
 signals:
     void handleRequest(QJsonObject request);
