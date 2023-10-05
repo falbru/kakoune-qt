@@ -38,6 +38,8 @@ namespace RPC
     DrawRequest deserializeDrawRequest(QJsonArray request_params);
     DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
     RefreshRequest deserializeRefreshRequest(QJsonArray request_params);
+
+    QByteArray serializeRequest(const QString& method_name, QJsonArray params);
 }
 
 #endif

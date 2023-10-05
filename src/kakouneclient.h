@@ -27,6 +27,7 @@ signals:
     void refresh();
     void finished();
 private:
+    void sendRequest(const QString& method_name, QJsonArray params);
     void handleRequest(QJsonObject request);
 
     QProcess m_process;

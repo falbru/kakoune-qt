@@ -1,4 +1,5 @@
 #include "rpc.h"
+#include <qjsondocument.h>
 
 namespace RPC {
     Atom deserializeAtom(QJsonObject atom_serialized) {
@@ -57,5 +58,13 @@ namespace RPC {
         return RefreshRequest{
             request_params.at(0).toBool()
         };
+    }
+
+    QByteArray serializeRequest(const QString& method_name, QJsonArray params) {
+        QJsonObject req{
+            {{"jsonrpc", "2.0"}, {"method", method_name}, {"params", params}}
+        };
+
+        return QJsonDocument(req).toJson(QJsonDocument::Compact);
     }
 }

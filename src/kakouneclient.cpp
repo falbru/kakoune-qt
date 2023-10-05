@@ -49,49 +49,28 @@ KakouneClient::~KakouneClient() {
     m_process.close();
 }
 
-void KakouneClient::sendKeys(const QString& key) {
-    QJsonObject req{
-        {{"jsonrpc", "2.0"}, {"method", "keys"}, {"params", QJsonArray{key}}}
-    };
+void KakouneClient::sendRequest(const QString& method_name, QJsonArray params) {
+    m_process.write(RPC::serializeRequest(method_name, params));
+}
 
-    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
-    m_process.write(rpc);
+void KakouneClient::sendKeys(const QString& key) {
+    sendRequest("keys", QJsonArray{key});
 }
 
 void KakouneClient::sendMouseMove(int line, int column) {
-    QJsonObject req{
-        {{"jsonrpc", "2.0"}, {"method", "mouse_move"}, {"params", QJsonArray{line, column}}}
-    };
-
-    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
-    m_process.write(rpc);
+    sendRequest("mouse_move", QJsonArray{line, column});
 }
 
 void KakouneClient::sendMousePress(const QString& button, int line, int column) {
-    QJsonObject req{
-        {{"jsonrpc", "2.0"}, {"method", "mouse_press"}, {"params", QJsonArray{button, line, column}}}
-    };
-
-    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
-    m_process.write(rpc);
+    sendRequest("mouse_press", QJsonArray{button, line, column});
 }
 
 void KakouneClient::sendMouseRelease(const QString& button, int line, int column) {
-    QJsonObject req{
-        {{"jsonrpc", "2.0"}, {"method", "mouse_release"}, {"params", QJsonArray{button, line, column}}}
-    };
-
-    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
-    m_process.write(rpc);
+    sendRequest("mouse_release", QJsonArray{button, line, column});
 }
 
 void KakouneClient::resize(int rows, int columns) {
-    QJsonObject req{
-        {{"jsonrpc", "2.0"}, {"method", "resize"}, {"params", QJsonArray{rows, columns}}}
-    };
-
-    QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
-    m_process.write(rpc);
+    sendRequest("resize", QJsonArray{rows, columns});
 }
 
 QList<RPC::Line> KakouneClient::getLines() {
