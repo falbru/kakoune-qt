@@ -31,9 +31,10 @@ namespace RPC
         bool force;
     };
 
+    Face deserializeFace(QJsonObject serialized_face);
     Atom deserializeAtom(QJsonObject serialized_atom);
     Line deserializeLine(QJsonArray serialized_line);
-    Face deserializeFace(QJsonObject serialized_face);
+    QList<Line> deserializeLines(QJsonObject serialized_lines);
 
     DrawRequest deserializeDrawRequest(QJsonArray request_params);
     DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
