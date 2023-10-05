@@ -1,5 +1,30 @@
 #include "kakouneclient.h"
 
+#include "rpc/rpc.h"
+
+void KakouneClient::handleRequest(QJsonObject request) {
+    const QString method = request["method"].toString();
+    QJsonArray request_params = request["params"].toArray();
+
+    if (method == "draw") {
+        RPC::DrawRequest request = RPC::deserializeDrawRequest(request_params);
+        m_lines = request.lines;
+        m_default_face = request.default_face;
+        m_padding_face = request.padding_face;
+    } else if(method == "draw_status") {
+        RPC::DrawStatusRequest request = RPC::deserializeDrawStatusRequest(request_params);
+        m_status_line = request.status_line;
+        m_mode_line = request.mode_line;
+        m_status_default_face = request.default_face;
+    }else if (method == "refresh"){
+        RPC::RefreshRequest request = RPC::deserializeRefreshRequest(request_params);
+        emit refresh();
+    }else {
+        qDebug() << "Unkown method: " << method;
+    }
+
+}
+
 KakouneClient::KakouneClient() {
     connect(&m_process, &QProcess::readyReadStandardOutput, [=] () {
         QByteArray buffer = m_process.readAllStandardOutput();
@@ -7,7 +32,7 @@ KakouneClient::KakouneClient() {
         QList<QByteArray> requests = buffer.split('\n');
         for (QByteArray request : requests) {
             if (request == "") continue;
-            emit handleRequest(QJsonDocument::fromJson(request).object());
+            handleRequest(QJsonDocument::fromJson(request).object());
         }
     });
 
@@ -68,3 +93,28 @@ void KakouneClient::resize(int rows, int columns) {
     QByteArray rpc = QJsonDocument(req).toJson(QJsonDocument::Compact);
     m_process.write(rpc);
 }
+
+QList<RPC::Line> KakouneClient::getLines() {
+    return m_lines;
+}
+
+RPC::Face KakouneClient::getDefaultFace() {
+    return m_default_face;
+}
+
+RPC::Face KakouneClient::getPaddingFace() {
+    return m_padding_face;
+}
+
+RPC::Line KakouneClient::getStatusLine() {
+    return m_status_line;
+}
+
+RPC::Line KakouneClient::getModeLine() {
+    return m_mode_line;
+}
+
+RPC::Face KakouneClient::getStatusDefaultFace() {
+    return m_status_default_face;
+}
+
