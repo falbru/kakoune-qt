@@ -54,38 +54,48 @@ void KakouneWidget::paintEvent(QPaintEvent *) {
     mode_line.draw(context, QPoint(rect().width() - m_cell_size.width() * length, rect().bottom() - m_cell_size.height()), status_default_face);
 }
 
-QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
-    static QMap<int, QString> special_keys;
+QString keyCodeToKakouneKey(int key_code, Qt::KeyboardModifiers modifiers) {
+    struct SpecialKey {
+        QString key;
+        bool is_function_key;
+    };
+
+    static QMap<int, SpecialKey> special_keys;
     if (special_keys.empty()) {
-        special_keys[Qt::Key_Return] = "ret";
-        special_keys[Qt::Key_Space] = "space";
-        special_keys[Qt::Key_Tab] = "tab";
-        special_keys[Qt::Key_BracketLeft] = "lt";
-        special_keys[Qt::Key_BracketRight] = "gt";
-        special_keys[Qt::Key_Backspace] = "backspace";
-        special_keys[Qt::Key_Escape] = "esc";
-        special_keys[Qt::Key_Up] = "up";
-        special_keys[Qt::Key_Down] = "down";
-        special_keys[Qt::Key_Left] = "left";
-        special_keys[Qt::Key_Right] = "right";
-        special_keys[Qt::Key_PageUp] = "pageup";
-        special_keys[Qt::Key_PageDown] = "pagedown";
-        special_keys[Qt::Key_Home] = "home";
-        special_keys[Qt::Key_End] = "end";
-        special_keys[Qt::Key_Backtab] = "backtab";
-        special_keys[Qt::Key_Delete] = "del";
+        special_keys[Qt::Key_Less]      = SpecialKey{"lt",        false};
+        special_keys[Qt::Key_Greater]   = SpecialKey{"gt",        false};
+        special_keys[Qt::Key_Plus]      = SpecialKey{"plus",      false};
+        special_keys[Qt::Key_Minus]     = SpecialKey{"minus",     false};
+        special_keys[Qt::Key_Return]    = SpecialKey{"ret",       true};
+        special_keys[Qt::Key_Space]     = SpecialKey{"space",     true};
+        special_keys[Qt::Key_Tab]       = SpecialKey{"tab",       true};
+        special_keys[Qt::Key_Backtab]   = SpecialKey{"tab",       true}; // Will become <s-tab>
+        special_keys[Qt::Key_Backspace] = SpecialKey{"backspace", true};
+        special_keys[Qt::Key_Delete]    = SpecialKey{"del",       true};
+        special_keys[Qt::Key_Escape]    = SpecialKey{"esc",       true};
+        special_keys[Qt::Key_Up]        = SpecialKey{"up",        true};
+        special_keys[Qt::Key_Down]      = SpecialKey{"down",      true};
+        special_keys[Qt::Key_Left]      = SpecialKey{"left",      true};
+        special_keys[Qt::Key_Right]     = SpecialKey{"right",     true};
+        special_keys[Qt::Key_PageUp]    = SpecialKey{"pageup",    true};
+        special_keys[Qt::Key_PageDown]  = SpecialKey{"pagedown",  true};
+        special_keys[Qt::Key_Home]      = SpecialKey{"home",      true};
+        special_keys[Qt::Key_End]       = SpecialKey{"end",       true};
+        special_keys[Qt::Key_Insert]    = SpecialKey{"ins",       true};
+        special_keys[Qt::Key_Semicolon] = SpecialKey{"semicolon", false};
+        special_keys[Qt::Key_Percent]   = SpecialKey{"percent",   false};
     }
 
     QString key;
 
-    auto special_keys_it = special_keys.find(keyCode);
+    auto special_keys_it = special_keys.find(key_code);
     if (special_keys_it == special_keys.end()) {
-        key = QKeySequence(keyCode).toString();
+        key = QKeySequence(key_code).toString();
     }else {
-        key = special_keys_it.value();
+        key = special_keys_it.value().key;
     }
 
-    if (special_keys_it == special_keys.end() && keyCode > 0x0ff) {
+    if (special_keys_it == special_keys.end() && key_code > 0x0ff) {
         return "";
     }
 
@@ -95,6 +105,8 @@ QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
 
     if (special_keys_it == special_keys.end() && !has_shift) {
         key = key.toLower();
+    }else if (special_keys_it != special_keys.end() && has_shift && special_keys_it.value().is_function_key) {
+        key = "s-" + key;
     }
     if (has_ctrl) {
         key = "c-" + key;
@@ -110,7 +122,7 @@ QString keyCodeToString(int keyCode, Qt::KeyboardModifiers modifiers) {
 }
 
 void KakouneWidget::keyPressEvent(QKeyEvent* ev) {
-    QString key = keyCodeToString(ev->key(), ev->modifiers());
+    QString key = keyCodeToKakouneKey(ev->key(), ev->modifiers());
     if (key == "") return;
 
     m_client->sendKeys(key);
