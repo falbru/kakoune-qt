@@ -1,4 +1,4 @@
-#include "kakounewidget.h"
+#include "kakounewidget.hpp"
 
 KakouneWidget::KakouneWidget(QWidget *parent) : QWidget(parent)
 {

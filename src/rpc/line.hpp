@@ -1,8 +1,8 @@
-#ifndef RPCLINE_H
-#define RPCLINE_H
+#ifndef RPCLINE_HPP
+#define RPCLINE_HPP
 
-#include "../drawcontext.h"
-#include "atom.h"
+#include "../drawcontext.hpp"
+#include "atom.hpp"
 #include <QList>
 #include <QPainter>
 

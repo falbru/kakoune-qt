@@ -1,8 +1,8 @@
-#ifndef KAKOUNECLIENT_H
-#define KAKOUNECLIENT_H
+#ifndef KAKOUNECLIENT_HPP
+#define KAKOUNECLIENT_HPP
 
-#include "rpc/face.h"
-#include "rpc/line.h"
+#include "rpc/face.hpp"
+#include "rpc/line.hpp"
 #include <QtWidgets>
 
 class KakouneClient : public QObject

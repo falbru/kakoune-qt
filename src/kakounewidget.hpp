@@ -1,7 +1,7 @@
-#ifndef KAKOUNEWINDOW_H
-#define KAKOUNEWINDOW_H
+#ifndef KAKOUNEWINDOW_HPP
+#define KAKOUNEWINDOW_HPP
 
-#include "kakouneclient.h"
+#include "kakouneclient.hpp"
 #include <QtWidgets>
 
 class KakouneWidget : public QWidget

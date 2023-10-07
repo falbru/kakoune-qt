@@ -1,5 +1,5 @@
-#ifndef DRAWCONTEXT_H
-#define DRAWCONTEXT_H
+#ifndef DRAWCONTEXT_HPP
+#define DRAWCONTEXT_HPP
 
 #include <QPainter>
 #include <QSize>
