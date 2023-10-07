@@ -1,5 +1,5 @@
-#ifndef RPCATTRIBUTE_H
-#define RPCATTRIBUTE_H
+#ifndef RPCATTRIBUTE_HPP
+#define RPCATTRIBUTE_HPP
 
 namespace RPC
 {

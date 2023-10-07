@@ -1,8 +1,8 @@
-#ifndef RPCATOM_H
-#define RPCATOM_H
+#ifndef RPCATOM_HPP
+#define RPCATOM_HPP
 
-#include "../drawcontext.h"
-#include "face.h"
+#include "../drawcontext.hpp"
+#include "face.hpp"
 #include <QPainter>
 
 namespace RPC

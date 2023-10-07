@@ -1,12 +1,12 @@
-#ifndef RPC_H
-#define RPC_H
+#ifndef RPC_HPP
+#define RPC_HPP
 
 #include <QList>
 #include <QString>
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 
-#include "line.h"
+#include "line.hpp"
 
 namespace RPC
 {

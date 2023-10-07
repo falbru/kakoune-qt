@@ -1,8 +1,8 @@
-#ifndef RPCFACE_H
-#define RPCFACE_H
+#ifndef RPCFACE_HPP
+#define RPCFACE_HPP
 
-#include "attribute.h"
-#include "color.h"
+#include "attribute.hpp"
+#include "color.hpp"
 #include <QList>
 
 namespace RPC

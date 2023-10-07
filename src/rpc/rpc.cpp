@@ -1,4 +1,4 @@
-#include "rpc.h"
+#include "rpc.hpp"
 #include <qjsondocument.h>
 
 namespace RPC

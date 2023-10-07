@@ -1,6 +1,6 @@
-#include "kakouneclient.h"
+#include "kakouneclient.hpp"
 
-#include "rpc/rpc.h"
+#include "rpc/rpc.hpp"
 
 void KakouneClient::handleRequest(QJsonObject request)
 {

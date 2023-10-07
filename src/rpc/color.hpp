@@ -1,5 +1,5 @@
-#ifndef RPCCOLOR_H
-#define RPCCOLOR_H
+#ifndef RPCCOLOR_HPP
+#define RPCCOLOR_HPP
 
 #include <QColor>
 #include <QString>

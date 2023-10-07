@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "kakounewidget.h"
+#include "mainwindow.hpp"
+#include "kakounewidget.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
