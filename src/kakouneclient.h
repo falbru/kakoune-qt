@@ -1,20 +1,21 @@
 #ifndef KAKOUNECLIENT_H
 #define KAKOUNECLIENT_H
 
-#include "rpc/line.h"
 #include "rpc/face.h"
+#include "rpc/line.h"
 #include <QtWidgets>
 
-class KakouneClient : public QObject {
+class KakouneClient : public QObject
+{
     Q_OBJECT
-public:
+  public:
     KakouneClient();
     ~KakouneClient();
 
-    void sendKeys(const QString& key);
+    void sendKeys(const QString &key);
     void sendMouseMove(int line, int column);
-    void sendMousePress(const QString& button, int line, int column);
-    void sendMouseRelease(const QString& button, int line, int column);
+    void sendMousePress(const QString &button, int line, int column);
+    void sendMouseRelease(const QString &button, int line, int column);
     void resize(int rows, int columns);
 
     QList<RPC::Line> getLines();
@@ -23,11 +24,12 @@ public:
     RPC::Line getStatusLine();
     RPC::Line getModeLine();
     RPC::Face getStatusDefaultFace();
-signals:
+  signals:
     void refresh();
     void finished();
-private:
-    void sendRequest(const QString& method_name, QJsonArray params);
+
+  private:
+    void sendRequest(const QString &method_name, QJsonArray params);
     void handleRequest(QJsonObject request);
 
     QProcess m_process;

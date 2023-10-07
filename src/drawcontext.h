@@ -4,9 +4,10 @@
 #include <QPainter>
 #include <QSize>
 
-struct DrawContext {
-    QPainter& painter;
-    const QSize& cell_size;
+struct DrawContext
+{
+    QPainter &painter;
+    const QSize &cell_size;
 };
 
 #endif

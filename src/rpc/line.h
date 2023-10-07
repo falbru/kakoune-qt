@@ -1,22 +1,25 @@
 #ifndef RPCLINE_H
 #define RPCLINE_H
 
+#include "../drawcontext.h"
+#include "atom.h"
 #include <QList>
 #include <QPainter>
-#include "atom.h"
-#include "../drawcontext.h"
 
-namespace RPC {
-    class Line {
-    public:
-        Line();
-        Line(QList<Atom> atoms);
+namespace RPC
+{
+class Line
+{
+  public:
+    Line();
+    Line(QList<Atom> atoms);
 
-        QList<Atom> getAtoms();
-        void draw(const DrawContext& context, QPoint position, const Face& default_face);
-    private:
-        QList<Atom> m_atoms;
-    };
-}
+    QList<Atom> getAtoms();
+    void draw(const DrawContext &context, QPoint position, const Face &default_face);
+
+  private:
+    QList<Atom> m_atoms;
+};
+} // namespace RPC
 
 #endif

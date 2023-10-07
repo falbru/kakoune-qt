@@ -1,17 +1,18 @@
 #include "mainwindow.h"
 #include "kakounewidget.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-	resize(1024, 768);
+    resize(1024, 768);
 
-	KakouneWidget* kakwidget = new KakouneWidget();
+    KakouneWidget *kakwidget = new KakouneWidget();
 
     connect(kakwidget, &KakouneWidget::finished, this, &MainWindow::close);
 
-	setCentralWidget(kakwidget);
-	kakwidget->setFocusPolicy(Qt::StrongFocus);
+    setCentralWidget(kakwidget);
+    kakwidget->setFocusPolicy(Qt::StrongFocus);
 }
 
-MainWindow::~MainWindow() { }
+MainWindow::~MainWindow()
+{
+}
