@@ -19,6 +19,7 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::closeEvent(QCloseEvent *ev) {
-  delete m_session;
+void MainWindow::closeEvent(QCloseEvent *ev)
+{
+    delete m_session;
 }

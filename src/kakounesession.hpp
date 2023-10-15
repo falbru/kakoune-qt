@@ -12,6 +12,7 @@ class KakouneSession : public QObject
     ~KakouneSession();
 
     QString getSessionId();
+
   private:
     QProcess m_process;
     QString m_session_id;

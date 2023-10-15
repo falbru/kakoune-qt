@@ -1,6 +1,6 @@
 #include "kakounewidget.hpp"
 
-KakouneWidget::KakouneWidget(const QString& session_id, QWidget *parent) : QWidget(parent)
+KakouneWidget::KakouneWidget(const QString &session_id, QWidget *parent) : QWidget(parent)
 {
     qDebug("Constructing kakounewidget");
 

@@ -10,10 +10,12 @@ class MainWindow : public QMainWindow
   public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
   protected:
     void closeEvent(QCloseEvent *ev) override;
+
   private:
-    KakouneSession* m_session;
+    KakouneSession *m_session;
 };
 
 #endif
