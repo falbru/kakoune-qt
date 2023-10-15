@@ -32,7 +32,7 @@ void KakouneClient::handleRequest(QJsonObject request)
     }
 }
 
-KakouneClient::KakouneClient()
+KakouneClient::KakouneClient(const QString& session_id)
 {
     connect(&m_process, &QProcess::readyReadStandardOutput, [=]() {
         QByteArray buffer = m_process.readAllStandardOutput();
@@ -51,7 +51,7 @@ KakouneClient::KakouneClient()
 
     connect(&m_process, &QProcess::finished, this, &KakouneClient::finished);
 
-    m_process.start("kak", {"-ui", "json"});
+    m_process.start("kak", {"-ui", "json", "-c", session_id});
 }
 
 KakouneClient::~KakouneClient()

@@ -5,7 +5,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(1024, 768);
 
-    KakouneWidget *kakwidget = new KakouneWidget();
+    m_session = new KakouneSession();
+
+    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId());
 
     connect(kakwidget, &KakouneWidget::finished, this, &MainWindow::close);
 
@@ -15,4 +17,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::closeEvent(QCloseEvent *ev) {
+  delete m_session;
 }

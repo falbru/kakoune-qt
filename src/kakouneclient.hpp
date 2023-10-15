@@ -9,7 +9,7 @@ class KakouneClient : public QObject
 {
     Q_OBJECT
   public:
-    KakouneClient();
+    KakouneClient(const QString& session_id);
     ~KakouneClient();
 
     void sendKeys(const QString &key);
