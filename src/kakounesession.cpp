@@ -14,25 +14,17 @@ KakouneSession::KakouneSession() : KakouneSession(generateRandomSessionId())
 {
 }
 
-KakouneSession::KakouneSession(QString session_id)
+void createFifo(const QString &path)
 {
-    m_session_id = session_id;
-
-    connect(&m_process, &QProcess::readyReadStandardError,
-            [=]() { qFatal() << "KakouneSession: " << m_process.readAllStandardError(); });
-
-    std::string session_ready_path = ("/tmp/" + session_id).toStdString();
-    const char *session_ready_path_cstr = session_ready_path.c_str();
-
-    if (mkfifo(session_ready_path_cstr, 0666) == -1)
+    if (mkfifo(path.toStdString().c_str(), 0666) == -1)
     {
         qFatal("Failed to create fifo");
     }
+}
 
-    m_process.start("kak",
-                    {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path_cstr)});
-
-    int fd = open(session_ready_path_cstr, O_RDONLY);
+void waitForFifo(const QString &path)
+{
+    int fd = open(path.toStdString().c_str(), O_RDONLY);
     if (fd == -1)
     {
         qFatal("Failed to read from fifo");
@@ -44,11 +36,31 @@ KakouneSession::KakouneSession(QString session_id)
     }
 
     close(fd);
+}
 
-    if (unlink(session_ready_path_cstr) == -1)
+void deleteFifo(const QString &path)
+{
+    if (unlink(path.toStdString().c_str()) == -1)
     {
         qFatal("Failed to remove fifo");
     }
+}
+
+KakouneSession::KakouneSession(QString session_id)
+{
+    m_session_id = session_id;
+
+    connect(&m_process, &QProcess::readyReadStandardError,
+            [=]() { qFatal() << "KakouneSession: " << m_process.readAllStandardError(); });
+
+    QString session_ready_path = "/tmp/" + session_id;
+
+    createFifo(session_ready_path);
+
+    m_process.start("kak", {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)});
+
+    waitForFifo(session_ready_path);
+    deleteFifo(session_ready_path);
 }
 
 KakouneSession::~KakouneSession()
