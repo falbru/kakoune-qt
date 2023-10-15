@@ -1,10 +1,10 @@
 #include "kakounewidget.hpp"
 
-KakouneWidget::KakouneWidget(QWidget *parent) : QWidget(parent)
+KakouneWidget::KakouneWidget(const QString &session_id, QWidget *parent) : QWidget(parent)
 {
     qDebug("Constructing kakounewidget");
 
-    m_client = new KakouneClient();
+    m_client = new KakouneClient(session_id);
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::refresh);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
 

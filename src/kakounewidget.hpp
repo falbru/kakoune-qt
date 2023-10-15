@@ -8,7 +8,7 @@ class KakouneWidget : public QWidget
 {
     Q_OBJECT
   public:
-    KakouneWidget(QWidget *parent = nullptr);
+    KakouneWidget(const QString &session_id, QWidget *parent = nullptr);
     ~KakouneWidget();
 
   protected:
