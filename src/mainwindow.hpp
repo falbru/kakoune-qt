@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include "drawoptions.hpp"
 #include "kakounesession.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
@@ -16,6 +17,8 @@ class MainWindow : public QMainWindow
 
   private:
     KakouneSession *m_session;
+
+    DrawOptions* m_draw_options;
 };
 
 #endif

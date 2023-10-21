@@ -1,14 +1,14 @@
 #include "kakounewidget.hpp"
 
-KakouneWidget::KakouneWidget(const QString &session_id, QWidget *parent) : QWidget(parent)
+KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions* draw_options, QWidget *parent) : QWidget(parent)
 {
+    m_draw_options = draw_options;
+
     qDebug("Constructing kakounewidget");
 
     m_client = new KakouneClient(session_id);
-    connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::refresh);
+    connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
-
-    setFont("monospace", 11);
 }
 
 KakouneWidget::~KakouneWidget()
@@ -16,19 +16,14 @@ KakouneWidget::~KakouneWidget()
     delete m_client;
 }
 
-void KakouneWidget::refresh()
-{
-    repaint();
+KakouneClient* KakouneWidget::getClient() {
+  return m_client;
 }
 
-void KakouneWidget::setFont(const QString &font_name, int font_size)
+void KakouneWidget::clientRefreshed()
 {
-    m_font = QFont(font_name, font_size);
-
-    QFontMetrics font_metrics(m_font);
-    QRect boundingBoxSingleChar = font_metrics.boundingRect("A");
-    m_cell_size =
-        QSize(boundingBoxSingleChar.width(), boundingBoxSingleChar.height()); // FIXME only works for monospaced fonts
+    repaint();
+    emit refresh();
 }
 
 void KakouneWidget::paintEvent(QPaintEvent *)
@@ -36,33 +31,17 @@ void KakouneWidget::paintEvent(QPaintEvent *)
     qDebug("Rerender kakounewidget");
 
     QPainter painter(this);
-    painter.setFont(m_font);
+    painter.setFont(m_draw_options->getFont());
     painter.fillRect(rect(), m_client->getDefaultFace().getBg().toQColor(m_client->getDefaultFace().getBg()));
 
-    DrawContext context{painter, m_cell_size};
+    DrawContext context{painter, m_draw_options->getCellSize()};
 
     QList<RPC::Line> lines = m_client->getLines();
     for (int i = 0; i < lines.size(); ++i)
     {
-        QPoint position(0, i * m_cell_size.height());
+        QPoint position(0, i * m_draw_options->getCellSize().height());
         lines[i].draw(context, position, m_client->getDefaultFace());
     }
-
-    // draw status
-    RPC::Face status_default_face = m_client->getDefaultFace();
-    painter.fillRect(QRect(0, rect().bottom() - m_cell_size.height(), rect().width(), m_cell_size.height()),
-                     status_default_face.getBg().toQColor(status_default_face.getBg()));
-    m_client->getStatusLine().draw(context, QPoint(0, rect().bottom() - m_cell_size.height()), status_default_face);
-
-    RPC::Line mode_line = m_client->getModeLine();
-    int length = 0;
-    for (auto atom : mode_line.getAtoms())
-    {
-        length += atom.getContents().size();
-    }
-    mode_line.draw(context,
-                   QPoint(rect().width() - m_cell_size.width() * length, rect().bottom() - m_cell_size.height()),
-                   status_default_face);
 }
 
 QString keyCodeToKakouneKey(int key_code, Qt::KeyboardModifiers modifiers)
@@ -156,13 +135,13 @@ void KakouneWidget::keyPressEvent(QKeyEvent *ev)
 
 void KakouneWidget::mouseMoveEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
     m_client->sendMouseMove(localMousePosition.y(), localMousePosition.x());
 }
 
 void KakouneWidget::mousePressEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
 
     QString button;
     switch (ev->button())
@@ -185,7 +164,7 @@ void KakouneWidget::mousePressEvent(QMouseEvent *ev)
 
 void KakouneWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_cell_size.width(), ev->position().y() / m_cell_size.height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
 
     QString button;
     switch (ev->button())
@@ -209,5 +188,5 @@ void KakouneWidget::mouseReleaseEvent(QMouseEvent *ev)
 void KakouneWidget::resizeEvent(QResizeEvent *ev)
 {
     qDebug() << "Resize event";
-    m_client->resize(height() / m_cell_size.height() - 1, width() / m_cell_size.width());
+    m_client->resize(height() / m_draw_options->getCellSize().height(), width() / m_draw_options->getCellSize().width());
 }
