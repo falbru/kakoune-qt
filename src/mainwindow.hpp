@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow
   private:
     KakouneSession *m_session;
 
-    DrawOptions* m_draw_options;
+    DrawOptions *m_draw_options;
 };
 
 #endif

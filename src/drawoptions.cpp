@@ -1,19 +1,21 @@
 #include "drawoptions.hpp"
 
-DrawOptions::DrawOptions() {
-
+DrawOptions::DrawOptions()
+{
 }
 
-DrawOptions::~DrawOptions() {
-
+DrawOptions::~DrawOptions()
+{
 }
 
-QFont DrawOptions::getFont() {
-  return m_font;
+QFont DrawOptions::getFont()
+{
+    return m_font;
 }
 
-QSize DrawOptions::getCellSize() {
-  return m_cell_size;
+QSize DrawOptions::getCellSize()
+{
+    return m_cell_size;
 }
 
 void DrawOptions::setFont(const QString &font_name, int font_size)

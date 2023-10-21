@@ -1,19 +1,22 @@
 #include "statusbar.hpp"
 
-StatusBar::StatusBar(DrawOptions* draw_options, QWidget *parent) {
-  m_draw_options = draw_options;
-  setFixedHeight(m_draw_options->getCellSize().height());
+StatusBar::StatusBar(DrawOptions *draw_options, QWidget *parent)
+{
+    m_draw_options = draw_options;
+    setFixedHeight(m_draw_options->getCellSize().height());
 }
 
-StatusBar::~StatusBar() {
-
+StatusBar::~StatusBar()
+{
 }
 
-void StatusBar::setActiveClient(KakouneClient* client) {
-  m_client = client;
+void StatusBar::setActiveClient(KakouneClient *client)
+{
+    m_client = client;
 }
 
-void StatusBar::paintEvent(QPaintEvent *ev) {
+void StatusBar::paintEvent(QPaintEvent *ev)
+{
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
@@ -30,7 +33,6 @@ void StatusBar::paintEvent(QPaintEvent *ev) {
     {
         length += atom.getContents().size();
     }
-    mode_line.draw(context,
-                   QPoint(rect().width() - m_draw_options->getCellSize().width() * length, 0),
+    mode_line.draw(context, QPoint(rect().width() - m_draw_options->getCellSize().width() * length, 0),
                    status_default_face);
 }

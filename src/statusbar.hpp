@@ -7,19 +7,19 @@
 
 class StatusBar : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
-    StatusBar(DrawOptions* draw_options, QWidget *parent = nullptr);
+    StatusBar(DrawOptions *draw_options, QWidget *parent = nullptr);
     ~StatusBar();
 
-    void setActiveClient(KakouneClient* client);
+    void setActiveClient(KakouneClient *client);
 
   protected:
     void paintEvent(QPaintEvent *ev) override;
 
   private:
     KakouneClient *m_client;
-    DrawOptions* m_draw_options;
+    DrawOptions *m_draw_options;
 };
 
 #endif

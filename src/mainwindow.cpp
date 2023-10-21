@@ -17,9 +17,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(kakwidget, &KakouneWidget::finished, this, &MainWindow::close);
 
     StatusBar *status_bar = new StatusBar(m_draw_options);
-    connect(kakwidget, &KakouneWidget::refresh, this, [=]() {
-      status_bar->repaint();
-    });
+    connect(kakwidget, &KakouneWidget::refresh, this, [=]() { status_bar->repaint(); });
     status_bar->setActiveClient(kakwidget->getClient());
 
     QWidget *root = new QWidget(parent);

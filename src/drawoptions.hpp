@@ -14,6 +14,7 @@ class DrawOptions
     QSize getCellSize();
 
     void setFont(const QString &font_name, int font_size);
+
   private:
     QFont m_font;
     QSize m_cell_size;

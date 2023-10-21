@@ -1,6 +1,6 @@
 #include "kakounewidget.hpp"
 
-KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions* draw_options, QWidget *parent) : QWidget(parent)
+KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent) : QWidget(parent)
 {
     m_draw_options = draw_options;
 
@@ -16,8 +16,9 @@ KakouneWidget::~KakouneWidget()
     delete m_client;
 }
 
-KakouneClient* KakouneWidget::getClient() {
-  return m_client;
+KakouneClient *KakouneWidget::getClient()
+{
+    return m_client;
 }
 
 void KakouneWidget::clientRefreshed()
@@ -135,13 +136,15 @@ void KakouneWidget::keyPressEvent(QKeyEvent *ev)
 
 void KakouneWidget::mouseMoveEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(),
+                              ev->position().y() / m_draw_options->getCellSize().height());
     m_client->sendMouseMove(localMousePosition.y(), localMousePosition.x());
 }
 
 void KakouneWidget::mousePressEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(),
+                              ev->position().y() / m_draw_options->getCellSize().height());
 
     QString button;
     switch (ev->button())
@@ -164,7 +167,8 @@ void KakouneWidget::mousePressEvent(QMouseEvent *ev)
 
 void KakouneWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
-    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(), ev->position().y() / m_draw_options->getCellSize().height());
+    QPoint localMousePosition(ev->position().x() / m_draw_options->getCellSize().width(),
+                              ev->position().y() / m_draw_options->getCellSize().height());
 
     QString button;
     switch (ev->button())
@@ -188,5 +192,6 @@ void KakouneWidget::mouseReleaseEvent(QMouseEvent *ev)
 void KakouneWidget::resizeEvent(QResizeEvent *ev)
 {
     qDebug() << "Resize event";
-    m_client->resize(height() / m_draw_options->getCellSize().height(), width() / m_draw_options->getCellSize().width());
+    m_client->resize(height() / m_draw_options->getCellSize().height(),
+                     width() / m_draw_options->getCellSize().width());
 }

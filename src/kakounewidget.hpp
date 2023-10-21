@@ -9,10 +9,10 @@ class KakouneWidget : public QWidget
 {
     Q_OBJECT
   public:
-    KakouneWidget(const QString &session_id, DrawOptions* draw_options, QWidget *parent = nullptr);
+    KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneWidget();
 
-    KakouneClient* getClient();
+    KakouneClient *getClient();
 
   protected:
     void paintEvent(QPaintEvent *ev) override;
@@ -30,7 +30,7 @@ class KakouneWidget : public QWidget
   private:
     KakouneClient *m_client;
 
-    DrawOptions* m_draw_options;
+    DrawOptions *m_draw_options;
 };
 
 #endif
