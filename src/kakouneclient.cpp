@@ -26,6 +26,15 @@ void KakouneClient::handleRequest(QJsonObject request)
         RPC::RefreshRequest request = RPC::deserializeRefreshRequest(request_params);
         emit refresh();
     }
+    else if (method == "menu_show")
+    {
+        RPC::MenuShowRequest request = RPC::deserializeMenuShowRequest(request_params); 
+        m_menu_items = request.items;
+        m_menu_anchor = request.anchor;
+        m_menu_face = request.selected_item_face;
+        m_menu_face = request.menu_face;
+        m_menu_style = request.style;
+    }
     else
     {
         qDebug() << "Unkown method: " << method;
@@ -117,4 +126,19 @@ RPC::Line KakouneClient::getModeLine()
 RPC::Face KakouneClient::getStatusDefaultFace()
 {
     return m_status_default_face;
+}
+
+QList<RPC::Line> KakouneClient::getMenuItems()
+{
+    return m_menu_items;
+}
+
+RPC::Face KakouneClient::getSelectedItemFace()
+{
+    return m_menu_selected_items_face;
+}
+
+RPC::Face KakouneClient::getMenuFace()
+{
+    return m_menu_face;
 }

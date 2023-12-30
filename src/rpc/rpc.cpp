@@ -3,6 +3,11 @@
 
 namespace RPC
 {
+Coord deserializeCoord(QJsonObject coord_serialized)
+{
+    return Coord{coord_serialized["line"].toInt(), coord_serialized["column"].toInt()};
+}
+
 Face deserializeFace(QJsonObject face_serialized)
 {
     return Face{face_serialized["fg"].toString(), face_serialized["bg"].toString(), QList<Attribute>()};
@@ -45,6 +50,15 @@ DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params)
     return DrawStatusRequest{deserializeLine(request_params.at(0).toArray()),
                              deserializeLine(request_params.at(1).toArray()),
                              deserializeFace(request_params.at(2).toObject())};
+}
+
+MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params)
+{
+    return MenuShowRequest{deserializeLines(request_params.at(0).toArray()),
+                   	   deserializeCoord(request_params.at(1).toObject()),
+                       deserializeFace(request_params.at(2).toObject()),
+                       deserializeFace(request_params.at(3).toObject()),
+                       request_params.at(4).toString() == "prompt" ? MenuStyle::PROMPT : MenuStyle::INLINE };
 }
 
 RefreshRequest deserializeRefreshRequest(QJsonArray request_params)
