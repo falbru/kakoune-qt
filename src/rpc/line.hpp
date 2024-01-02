@@ -14,6 +14,8 @@ class Line
     Line();
     Line(QList<Atom> atoms);
 
+    int contentSize();
+
     QList<Atom> getAtoms();
     void draw(const DrawContext &context, QPoint position, const Face &default_face);
 

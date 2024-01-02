@@ -12,6 +12,7 @@ class Color
     Color(QString value);
 
     QString getValue() const;
+    QColor toQColor();
     QColor toQColor(const Color &default_color);
 
   private:

@@ -2,13 +2,15 @@
 
 KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent) : QWidget(parent)
 {
-    m_draw_options = draw_options;
-
     qDebug("Constructing kakounewidget");
+
+    m_draw_options = draw_options;
 
     m_client = new KakouneClient(session_id);
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
+
+    m_menu = new KakouneMenu(m_client, draw_options, this);
 }
 
 KakouneWidget::~KakouneWidget()

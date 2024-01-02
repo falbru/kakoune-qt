@@ -3,6 +3,7 @@
 
 #include "rpc/face.hpp"
 #include "rpc/line.hpp"
+#include "rpc/rpc.hpp"
 #include <QtWidgets>
 
 class KakouneClient : public QObject
@@ -24,9 +25,17 @@ class KakouneClient : public QObject
     RPC::Line getStatusLine();
     RPC::Line getModeLine();
     RPC::Face getStatusDefaultFace();
+    QList<RPC::Line> getMenuItems();
+    RPC::Coord getMenuAnchor();
+    RPC::Face getSelectedMenuItemFace();
+    RPC::Face getMenuFace();
   signals:
     void refresh();
     void finished();
+
+    void showMenu();
+    void hideMenu();
+    void selectMenuItem(int selected);
 
   private:
     void sendRequest(const QString &method_name, QJsonArray params);
@@ -41,6 +50,12 @@ class KakouneClient : public QObject
     RPC::Line m_status_line;
     RPC::Line m_mode_line;
     RPC::Face m_status_default_face;
+
+    QList<RPC::Line> m_menu_items;
+    RPC::Coord m_menu_anchor;
+    RPC::Face m_menu_selected_item_face;
+    RPC::Face m_menu_face;
+    RPC::MenuStyle m_menu_style;
 };
 
 #endif

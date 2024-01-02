@@ -19,6 +19,7 @@ qt_add_executable(kak-qt
     src/drawoptions.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
+    src/kakounemenu.cpp
     src/kakounewidget.cpp
     src/statusbar.cpp
     src/mainwindow.cpp
