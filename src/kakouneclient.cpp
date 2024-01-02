@@ -28,18 +28,22 @@ void KakouneClient::handleRequest(QJsonObject request)
     }
     else if (method == "menu_show")
     {
-        RPC::MenuShowRequest request = RPC::deserializeMenuShowRequest(request_params); 
+        RPC::MenuShowRequest request = RPC::deserializeMenuShowRequest(request_params);
         m_menu_items = request.items;
         m_menu_anchor = request.anchor;
         m_menu_selected_items_face = request.selected_item_face;
         m_menu_face = request.menu_face;
         m_menu_style = request.style;
         emit showMenu();
-    }else if (method == "menu_hide") {
-      emit hideMenu();
-    }else if (method == "menu_select") {
-      RPC::MenuSelectRequest request = RPC::deserializeMenuSelectRequest(request_params);
-      emit selectMenuItem(request.selected);
+    }
+    else if (method == "menu_hide")
+    {
+        emit hideMenu();
+    }
+    else if (method == "menu_select")
+    {
+        RPC::MenuSelectRequest request = RPC::deserializeMenuSelectRequest(request_params);
+        emit selectMenuItem(request.selected);
     }
     else
     {

@@ -32,8 +32,8 @@ struct DrawStatusRequest
 
 enum MenuStyle
 {
-	PROMPT,
-	INLINE
+    PROMPT,
+    INLINE
 };
 
 struct MenuShowRequest

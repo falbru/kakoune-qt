@@ -54,11 +54,10 @@ DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params)
 
 MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params)
 {
-    return MenuShowRequest{deserializeLines(request_params.at(0).toArray()),
-                   	   deserializeCoord(request_params.at(1).toObject()),
-                       deserializeFace(request_params.at(2).toObject()),
-                       deserializeFace(request_params.at(3).toObject()),
-                       request_params.at(4).toString() == "prompt" ? MenuStyle::PROMPT : MenuStyle::INLINE };
+    return MenuShowRequest{
+        deserializeLines(request_params.at(0).toArray()), deserializeCoord(request_params.at(1).toObject()),
+        deserializeFace(request_params.at(2).toObject()), deserializeFace(request_params.at(3).toObject()),
+        request_params.at(4).toString() == "prompt" ? MenuStyle::PROMPT : MenuStyle::INLINE};
 }
 
 MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params)

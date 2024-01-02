@@ -10,12 +10,14 @@ Line::Line(QList<Atom> atoms) : m_atoms(atoms)
 {
 }
 
-int Line::contentSize() {
-  int content_size = 0;
-  for (Atom atom : m_atoms) {
-    content_size += atom.getContents().size();
-  }
-  return content_size;
+int Line::contentSize()
+{
+    int content_size = 0;
+    for (Atom atom : m_atoms)
+    {
+        content_size += atom.getContents().size();
+    }
+    return content_size;
 }
 
 QList<Atom> Line::getAtoms()

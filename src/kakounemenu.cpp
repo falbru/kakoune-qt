@@ -1,7 +1,9 @@
 #include "kakounemenu.hpp"
 #include "rpc/line.hpp"
 
-KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent) : QWidget(parent), menu_max_height(5) {
+KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
+    : QWidget(parent), menu_max_height(5)
+{
     m_visible = false;
     m_selected_item = -1;
 
@@ -15,35 +17,44 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
     resize(1000, 1000);
 }
 
-KakouneMenu::~KakouneMenu() {
-
+KakouneMenu::~KakouneMenu()
+{
 }
 
-void KakouneMenu::showMenu() {
+void KakouneMenu::showMenu()
+{
     show();
 
     RPC::Coord anchor = m_client->getMenuAnchor();
-    move(anchor.column * m_draw_options->getCellSize().width(), (anchor.line+1) * m_draw_options->getCellSize().height());
+    move(anchor.column * m_draw_options->getCellSize().width(),
+         (anchor.line + 1) * m_draw_options->getCellSize().height());
 
     QList<RPC::Line> items = m_client->getMenuItems();
 
     int max_item_contentsize = 0;
-    for (int i = 0; i < items.length(); i++) {
-      max_item_contentsize = qMax(max_item_contentsize, items[i].contentSize());
+    for (int i = 0; i < items.length(); i++)
+    {
+        max_item_contentsize = qMax(max_item_contentsize, items[i].contentSize());
     }
 
-    resize(max_item_contentsize * m_draw_options->getCellSize().width(), qMin(menu_max_height, items.length()) * m_draw_options->getCellSize().height());
+    resize(max_item_contentsize * m_draw_options->getCellSize().width(),
+           qMin(menu_max_height, items.length()) * m_draw_options->getCellSize().height());
 }
 
-void KakouneMenu::selectItem(int selected) {
-    if (selected >= m_client->getMenuItems().count()) {
-      m_selected_item = -1;
-    }else {
-      m_selected_item = selected;
+void KakouneMenu::selectItem(int selected)
+{
+    if (selected >= m_client->getMenuItems().count())
+    {
+        m_selected_item = -1;
+    }
+    else
+    {
+        m_selected_item = selected;
     }
 }
 
-void KakouneMenu::paintEvent(QPaintEvent *ev) {
+void KakouneMenu::paintEvent(QPaintEvent *ev)
+{
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
@@ -58,6 +69,7 @@ void KakouneMenu::paintEvent(QPaintEvent *ev) {
     {
         int index = scrolling_index_offset + i;
         QPoint position(0, i * m_draw_options->getCellSize().height());
-        items[index].draw(context, position, m_selected_item == index ? m_client->getSelectedItemFace() : m_client->getMenuFace());
+        items[index].draw(context, position,
+                          m_selected_item == index ? m_client->getSelectedItemFace() : m_client->getMenuFace());
     }
 }

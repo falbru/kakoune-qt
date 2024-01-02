@@ -9,7 +9,7 @@ class KakouneMenu : public QWidget
 {
     Q_OBJECT
   public:
-    KakouneMenu(KakouneClient *client, DrawOptions* draw_options, QWidget *parent = nullptr);
+    KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneMenu();
 
   protected:
