@@ -17,10 +17,10 @@ class KakouneMenu : public QWidget
 
   private slots:
     void showMenu();
-    void selectItem(int index);
+    void selectItem(int selected);
 
   private:
-    const int menu_height;
+    const int menu_max_height;
 
     bool m_visible;
     int m_selected_item;

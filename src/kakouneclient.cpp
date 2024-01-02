@@ -38,7 +38,8 @@ void KakouneClient::handleRequest(QJsonObject request)
     }else if (method == "menu_hide") {
       emit hideMenu();
     }else if (method == "menu_select") {
-      emit selectMenuItem(request_params.at(0).toInt());
+      RPC::MenuSelectRequest request = RPC::deserializeMenuSelectRequest(request_params);
+      emit selectMenuItem(request.selected);
     }
     else
     {

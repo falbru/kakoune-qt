@@ -45,6 +45,11 @@ struct MenuShowRequest
     MenuStyle style;
 };
 
+struct MenuSelectRequest
+{
+    int selected;
+};
+
 struct RefreshRequest
 {
     bool force;
@@ -59,6 +64,7 @@ QList<Line> deserializeLines(QJsonObject lines_serialized);
 DrawRequest deserializeDrawRequest(QJsonArray request_params);
 DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
 MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params);
+MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params);
 RefreshRequest deserializeRefreshRequest(QJsonArray request_params);
 
 QByteArray serializeRequest(const QString &method_name, QJsonArray params);

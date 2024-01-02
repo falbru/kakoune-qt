@@ -35,7 +35,7 @@ class KakouneClient : public QObject
 
     void showMenu();
     void hideMenu();
-    void selectMenuItem(int index);
+    void selectMenuItem(int selected);
 
   private:
     void sendRequest(const QString &method_name, QJsonArray params);

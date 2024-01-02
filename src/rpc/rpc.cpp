@@ -61,6 +61,11 @@ MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params)
                        request_params.at(4).toString() == "prompt" ? MenuStyle::PROMPT : MenuStyle::INLINE };
 }
 
+MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params)
+{
+    return MenuSelectRequest{request_params.at(0).toInt()};
+}
+
 RefreshRequest deserializeRefreshRequest(QJsonArray request_params)
 {
     return RefreshRequest{request_params.at(0).toBool()};
