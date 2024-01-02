@@ -12,11 +12,19 @@ class KakouneMenu : public QWidget
     KakouneMenu(KakouneClient *client, DrawOptions* draw_options, QWidget *parent = nullptr);
     ~KakouneMenu();
 
-    KakouneMenu *getClient();
   protected:
     void paintEvent(QPaintEvent *ev) override;
+
+  private slots:
+    void showMenu();
+    void selectItem(int index);
+
   private:
-    bool visible;
+    const int menu_height;
+
+    bool m_visible;
+    int m_selected_item;
+
     KakouneClient *m_client;
     DrawOptions *m_draw_options;
 };

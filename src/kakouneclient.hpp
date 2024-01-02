@@ -26,11 +26,16 @@ class KakouneClient : public QObject
     RPC::Line getModeLine();
     RPC::Face getStatusDefaultFace();
     QList<RPC::Line> getMenuItems();
+    RPC::Coord getMenuAnchor();
     RPC::Face getSelectedItemFace();
     RPC::Face getMenuFace();
   signals:
     void refresh();
     void finished();
+
+    void showMenu();
+    void hideMenu();
+    void selectMenuItem(int index);
 
   private:
     void sendRequest(const QString &method_name, QJsonArray params);

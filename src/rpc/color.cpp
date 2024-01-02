@@ -11,6 +11,11 @@ QString Color::getValue() const
     return m_value;
 }
 
+QColor Color::toQColor()
+{
+    return toQColor(Color("black"));
+}
+
 QColor Color::toQColor(const Color &default_color)
 {
     QString color = m_value;
