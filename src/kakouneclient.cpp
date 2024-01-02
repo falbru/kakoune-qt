@@ -31,7 +31,7 @@ void KakouneClient::handleRequest(QJsonObject request)
         RPC::MenuShowRequest request = RPC::deserializeMenuShowRequest(request_params);
         m_menu_items = request.items;
         m_menu_anchor = request.anchor;
-        m_menu_selected_items_face = request.selected_item_face;
+        m_menu_selected_item_face = request.selected_item_face;
         m_menu_face = request.menu_face;
         m_menu_style = request.style;
         emit showMenu();
@@ -148,9 +148,9 @@ RPC::Coord KakouneClient::getMenuAnchor()
     return m_menu_anchor;
 }
 
-RPC::Face KakouneClient::getSelectedItemFace()
+RPC::Face KakouneClient::getSelectedMenuItemFace()
 {
-    return m_menu_selected_items_face;
+    return m_menu_selected_item_face;
 }
 
 RPC::Face KakouneClient::getMenuFace()

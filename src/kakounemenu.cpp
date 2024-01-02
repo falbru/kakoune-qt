@@ -70,6 +70,6 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
         int index = scrolling_index_offset + i;
         QPoint position(0, i * m_draw_options->getCellSize().height());
         items[index].draw(context, position,
-                          m_selected_item == index ? m_client->getSelectedItemFace() : m_client->getMenuFace());
+                          m_selected_item == index ? m_client->getSelectedMenuItemFace() : m_client->getMenuFace());
     }
 }

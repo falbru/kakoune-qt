@@ -27,7 +27,7 @@ class KakouneClient : public QObject
     RPC::Face getStatusDefaultFace();
     QList<RPC::Line> getMenuItems();
     RPC::Coord getMenuAnchor();
-    RPC::Face getSelectedItemFace();
+    RPC::Face getSelectedMenuItemFace();
     RPC::Face getMenuFace();
   signals:
     void refresh();
@@ -53,7 +53,7 @@ class KakouneClient : public QObject
 
     QList<RPC::Line> m_menu_items;
     RPC::Coord m_menu_anchor;
-    RPC::Face m_menu_selected_items_face;
+    RPC::Face m_menu_selected_item_face;
     RPC::Face m_menu_face;
     RPC::MenuStyle m_menu_style;
 };
