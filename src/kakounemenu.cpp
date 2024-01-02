@@ -2,7 +2,8 @@
 #include "rpc/line.hpp"
 
 KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
-    : QWidget(parent), m_visible(false), m_selected_item(-1), menu_max_height(5), m_client(client), m_draw_options(draw_options)
+    : QWidget(parent), m_visible(false), m_selected_item(-1), menu_max_height(5), m_client(client),
+      m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showMenu, this, &KakouneMenu::showMenu);
     connect(m_client, &KakouneClient::hideMenu, this, &KakouneMenu::hide);
