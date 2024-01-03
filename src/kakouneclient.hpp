@@ -29,6 +29,7 @@ class KakouneClient : public QObject
     RPC::Coord getMenuAnchor();
     RPC::Face getSelectedMenuItemFace();
     RPC::Face getMenuFace();
+    RPC::MenuStyle getMenuStyle();
   signals:
     void refresh();
     void finished();

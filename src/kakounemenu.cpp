@@ -2,28 +2,21 @@
 #include "rpc/line.hpp"
 
 KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
-    : QWidget(parent), m_visible(false), m_selected_item(-1), menu_max_height(5), m_client(client),
-      m_draw_options(draw_options)
+    : QWidget(parent), m_selected_item(-1), max_item_grid_columns(10), m_client(client), m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showMenu, this, &KakouneMenu::showMenu);
     connect(m_client, &KakouneClient::hideMenu, this, &KakouneMenu::hide);
     connect(m_client, &KakouneClient::selectMenuItem, this, &KakouneMenu::selectItem);
 
-    resize(1000, 1000);
+    hide();
 }
 
 KakouneMenu::~KakouneMenu()
 {
 }
 
-void KakouneMenu::showMenu()
+int KakouneMenu::getItemWidth()
 {
-    show();
-
-    RPC::Coord anchor = m_client->getMenuAnchor();
-    move(anchor.column * m_draw_options->getCellSize().width(),
-         (anchor.line + 1) * m_draw_options->getCellSize().height());
-
     QList<RPC::Line> items = m_client->getMenuItems();
 
     int max_item_contentsize = 0;
@@ -32,8 +25,52 @@ void KakouneMenu::showMenu()
         max_item_contentsize = qMax(max_item_contentsize, items[i].contentSize());
     }
 
-    resize(max_item_contentsize * m_draw_options->getCellSize().width(),
-           qMin(menu_max_height, items.length()) * m_draw_options->getCellSize().height());
+    return max_item_contentsize * m_draw_options->getCellSize().width();
+}
+
+void KakouneMenu::applyInlineStyle()
+{
+    QList<RPC::Line> items = m_client->getMenuItems();
+
+    m_item_grid_rows = 1;
+    m_item_grid_columns = qMin(items.size(), max_item_grid_columns);
+
+    RPC::Coord anchor = m_client->getMenuAnchor();
+    move(anchor.column * m_draw_options->getCellSize().width(),
+         (anchor.line + 1) * m_draw_options->getCellSize().height());
+
+    int item_width = getItemWidth();
+    int item_grid_height = qMin(max_item_grid_columns, items.size()) * m_draw_options->getCellSize().height();
+    resize(item_width, item_grid_height);
+}
+
+void KakouneMenu::applyPromptStyle()
+{
+    QList<RPC::Line> items = m_client->getMenuItems();
+
+    int item_width = getItemWidth();
+
+    m_item_grid_rows = parentWidget()->width() / item_width;
+    m_item_grid_columns = qMin(items.size() / m_item_grid_rows + 1, max_item_grid_columns);
+
+    int item_grid_height = m_item_grid_columns * m_draw_options->getCellSize().height();
+
+    move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
+    resize(parentWidget()->width(), item_grid_height);
+}
+
+void KakouneMenu::showMenu()
+{
+    show();
+
+    if (m_client->getMenuStyle() == RPC::MenuStyle::INLINE)
+    {
+        applyInlineStyle();
+    }
+    else
+    {
+        applyPromptStyle();
+    }
 }
 
 void KakouneMenu::selectItem(int selected)
@@ -59,12 +96,27 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
 
     QList<RPC::Line> items = m_client->getMenuItems();
 
-    int scrolling_index_offset = (m_selected_item / menu_max_height) * menu_max_height;
-    for (int i = 0; i < items.size() - scrolling_index_offset && i < menu_max_height; ++i)
+    int item_grid_capacity = m_item_grid_rows * m_item_grid_columns;
+    int scrolling_index_offset =
+        m_selected_item == -1 ? 0 : (m_selected_item / item_grid_capacity) * item_grid_capacity;
+
+    for (int i = 0; i < qMin(items.size() - scrolling_index_offset, item_grid_capacity); ++i)
     {
         int index = scrolling_index_offset + i;
-        QPoint position(0, i * m_draw_options->getCellSize().height());
-        items[index].draw(context, position,
-                          m_selected_item == index ? m_client->getSelectedMenuItemFace() : m_client->getMenuFace());
+        int item_width = width() / m_item_grid_rows;
+        int item_height = m_draw_options->getCellSize().height();
+
+        QPoint position(i / m_item_grid_columns * item_width, (i % m_item_grid_columns) * item_height);
+
+        if (m_selected_item == index)
+        {
+            painter.fillRect(position.x(), position.y(), item_width, item_height,
+                             m_client->getSelectedMenuItemFace().getBg().toQColor());
+            items[index].draw(context, position, m_client->getSelectedMenuItemFace());
+        }
+        else
+        {
+            items[index].draw(context, position, m_client->getMenuFace());
+        }
     }
 }
