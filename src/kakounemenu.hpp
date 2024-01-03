@@ -20,13 +20,18 @@ class KakouneMenu : public QWidget
     void selectItem(int selected);
 
   private:
-    const int menu_max_height;
-
-    bool m_visible;
     int m_selected_item;
+
+    const int max_item_grid_height;
+
+    int item_grid_width;
+    int item_grid_height;
 
     KakouneClient *m_client;
     DrawOptions *m_draw_options;
+
+    void setupInlineMenu();
+    void setupPromptMenu();
 };
 
 #endif
