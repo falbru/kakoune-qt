@@ -22,16 +22,18 @@ class KakouneMenu : public QWidget
   private:
     int m_selected_item;
 
-    const int max_item_grid_height;
+    const int max_item_grid_columns;
 
-    int item_grid_width;
-    int item_grid_height;
+    int item_grid_rows;
+    int item_grid_columns;
 
     KakouneClient *m_client;
     DrawOptions *m_draw_options;
 
-    void setupInlineMenu();
-    void setupPromptMenu();
+    void applyInlineStyle();
+    void applyPromptStyle();
+
+    int getItemWidth();
 };
 
 #endif
