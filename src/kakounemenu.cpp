@@ -32,8 +32,8 @@ void KakouneMenu::applyInlineStyle()
 {
     QList<RPC::Line> items = m_client->getMenuItems();
 
-    item_grid_rows = 1;
-    item_grid_columns = qMin(items.size(), max_item_grid_columns);
+    m_item_grid_rows = 1;
+    m_item_grid_columns = qMin(items.size(), max_item_grid_columns);
 
     RPC::Coord anchor = m_client->getMenuAnchor();
     move(anchor.column * m_draw_options->getCellSize().width(),
@@ -50,10 +50,10 @@ void KakouneMenu::applyPromptStyle()
 
     int item_width = getItemWidth();
 
-    item_grid_rows = parentWidget()->width() / item_width;
-    item_grid_columns = qMin(items.size() / item_grid_rows + 1, max_item_grid_columns);
+    m_item_grid_rows = parentWidget()->width() / item_width;
+    m_item_grid_columns = qMin(items.size() / m_item_grid_rows + 1, max_item_grid_columns);
 
-    int item_grid_height = item_grid_columns * m_draw_options->getCellSize().height();
+    int item_grid_height = m_item_grid_columns * m_draw_options->getCellSize().height();
 
     move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
     resize(parentWidget()->width(), item_grid_height);
@@ -96,17 +96,17 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
 
     QList<RPC::Line> items = m_client->getMenuItems();
 
-    int item_grid_capacity = item_grid_rows * item_grid_columns;
+    int item_grid_capacity = m_item_grid_rows * m_item_grid_columns;
     int scrolling_index_offset =
         m_selected_item == -1 ? 0 : (m_selected_item / item_grid_capacity) * item_grid_capacity;
 
     for (int i = 0; i < qMin(items.size() - scrolling_index_offset, item_grid_capacity); ++i)
     {
         int index = scrolling_index_offset + i;
-        int item_width = width() / item_grid_rows;
+        int item_width = width() / m_item_grid_rows;
         int item_height = m_draw_options->getCellSize().height();
 
-        QPoint position(i / item_grid_columns * item_width, (i % item_grid_columns) * item_height);
+        QPoint position(i / m_item_grid_columns * item_width, (i % m_item_grid_columns) * item_height);
 
         if (m_selected_item == index)
         {

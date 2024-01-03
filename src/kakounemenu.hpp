@@ -24,8 +24,8 @@ class KakouneMenu : public QWidget
 
     const int max_item_grid_columns;
 
-    int item_grid_rows;
-    int item_grid_columns;
+    int m_item_grid_rows;
+    int m_item_grid_columns;
 
     KakouneClient *m_client;
     DrawOptions *m_draw_options;
