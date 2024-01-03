@@ -35,12 +35,22 @@ void KakouneMenu::applyInlineStyle()
     m_item_grid_rows = 1;
     m_item_grid_columns = qMin(items.size(), max_item_grid_columns);
 
-    RPC::Coord anchor = m_client->getMenuAnchor();
-    move(anchor.column * m_draw_options->getCellSize().width(),
-         (anchor.line + 1) * m_draw_options->getCellSize().height());
-
     int item_width = getItemWidth();
     int item_grid_height = qMin(max_item_grid_columns, items.size()) * m_draw_options->getCellSize().height();
+
+    RPC::Coord anchor = m_client->getMenuAnchor();
+    QPoint anchor_position(anchor.column * m_draw_options->getCellSize().width(),
+         anchor.line * m_draw_options->getCellSize().height());
+    QPoint menu_position(anchor_position.x(), anchor_position.y() + m_draw_options->getCellSize().height());
+
+    if (menu_position.x() + item_width > parentWidget()->width()) {
+      menu_position.setX(parentWidget()->width() - item_width);
+    }
+    if (menu_position.y() + item_grid_height > parentWidget()->height()) {
+      menu_position.setY(anchor_position.y() - item_grid_height);
+    }
+
+    move(menu_position);
     resize(item_width, item_grid_height);
 }
 
