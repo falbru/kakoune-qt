@@ -160,5 +160,5 @@ RPC::Face KakouneClient::getMenuFace()
 
 RPC::MenuStyle KakouneClient::getMenuStyle()
 {
-  return m_menu_style;
+    return m_menu_style;
 }

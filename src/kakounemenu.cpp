@@ -2,8 +2,7 @@
 #include "rpc/line.hpp"
 
 KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
-    : QWidget(parent), m_selected_item(-1), max_item_grid_columns(10), m_client(client),
-      m_draw_options(draw_options)
+    : QWidget(parent), m_selected_item(-1), max_item_grid_columns(10), m_client(client), m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showMenu, this, &KakouneMenu::showMenu);
     connect(m_client, &KakouneClient::hideMenu, this, &KakouneMenu::hide);
@@ -16,7 +15,8 @@ KakouneMenu::~KakouneMenu()
 {
 }
 
-int KakouneMenu::getItemWidth() {
+int KakouneMenu::getItemWidth()
+{
     QList<RPC::Line> items = m_client->getMenuItems();
 
     int max_item_contentsize = 0;
@@ -28,7 +28,8 @@ int KakouneMenu::getItemWidth() {
     return max_item_contentsize * m_draw_options->getCellSize().width();
 }
 
-void KakouneMenu::applyInlineStyle() {
+void KakouneMenu::applyInlineStyle()
+{
     QList<RPC::Line> items = m_client->getMenuItems();
 
     item_grid_rows = 1;
@@ -43,28 +44,32 @@ void KakouneMenu::applyInlineStyle() {
     resize(item_width, item_grid_height);
 }
 
-void KakouneMenu::applyPromptStyle() {
-  QList<RPC::Line> items = m_client->getMenuItems();
-  
-  int item_width = getItemWidth();
+void KakouneMenu::applyPromptStyle()
+{
+    QList<RPC::Line> items = m_client->getMenuItems();
 
-  item_grid_rows = parentWidget()->width() / item_width;
-  item_grid_columns = qMin(items.size() / item_grid_rows + 1, max_item_grid_columns);
+    int item_width = getItemWidth();
 
-  int item_grid_height = item_grid_columns * m_draw_options->getCellSize().height();
+    item_grid_rows = parentWidget()->width() / item_width;
+    item_grid_columns = qMin(items.size() / item_grid_rows + 1, max_item_grid_columns);
 
-  move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
-  resize(parentWidget()->width(), item_grid_height);
+    int item_grid_height = item_grid_columns * m_draw_options->getCellSize().height();
+
+    move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
+    resize(parentWidget()->width(), item_grid_height);
 }
 
 void KakouneMenu::showMenu()
 {
     show();
 
-    if (m_client->getMenuStyle() == RPC::MenuStyle::INLINE) {
-      applyInlineStyle();
-    }else {
-      applyPromptStyle();
+    if (m_client->getMenuStyle() == RPC::MenuStyle::INLINE)
+    {
+        applyInlineStyle();
+    }
+    else
+    {
+        applyPromptStyle();
     }
 }
 
@@ -92,7 +97,8 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
     QList<RPC::Line> items = m_client->getMenuItems();
 
     int item_grid_capacity = item_grid_rows * item_grid_columns;
-    int scrolling_index_offset = m_selected_item == -1 ? 0 : (m_selected_item / item_grid_capacity) * item_grid_capacity;
+    int scrolling_index_offset =
+        m_selected_item == -1 ? 0 : (m_selected_item / item_grid_capacity) * item_grid_capacity;
 
     for (int i = 0; i < qMin(items.size() - scrolling_index_offset, item_grid_capacity); ++i)
     {
@@ -102,11 +108,15 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
 
         QPoint position(i / item_grid_columns * item_width, (i % item_grid_columns) * item_height);
 
-        if (m_selected_item == index) {
-          painter.fillRect(position.x(), position.y(), item_width, item_height, m_client->getSelectedMenuItemFace().getBg().toQColor());
-          items[index].draw(context, position, m_client->getSelectedMenuItemFace());
-        }else {
-          items[index].draw(context, position, m_client->getMenuFace());
+        if (m_selected_item == index)
+        {
+            painter.fillRect(position.x(), position.y(), item_width, item_height,
+                             m_client->getSelectedMenuItemFace().getBg().toQColor());
+            items[index].draw(context, position, m_client->getSelectedMenuItemFace());
+        }
+        else
+        {
+            items[index].draw(context, position, m_client->getMenuFace());
         }
     }
 }
