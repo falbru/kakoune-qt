@@ -11,6 +11,7 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
 
     m_menu = new KakouneMenu(m_client, draw_options, this);
+    m_info_box = new KakouneInfoBox(m_client, m_menu, draw_options, this);
 }
 
 KakouneWidget::~KakouneWidget()

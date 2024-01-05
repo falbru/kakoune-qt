@@ -65,6 +65,42 @@ MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params)
     return MenuSelectRequest{request_params.at(0).toInt()};
 }
 
+InfoStyle convertToInfoStyle(QString style)
+{
+    if (style == "prompt") {
+      return InfoStyle::PROMPT;
+    }
+    if (style == "inline") {
+      return InfoStyle::INLINE;
+    }
+    if (style == "inlineAbove") {
+      return InfoStyle::INLINE_ABOVE;
+    }
+    if (style == "inlineBelow") {
+      return InfoStyle::INLINE_BELOW;
+    }
+    if (style == "menuDoc") {
+      return InfoStyle::MENU_DOC;
+    }
+    if (style == "modal") {
+      return InfoStyle::MODAL;
+    }
+
+    qDebug() << "Unknown InfoStyle: " << style;
+    return InfoStyle::PROMPT;
+}
+ 
+
+InfoShowRequest deserializeInfoShowRequest(QJsonArray request_params)
+{
+    return InfoShowRequest{deserializeLine(request_params.at(0).toArray()),
+                          deserializeLines(request_params.at(1).toArray()),
+                          deserializeCoord(request_params.at(2).toObject()),
+                          deserializeFace(request_params.at(3).toObject()),
+                          convertToInfoStyle(request_params.at(4).toString()),
+                          };
+}
+
 RefreshRequest deserializeRefreshRequest(QJsonArray request_params)
 {
     return RefreshRequest{request_params.at(0).toBool()};
