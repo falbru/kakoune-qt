@@ -17,7 +17,7 @@ class KakouneInfoBox : public QWidget
 {
     Q_OBJECT
   public:
-    KakouneInfoBox(KakouneClient *client, KakouneMenu* menu, DrawOptions *draw_options, QWidget *parent = nullptr);
+    KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneInfoBox();
 
   protected:

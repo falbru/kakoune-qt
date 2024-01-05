@@ -57,7 +57,7 @@ void KakouneClient::handleRequest(QJsonObject request)
     }
     else if (method == "info_hide")
     {
-      emit hideInfoBox();
+        emit hideInfoBox();
     }
     else
     {
@@ -177,20 +177,24 @@ RPC::MenuStyle KakouneClient::getMenuStyle()
     return m_menu_style;
 }
 
-RPC::Line KakouneClient::getInfoTitle() {
-  return m_info_title;
+RPC::Line KakouneClient::getInfoTitle()
+{
+    return m_info_title;
 }
 
-QList<RPC::Line> KakouneClient::getInfoContent() {
-  return m_info_content;
+QList<RPC::Line> KakouneClient::getInfoContent()
+{
+    return m_info_content;
 }
 
-RPC::Coord KakouneClient::getInfoAnchor() {
-  return m_info_anchor;
+RPC::Coord KakouneClient::getInfoAnchor()
+{
+    return m_info_anchor;
 }
 
-RPC::Face KakouneClient::getInfoFace() {
-  return m_info_face;
+RPC::Face KakouneClient::getInfoFace()
+{
+    return m_info_face;
 }
 
 RPC::InfoStyle KakouneClient::getInfoStyle()
