@@ -3,6 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
+#include "kakouneinfobox.hpp"
 #include "kakounemenu.hpp"
 #include <QtWidgets>
 
@@ -32,6 +33,7 @@ class KakouneWidget : public QWidget
     KakouneClient *m_client;
 
     KakouneMenu *m_menu;
+    KakouneInfoBox *m_info_box;
 
     DrawOptions *m_draw_options;
 };

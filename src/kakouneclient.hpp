@@ -30,6 +30,11 @@ class KakouneClient : public QObject
     RPC::Face getSelectedMenuItemFace();
     RPC::Face getMenuFace();
     RPC::MenuStyle getMenuStyle();
+    QList<RPC::Line> getInfoContent();
+    RPC::Line getInfoTitle();
+    RPC::Coord getInfoAnchor();
+    RPC::Face getInfoFace();
+    RPC::InfoStyle getInfoStyle();
   signals:
     void refresh();
     void finished();
@@ -37,6 +42,9 @@ class KakouneClient : public QObject
     void showMenu();
     void hideMenu();
     void selectMenuItem(int selected);
+
+    void showInfoBox();
+    void hideInfoBox();
 
   private:
     void sendRequest(const QString &method_name, QJsonArray params);
@@ -57,6 +65,12 @@ class KakouneClient : public QObject
     RPC::Face m_menu_selected_item_face;
     RPC::Face m_menu_face;
     RPC::MenuStyle m_menu_style;
+
+    RPC::Line m_info_title;
+    QList<RPC::Line> m_info_content;
+    RPC::Coord m_info_anchor;
+    RPC::Face m_info_face;
+    RPC::InfoStyle m_info_style;
 };
 
 #endif

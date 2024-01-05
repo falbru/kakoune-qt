@@ -45,6 +45,20 @@ void KakouneClient::handleRequest(QJsonObject request)
         RPC::MenuSelectRequest request = RPC::deserializeMenuSelectRequest(request_params);
         emit selectMenuItem(request.selected);
     }
+    else if (method == "info_show")
+    {
+        RPC::InfoShowRequest request = RPC::deserializeInfoShowRequest(request_params);
+        m_info_title = request.title;
+        m_info_content = request.content;
+        m_info_anchor = request.anchor;
+        m_info_face = request.face;
+        m_info_style = request.style;
+        emit showInfoBox();
+    }
+    else if (method == "info_hide")
+    {
+        emit hideInfoBox();
+    }
     else
     {
         qDebug() << "Unkown method: " << method;
@@ -161,4 +175,29 @@ RPC::Face KakouneClient::getMenuFace()
 RPC::MenuStyle KakouneClient::getMenuStyle()
 {
     return m_menu_style;
+}
+
+RPC::Line KakouneClient::getInfoTitle()
+{
+    return m_info_title;
+}
+
+QList<RPC::Line> KakouneClient::getInfoContent()
+{
+    return m_info_content;
+}
+
+RPC::Coord KakouneClient::getInfoAnchor()
+{
+    return m_info_anchor;
+}
+
+RPC::Face KakouneClient::getInfoFace()
+{
+    return m_info_face;
+}
+
+RPC::InfoStyle KakouneClient::getInfoStyle()
+{
+    return m_info_style;
 }
