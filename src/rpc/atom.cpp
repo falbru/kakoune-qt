@@ -16,11 +16,11 @@ void Atom::draw(const DrawContext &context, const QPoint &position, const Face &
     QColor fg = m_face.getFg().toQColor(default_face.getFg());
     QColor bg = m_face.getBg().toQColor(default_face.getBg());
 
-    int inf = 999;
+    int width = context.cell_size.width() * m_contents.size();
+    int height = context.cell_size.height();
 
     context.painter.setPen(fg);
-    context.painter.fillRect(position.x(), position.y(), context.cell_size.width() * m_contents.size(),
-                             context.cell_size.height(), bg);
-    context.painter.drawText(QRect(position.x(), position.y(), inf, inf), Qt::AlignTop, m_contents);
+    context.painter.fillRect(position.x(), position.y(), width, height, bg);
+    context.painter.drawText(QRect(position.x(), position.y(), width, height), Qt::AlignTop, m_contents);
 }
 } // namespace RPC
