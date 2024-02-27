@@ -15,6 +15,7 @@ class Atom
     void draw(const DrawContext &context, const QPoint &position, const Face &default_face);
 
     QString getContents();
+    Face getFace();
 
   private:
     Face m_face;

@@ -29,6 +29,27 @@ void KakouneInfoBox::resizeToFitContent()
     resize(width, height);
 }
 
+void KakouneInfoBox::resizeToFitParent()
+{
+    QList<RPC::Line> lines = m_client->getInfoContent();
+    int width = this->width();
+    int height = this->height();
+
+    if (width > parentWidget()->width()) {
+      width = parentWidget()->width();
+      int cutoff_index = width / (float)m_draw_options->getCellSize().width();
+      int wrapped_lines_count = 0;
+
+      for (RPC::Line line : lines) {
+        wrapped_lines_count += line.contentSize() / cutoff_index;
+      }
+
+      height += wrapped_lines_count * m_draw_options->getCellSize().height(); 
+    }
+
+    resize(width, height);
+}
+
 void KakouneInfoBox::applyPromptStyle()
 {
     int x = parentWidget()->width() - width();
@@ -103,6 +124,7 @@ void KakouneInfoBox::showInfoBox()
     RPC::InfoStyle style = m_client->getInfoStyle();
 
     resizeToFitContent();
+    resizeToFitParent();
 
     switch (style)
     {
@@ -150,9 +172,21 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
     }
 
     QList<RPC::Line> lines = m_client->getInfoContent();
+
+    QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
     for (int i = 0; i < lines.size(); ++i)
     {
-        QPoint position(0, (title.contentSize() > 0 ? (i + 1) : i) * m_draw_options->getCellSize().height());
-        lines[i].draw(context, position, m_client->getInfoFace());
+        RPC::Line line = lines[i];
+        line.draw(context, position, m_client->getInfoFace());
+        position.setY(position.y() + m_draw_options->getCellSize().height());
+
+        while (line.contentSize() * m_draw_options->getCellSize().width() > width()) {
+            int cutoff_index = width() / (float)m_draw_options->getCellSize().width();
+            RPC::Line cutoff = line.slice(cutoff_index);
+            cutoff.draw(context, position, m_client->getInfoFace());
+            position.setY(position.y() + m_draw_options->getCellSize().height());
+
+            line = cutoff;
+        }
     }
 }
