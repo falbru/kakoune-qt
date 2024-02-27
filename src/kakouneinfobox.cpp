@@ -54,15 +54,14 @@ void KakouneInfoBox::resizeToFitParent()
 void KakouneInfoBox::applyPromptStyle()
 {
     int x = parentWidget()->width() - width();
+    int y = parentWidget()->height() - height();
 
     if (m_menu->isVisible() && m_client->getMenuStyle() == RPC::MenuStyle::PROMPT)
     {
-        move(x, m_menu->y() - height());
+        y = m_menu->y() - height();
     }
-    else
-    {
-        move(x, parentWidget()->height() - height());
-    }
+
+    move(qMax(x, 0), qMax(0, y));
 }
 
 void KakouneInfoBox::applyInlineStyle(InlineType type)
@@ -90,7 +89,7 @@ void KakouneInfoBox::applyInlineStyle(InlineType type)
         info_box_position.setY(above_y);
     }
 
-    move(info_box_position);
+    move(qMax(0, info_box_position.x()), qMax(0, info_box_position.y()));
 }
 
 void KakouneInfoBox::applyMenuDocStyle()
@@ -112,20 +111,25 @@ void KakouneInfoBox::applyMenuDocStyle()
         info_box_position.setY(parentWidget()->height() - height());
     }
 
-    move(info_box_position);
+    move(qMax(0, info_box_position.x()), qMax(0, info_box_position.y()));
 }
 
 void KakouneInfoBox::applyModalStyle()
 {
-    move((parentWidget()->width() - width()) / 2, (parentWidget()->height() - height()) / 2);
+    int x = (parentWidget()->width() - width()) / 2;
+    int y = (parentWidget()->height() - height()) / 2;
+    move(qMax(x, 0), qMax(0, y));
 }
 
 void KakouneInfoBox::showInfoBox()
 {
     RPC::InfoStyle style = m_client->getInfoStyle();
 
+    qDebug("Fit content");
     resizeToFitContent();
+    qDebug("Fit parent");
     resizeToFitParent();
+    qDebug("set style");
 
     switch (style)
     {
@@ -158,6 +162,7 @@ KakouneInfoBox::~KakouneInfoBox()
 
 void KakouneInfoBox::paintEvent(QPaintEvent *ev)
 {
+    qDebug("Draw infobox");
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
@@ -174,7 +179,7 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
 
     QList<RPC::Line> lines = m_client->getInfoContent();
 
-    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width(); 
+    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width();
     QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
     for (int i = 0; i < lines.size(); ++i)
     {
@@ -194,18 +199,5 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
 
           line = cutoff;
         }
-
-
-        // while (cutoff.contentSize() > 0) {
-        //     cutoff.draw(context, position, m_client->getInfoFace());
-        //     position.setY(position.y() + m_draw_options->getCellSize().height());
-
-        //     if (cutoff.contentSize() > max_characters_per_line) {
-        //       cutoff = cutoff.slice(max_characters_per_line);
-        //     }else {
-        //       break;
-        //     }
-
-        // }
     }
 }
