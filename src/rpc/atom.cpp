@@ -21,6 +21,11 @@ void Atom::draw(const DrawContext &context, const QPoint &position, const Face &
 
     context.painter.setPen(fg);
     context.painter.fillRect(position.x(), position.y(), width, height, bg);
-    context.painter.drawText(QRect(position.x(), position.y(), width, height), Qt::AlignTop, m_contents);
+
+    for (int i = 0; i < m_contents.size(); i++)
+    {
+        context.painter.drawText(QRect(position.x() + i * context.cell_size.width(), position.y(), width, height),
+                                 Qt::AlignTop, m_contents.at(i));
+    }
 }
 } // namespace RPC
