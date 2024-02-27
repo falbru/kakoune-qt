@@ -1,5 +1,4 @@
 #include "line.hpp"
-#include <qdebug.h>
 
 namespace RPC
 {
@@ -42,49 +41,37 @@ Line Line::slice(int start) {
 Line Line::slice(int start, int end) {
   QList<Atom> atoms;
 
-  auto it = m_atoms.begin();
-  int index = 0;
+  int content_index = 0;
+  auto atom_it = m_atoms.begin();
 
-  while (it != m_atoms.end() && index < start) {
-    int atom_size = it->getContents().size(); 
-    if (index + atom_size < start) {
-      index += atom_size;
-      it++;
-    }else {
-      if (index + atom_size > start) {
-        QString substring = "";
-        for (int i = start - index; i < atom_size; i++) {
-          substring.append(it->getContents()[i]);
-        }
-        atoms.append(Atom(it->getFace(), substring));
-      }
-      index = start;
-      it++;
+  while (atom_it != m_atoms.end() && content_index < start) {
+    int atom_size = atom_it->getContents().size(); 
+
+    int next_index = content_index + atom_size; 
+    if (next_index > start) {
+      QString substring = atom_it->getContents().mid(start - content_index);
+      atoms.append(Atom(atom_it->getFace(), substring));
     }
+
+    content_index = qMin(next_index, start);
+    atom_it++;
   }
 
-  while(it != m_atoms.end() && index < end) {
-    int atom_size = it->getContents().size(); 
-    if (index + atom_size < end) {
-      index += atom_size;
-      atoms.append(*it);
-      it++;
-    }else {
-      if (index + atom_size > end) {
-        QString substring = "";
-        for (int i = end - index; i < atom_size; i++) {
-          substring.append(it->getContents()[i]);
-        }
-        atoms.append(Atom(it->getFace(), substring));
-      }
-      index = end;
+  while(atom_it != m_atoms.end() && content_index < end) {
+    int atom_size = atom_it->getContents().size(); 
+
+    int next_index = content_index + atom_size; 
+    if (next_index > end) {
+      QString substring = atom_it->getContents().mid(0, end - content_index);
+      atoms.append(Atom(atom_it->getFace(), substring));
+    }else if (next_index < end) {
+      atoms.append(*atom_it);
     }
+
+    content_index = qMin(next_index, end);
+    atom_it++;
   }
   return Line(atoms);
-}
-
-Line Line::concat(Line a, Line b){
-  return Line(a.getAtoms() + b.getAtoms());
 }
 
 } // namespace RPC

@@ -37,6 +37,7 @@ void KakouneInfoBox::resizeToFitParent()
 
     if (width > parentWidget()->width()) {
       width = parentWidget()->width();
+
       int cutoff_index = width / (float)m_draw_options->getCellSize().width();
       int wrapped_lines_count = 0;
 
@@ -173,20 +174,38 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
 
     QList<RPC::Line> lines = m_client->getInfoContent();
 
+    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width(); 
     QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
     for (int i = 0; i < lines.size(); ++i)
     {
         RPC::Line line = lines[i];
-        line.draw(context, position, m_client->getInfoFace());
-        position.setY(position.y() + m_draw_options->getCellSize().height());
+        RPC::Line cutoff;
 
-        while (line.contentSize() * m_draw_options->getCellSize().width() > width()) {
-            int cutoff_index = width() / (float)m_draw_options->getCellSize().width();
-            RPC::Line cutoff = line.slice(cutoff_index);
-            cutoff.draw(context, position, m_client->getInfoFace());
-            position.setY(position.y() + m_draw_options->getCellSize().height());
+        while(line.contentSize() > 0) {
+          if (line.contentSize() > max_characters_per_line) {
+            cutoff = line.slice(max_characters_per_line);
+            line = line.slice(0, max_characters_per_line);
+          }else {
+            cutoff = RPC::Line();
+          }
 
-            line = cutoff;
+          line.draw(context, position, m_client->getInfoFace());
+          position.setY(position.y() + m_draw_options->getCellSize().height());
+
+          line = cutoff;
         }
+
+
+        // while (cutoff.contentSize() > 0) {
+        //     cutoff.draw(context, position, m_client->getInfoFace());
+        //     position.setY(position.y() + m_draw_options->getCellSize().height());
+
+        //     if (cutoff.contentSize() > max_characters_per_line) {
+        //       cutoff = cutoff.slice(max_characters_per_line);
+        //     }else {
+        //       break;
+        //     }
+
+        // }
     }
 }

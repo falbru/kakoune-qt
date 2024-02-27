@@ -22,8 +22,6 @@ class Line
     Line slice(int start);
     Line slice(int start, int end);
 
-    Line static concat(Line a, Line b);
-
   private:
     QList<Atom> m_atoms;
 };
