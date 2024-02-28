@@ -11,7 +11,8 @@ QString Atom::getContents()
     return m_contents;
 }
 
-Face Atom::getFace() {
+Face Atom::getFace()
+{
     return m_face;
 }
 

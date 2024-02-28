@@ -35,17 +35,19 @@ void KakouneInfoBox::resizeToFitParent()
     int width = this->width();
     int height = this->height();
 
-    if (width > parentWidget()->width()) {
-      width = parentWidget()->width();
+    if (width > parentWidget()->width())
+    {
+        width = parentWidget()->width();
 
-      int cutoff_index = width / (float)m_draw_options->getCellSize().width();
-      int wrapped_lines_count = 0;
+        int cutoff_index = width / (float)m_draw_options->getCellSize().width();
+        int wrapped_lines_count = 0;
 
-      for (RPC::Line line : lines) {
-        wrapped_lines_count += line.contentSize() / cutoff_index;
-      }
+        for (RPC::Line line : lines)
+        {
+            wrapped_lines_count += line.contentSize() / cutoff_index;
+        }
 
-      height += wrapped_lines_count * m_draw_options->getCellSize().height(); 
+        height += wrapped_lines_count * m_draw_options->getCellSize().height();
     }
 
     resize(width, height);
@@ -186,18 +188,22 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
         RPC::Line line = lines[i];
         RPC::Line cutoff;
 
-        while(line.contentSize() > 0) {
-          if (line.contentSize() > max_characters_per_line) {
-            cutoff = line.slice(max_characters_per_line);
-            line = line.slice(0, max_characters_per_line);
-          }else {
-            cutoff = RPC::Line();
-          }
+        while (line.contentSize() > 0)
+        {
+            if (line.contentSize() > max_characters_per_line)
+            {
+                cutoff = line.slice(max_characters_per_line);
+                line = line.slice(0, max_characters_per_line);
+            }
+            else
+            {
+                cutoff = RPC::Line();
+            }
 
-          line.draw(context, position, m_client->getInfoFace());
-          position.setY(position.y() + m_draw_options->getCellSize().height());
+            line.draw(context, position, m_client->getInfoFace());
+            position.setY(position.y() + m_draw_options->getCellSize().height());
 
-          line = cutoff;
+            line = cutoff;
         }
     }
 }
