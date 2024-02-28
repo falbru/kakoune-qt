@@ -11,6 +11,11 @@ QString Atom::getContents()
     return m_contents;
 }
 
+Face Atom::getFace()
+{
+    return m_face;
+}
+
 void Atom::draw(const DrawContext &context, const QPoint &position, const Face &default_face)
 {
     QColor fg = m_face.getFg().toQColor(default_face.getFg());

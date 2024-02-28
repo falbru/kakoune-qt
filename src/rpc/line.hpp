@@ -19,6 +19,9 @@ class Line
     QList<Atom> getAtoms();
     void draw(const DrawContext &context, QPoint position, const Face &default_face);
 
+    Line slice(int start);
+    Line slice(int start, int end);
+
   private:
     QList<Atom> m_atoms;
 };

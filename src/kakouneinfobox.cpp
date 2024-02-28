@@ -29,18 +29,41 @@ void KakouneInfoBox::resizeToFitContent()
     resize(width, height);
 }
 
+void KakouneInfoBox::resizeToFitParent()
+{
+    QList<RPC::Line> lines = m_client->getInfoContent();
+    int width = this->width();
+    int height = this->height();
+
+    if (width > parentWidget()->width())
+    {
+        width = parentWidget()->width();
+
+        int cutoff_index = width / (float)m_draw_options->getCellSize().width();
+        int wrapped_lines_count = 0;
+
+        for (RPC::Line line : lines)
+        {
+            wrapped_lines_count += line.contentSize() / cutoff_index;
+        }
+
+        height += wrapped_lines_count * m_draw_options->getCellSize().height();
+    }
+
+    resize(width, height);
+}
+
 void KakouneInfoBox::applyPromptStyle()
 {
     int x = parentWidget()->width() - width();
+    int y = parentWidget()->height() - height();
 
     if (m_menu->isVisible() && m_client->getMenuStyle() == RPC::MenuStyle::PROMPT)
     {
-        move(x, m_menu->y() - height());
+        y = m_menu->y() - height();
     }
-    else
-    {
-        move(x, parentWidget()->height() - height());
-    }
+
+    move(qMax(x, 0), qMax(0, y));
 }
 
 void KakouneInfoBox::applyInlineStyle(InlineType type)
@@ -68,7 +91,7 @@ void KakouneInfoBox::applyInlineStyle(InlineType type)
         info_box_position.setY(above_y);
     }
 
-    move(info_box_position);
+    move(qMax(0, info_box_position.x()), qMax(0, info_box_position.y()));
 }
 
 void KakouneInfoBox::applyMenuDocStyle()
@@ -90,12 +113,14 @@ void KakouneInfoBox::applyMenuDocStyle()
         info_box_position.setY(parentWidget()->height() - height());
     }
 
-    move(info_box_position);
+    move(qMax(0, info_box_position.x()), qMax(0, info_box_position.y()));
 }
 
 void KakouneInfoBox::applyModalStyle()
 {
-    move((parentWidget()->width() - width()) / 2, (parentWidget()->height() - height()) / 2);
+    int x = (parentWidget()->width() - width()) / 2;
+    int y = (parentWidget()->height() - height()) / 2;
+    move(qMax(x, 0), qMax(0, y));
 }
 
 void KakouneInfoBox::showInfoBox()
@@ -103,6 +128,7 @@ void KakouneInfoBox::showInfoBox()
     RPC::InfoStyle style = m_client->getInfoStyle();
 
     resizeToFitContent();
+    resizeToFitParent();
 
     switch (style)
     {
@@ -150,9 +176,30 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
     }
 
     QList<RPC::Line> lines = m_client->getInfoContent();
+
+    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width();
+    QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
     for (int i = 0; i < lines.size(); ++i)
     {
-        QPoint position(0, (title.contentSize() > 0 ? (i + 1) : i) * m_draw_options->getCellSize().height());
-        lines[i].draw(context, position, m_client->getInfoFace());
+        RPC::Line line = lines[i];
+        RPC::Line cutoff;
+
+        while (line.contentSize() > 0)
+        {
+            if (line.contentSize() > max_characters_per_line)
+            {
+                cutoff = line.slice(max_characters_per_line);
+                line = line.slice(0, max_characters_per_line);
+            }
+            else
+            {
+                cutoff = RPC::Line();
+            }
+
+            line.draw(context, position, m_client->getInfoFace());
+            position.setY(position.y() + m_draw_options->getCellSize().height());
+
+            line = cutoff;
+        }
     }
 }
