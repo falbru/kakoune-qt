@@ -127,11 +127,8 @@ void KakouneInfoBox::showInfoBox()
 {
     RPC::InfoStyle style = m_client->getInfoStyle();
 
-    qDebug("Fit content");
     resizeToFitContent();
-    qDebug("Fit parent");
     resizeToFitParent();
-    qDebug("set style");
 
     switch (style)
     {
@@ -164,7 +161,6 @@ KakouneInfoBox::~KakouneInfoBox()
 
 void KakouneInfoBox::paintEvent(QPaintEvent *ev)
 {
-    qDebug("Draw infobox");
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
