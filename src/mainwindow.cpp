@@ -1,6 +1,5 @@
 #include "mainwindow.hpp"
-#include "kakounewidget.hpp"
-#include "statusbar.hpp"
+#include "kakounewidgetwithstatusbar.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -11,22 +10,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_session = new KakouneSession();
 
-    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options);
-    kakwidget->setFocusPolicy(Qt::StrongFocus);
+    QSplitter *root = new QSplitter(parent);
 
-    connect(kakwidget, &KakouneWidget::finished, this, &MainWindow::close);
+    for (int i = 0; i < 2; i++) {
+      KakouneWidgetWithStatusBar* kakwidget = new KakouneWidgetWithStatusBar(m_session->getSessionId(), m_draw_options, root);
+      connect(kakwidget, &KakouneWidgetWithStatusBar::finished, root, [=]() {
+        kakwidget->setParent(nullptr);
+      });
 
-    StatusBar *status_bar = new StatusBar(m_draw_options);
-    connect(kakwidget, &KakouneWidget::refresh, this, [=]() { status_bar->repaint(); });
-    status_bar->setActiveClient(kakwidget->getClient());
+      root->addWidget(kakwidget);
+    }
 
-    QWidget *root = new QWidget(parent);
-    QVBoxLayout *rootLayout = new QVBoxLayout();
-    rootLayout->setSpacing(0);
-    rootLayout->setContentsMargins(0, 0, 0, 0);
-    rootLayout->addWidget(kakwidget);
-    rootLayout->addWidget(status_bar);
-    root->setLayout(rootLayout);
+    // TODO: MainWindow::close when there are no more widgets in root
+    // TODO: Create the KakouneCode class, which is basically what KakouneWidget is now minus the handling of KakouneClient. Move that into its own class, KakouneWidget, which includes KakouneCode and StatusBar.
+
     setCentralWidget(root);
 }
 

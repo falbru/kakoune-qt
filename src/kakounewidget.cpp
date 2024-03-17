@@ -1,4 +1,19 @@
-#include "kakounewidget.hpp"
+#include "kakounewidget.hpp" 
+
+bool TabIgnoreFilter::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab) {
+            KakouneWidget * kakwidget = dynamic_cast<KakouneWidget *>(qApp->focusWidget());
+            if (kakwidget && keyEvent->key() == Qt::Key_Tab) {
+              kakwidget->pressKey(Qt::Key_Tab, Qt::NoModifier); 
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
 KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent) : QWidget(parent)
 {
@@ -12,6 +27,10 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
 
     m_menu = new KakouneMenu(m_client, draw_options, this);
     m_info_box = new KakouneInfoBox(m_client, m_menu, draw_options, this);
+
+    installEventFilter(new TabIgnoreFilter());
+
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 KakouneWidget::~KakouneWidget()
@@ -128,13 +147,18 @@ QString keyCodeToKakouneKey(int key_code, Qt::KeyboardModifiers modifiers)
     return key;
 }
 
-void KakouneWidget::keyPressEvent(QKeyEvent *ev)
+void KakouneWidget::pressKey(int key_code, Qt::KeyboardModifiers modifiers)
 {
-    QString key = keyCodeToKakouneKey(ev->key(), ev->modifiers());
+    QString key = keyCodeToKakouneKey(key_code, modifiers);
     if (key == "")
         return;
 
     m_client->sendKeys(key);
+}
+
+void KakouneWidget::keyPressEvent(QKeyEvent *ev)
+{
+    pressKey(ev->key(), ev->modifiers());
 }
 
 void KakouneWidget::mouseMoveEvent(QMouseEvent *ev)

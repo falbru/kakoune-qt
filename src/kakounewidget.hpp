@@ -7,12 +7,21 @@
 #include "kakounemenu.hpp"
 #include <QtWidgets>
 
+class TabIgnoreFilter: public QObject
+{
+  Q_OBJECT
+  protected:
+    bool eventFilter(QObject *object, QEvent *event);
+};
+
 class KakouneWidget : public QWidget
 {
     Q_OBJECT
   public:
     KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneWidget();
+
+    void pressKey(int key_code, Qt::KeyboardModifiers modifiers);
 
     KakouneClient *getClient();
 
