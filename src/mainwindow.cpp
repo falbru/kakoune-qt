@@ -1,6 +1,5 @@
 #include "mainwindow.hpp"
 #include "kakounewidget.hpp"
-#include "statusbar.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -11,22 +10,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_session = new KakouneSession();
 
-    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options);
-    kakwidget->setFocusPolicy(Qt::StrongFocus);
+    QSplitter *root = new QSplitter(parent);
 
-    connect(kakwidget, &KakouneWidget::finished, this, &MainWindow::close);
+    for (int i = 0; i < 2; i++)
+    {
+        KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, root);
+        connect(kakwidget, &KakouneWidget::finished, root, [=]() {
+            kakwidget->setParent(nullptr);
 
-    StatusBar *status_bar = new StatusBar(m_draw_options);
-    connect(kakwidget, &KakouneWidget::refresh, this, [=]() { status_bar->repaint(); });
-    status_bar->setActiveClient(kakwidget->getClient());
+            if (root->count() == 0)
+            {
+                close();
+            }
+        });
 
-    QWidget *root = new QWidget(parent);
-    QVBoxLayout *rootLayout = new QVBoxLayout();
-    rootLayout->setSpacing(0);
-    rootLayout->setContentsMargins(0, 0, 0, 0);
-    rootLayout->addWidget(kakwidget);
-    rootLayout->addWidget(status_bar);
-    root->setLayout(rootLayout);
+        root->addWidget(kakwidget);
+    }
+
     setCentralWidget(root);
 }
 
