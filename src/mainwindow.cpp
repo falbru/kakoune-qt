@@ -1,5 +1,5 @@
 #include "mainwindow.hpp"
-#include "kakounewidgetwithstatusbar.hpp"
+#include "kakounewidget.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -12,17 +12,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QSplitter *root = new QSplitter(parent);
 
-    for (int i = 0; i < 2; i++) {
-      KakouneWidgetWithStatusBar* kakwidget = new KakouneWidgetWithStatusBar(m_session->getSessionId(), m_draw_options, root);
-      connect(kakwidget, &KakouneWidgetWithStatusBar::finished, root, [=]() {
-        kakwidget->setParent(nullptr);
-      });
+    for (int i = 0; i < 2; i++)
+    {
+        KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, root);
+        connect(kakwidget, &KakouneWidget::finished, root, [=]() {
+            kakwidget->setParent(nullptr);
 
-      root->addWidget(kakwidget);
+            if (root->count() == 0)
+            {
+                close();
+            }
+        });
+
+        root->addWidget(kakwidget);
     }
-
-    // TODO: MainWindow::close when there are no more widgets in root
-    // TODO: Create the KakouneCode class, which is basically what KakouneWidget is now minus the handling of KakouneClient. Move that into its own class, KakouneWidget, which includes KakouneCode and StatusBar.
 
     setCentralWidget(root);
 }
