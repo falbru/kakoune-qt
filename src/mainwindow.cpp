@@ -10,24 +10,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_session = new KakouneSession();
 
-    QSplitter *root = new QSplitter(parent);
+    m_root = new QSplitter(parent);
+    this->newClient();
 
-    for (int i = 0; i < 2; i++)
-    {
-        KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, root);
-        connect(kakwidget, &KakouneWidget::finished, root, [=]() {
-            kakwidget->setParent(nullptr);
-
-            if (root->count() == 0)
-            {
-                close();
-            }
-        });
-
-        root->addWidget(kakwidget);
-    }
-
-    setCentralWidget(root);
+    setCentralWidget(m_root);
 }
 
 MainWindow::~MainWindow()
@@ -37,4 +23,19 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent *ev)
 {
     delete m_session;
+}
+
+void MainWindow::newClient()
+{
+    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, m_root);
+    connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
+        kakwidget->setParent(nullptr);
+
+        if (m_root->count() == 0)
+        {
+            close();
+        }
+    });
+
+    m_root->addWidget(kakwidget);
 }

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets DBus)
 qt_standard_project_setup()
 
 qt_add_executable(kak-qt
@@ -19,6 +19,7 @@ qt_add_executable(kak-qt
     src/drawoptions.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
+    src/kakounecli.cpp
     src/kakounemenu.cpp
     src/kakouneinfobox.cpp
     src/kakounewidget.cpp
@@ -28,7 +29,7 @@ qt_add_executable(kak-qt
     src/main.cpp
 )
 
-target_link_libraries(kak-qt PRIVATE Qt6::Widgets)
+target_link_libraries(kak-qt PRIVATE Qt6::Widgets Qt6::DBus)
 
 set_target_properties(kak-qt PROPERTIES
     WIN32_EXECUTABLE ON
