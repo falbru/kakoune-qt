@@ -25,8 +25,6 @@ void StatusBar::paintEvent(QPaintEvent *ev)
     RPC::Face status_default_face = m_client->getStatusDefaultFace();
     painter.fillRect(rect(), status_default_face.getBg().toQColor(status_default_face.getBg()));
 
-    m_client->getStatusLine().draw(context, QPoint(), status_default_face);
-
     RPC::Line mode_line = m_client->getModeLine();
     int length = 0;
     for (auto atom : mode_line.getAtoms())
@@ -35,4 +33,6 @@ void StatusBar::paintEvent(QPaintEvent *ev)
     }
     mode_line.draw(context, QPoint(rect().width() - m_draw_options->getCellSize().width() * length, 0),
                    status_default_face);
+
+    m_client->getStatusLine().draw(context, QPoint(), status_default_face);
 }
