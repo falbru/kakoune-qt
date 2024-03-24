@@ -62,7 +62,7 @@ void KakouneMenu::applyPromptStyle()
 
     int item_width = getItemWidth();
 
-    m_item_grid_rows = parentWidget()->width() / item_width;
+    m_item_grid_rows = qMax(parentWidget()->width() / item_width, 1);
     m_item_grid_columns = qMin(items.size() / m_item_grid_rows + 1, max_item_grid_columns);
 
     int item_grid_height = m_item_grid_columns * m_draw_options->getCellSize().height();
