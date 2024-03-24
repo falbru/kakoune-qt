@@ -28,6 +28,11 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
     this->setLayout(layout);
 }
 
+QSize KakouneWidget::sizeHint() const
+{
+    return QSize(512, 256);
+}
+
 KakouneWidget::~KakouneWidget()
 {
     delete m_client;

@@ -17,6 +17,8 @@ class KakouneWidget : public QWidget
 
     KakouneClient *getClient();
 
+    QSize sizeHint() const override;
+
   private slots:
     void clientRefreshed();
   signals:
