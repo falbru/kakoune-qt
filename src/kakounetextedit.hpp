@@ -31,6 +31,8 @@ class KakouneTextEdit : public QWidget
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
     void resizeEvent(QResizeEvent *ev) override;
+    void focusInEvent(QFocusEvent *ev) override;
+    void focusOutEvent(QFocusEvent *ev) override;
 
   private:
     KakouneClient *m_client;
