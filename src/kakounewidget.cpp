@@ -10,9 +10,10 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
                              QWidget *parent)
     : QWidget(parent)
 {
+    m_id = QUuid::createUuid();
     m_draw_options = draw_options;
 
-    m_client = new KakouneClient(session_id, client_arguments);
+    m_client = new KakouneClient(session_id, client_arguments, {{"KAKQT_WINDOW_ID", m_id.toString()}});
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
 
@@ -30,6 +31,7 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
     layout->addWidget(m_textedit);
     layout->addWidget(status_bar);
 
+    setFocusProxy(m_textedit);
     this->setLayout(layout);
 }
 
@@ -41,6 +43,11 @@ QSize KakouneWidget::sizeHint() const
 KakouneWidget::~KakouneWidget()
 {
     delete m_client;
+}
+
+QUuid KakouneWidget::getID()
+{
+    return m_id;
 }
 
 KakouneClient *KakouneWidget::getClient()

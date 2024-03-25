@@ -3,6 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakounesession.hpp"
+#include "kakounewidget.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
 
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow
   public slots:
     void newClient();
     void newClient(const QString &arguments);
+    void focusWindow(const QString &uuid);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
@@ -24,6 +26,8 @@ class MainWindow : public QMainWindow
   private:
     QSplitter *m_root;
     KakouneSession *m_session;
+
+    QList<KakouneWidget *> m_windows;
 
     DrawOptions *m_draw_options;
 };

@@ -1,5 +1,4 @@
 #include "mainwindow.hpp"
-#include "kakounewidget.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -35,6 +34,7 @@ void MainWindow::newClient(const QString &arguments)
     KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, arguments, m_root);
     connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
         kakwidget->setParent(nullptr);
+        m_windows.removeOne(kakwidget);
 
         if (m_root->count() == 0)
         {
@@ -42,5 +42,18 @@ void MainWindow::newClient(const QString &arguments)
         }
     });
 
+    m_windows.append(kakwidget);
     m_root->addWidget(kakwidget);
+}
+
+void MainWindow::focusWindow(const QString &uuid)
+{
+    for (KakouneWidget *window : m_windows)
+    {
+        if (window->getID().toString() == uuid)
+        {
+            window->setFocus();
+            return;
+        }
+    }
 }
