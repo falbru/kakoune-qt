@@ -16,6 +16,7 @@ qt_add_executable(kak-qt
     src/rpc/color.cpp
     src/rpc/attribute.hpp
     src/rpc/rpc.cpp
+    src/keybindings.cpp
     src/drawoptions.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
