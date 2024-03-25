@@ -13,6 +13,8 @@ class KakouneWidget : public QWidget
     Q_OBJECT
   public:
     KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent = nullptr);
+    KakouneWidget(const QString &session_id, DrawOptions *draw_options, QString client_arguments,
+                  QWidget *parent = nullptr);
     ~KakouneWidget();
 
     KakouneClient *getClient();

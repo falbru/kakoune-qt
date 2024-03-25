@@ -1,13 +1,18 @@
 #include "kakounewidget.hpp"
 #include "statusbar.hpp"
 
-KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent) : QWidget(parent)
+KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent)
+    : KakouneWidget(session_id, draw_options, "", parent)
 {
-    qDebug("Constructing kakounewidget");
+}
 
+KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QString client_arguments,
+                             QWidget *parent)
+    : QWidget(parent)
+{
     m_draw_options = draw_options;
 
-    m_client = new KakouneClient(session_id);
+    m_client = new KakouneClient(session_id, client_arguments);
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
 

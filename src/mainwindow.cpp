@@ -27,7 +27,12 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 
 void MainWindow::newClient()
 {
-    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, m_root);
+    newClient("");
+}
+
+void MainWindow::newClient(const QString &arguments)
+{
+    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, arguments, m_root);
     connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
         kakwidget->setParent(nullptr);
 
