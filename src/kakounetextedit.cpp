@@ -210,3 +210,13 @@ void KakouneTextEdit::resizeEvent(QResizeEvent *ev)
     m_client->resize(height() / m_draw_options->getCellSize().height(),
                      width() / m_draw_options->getCellSize().width());
 }
+
+void KakouneTextEdit::focusInEvent(QFocusEvent *ev)
+{
+    m_client->sendKeys("<focus_in>");
+}
+
+void KakouneTextEdit::focusOutEvent(QFocusEvent *ev)
+{
+    m_client->sendKeys("<focus_out>");
+}
