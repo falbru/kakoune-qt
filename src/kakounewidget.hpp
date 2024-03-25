@@ -17,6 +17,7 @@ class KakouneWidget : public QWidget
                   QWidget *parent = nullptr);
     ~KakouneWidget();
 
+    QUuid getID();
     KakouneClient *getClient();
 
     QSize sizeHint() const override;
@@ -28,6 +29,7 @@ class KakouneWidget : public QWidget
     void refresh();
 
   private:
+    QUuid m_id;
     KakouneClient *m_client;
 
     KakouneTextEdit *m_textedit;

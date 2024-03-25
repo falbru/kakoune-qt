@@ -69,7 +69,12 @@ KakouneClient::KakouneClient(const QString &session_id) : KakouneClient(session_
 {
 }
 
-KakouneClient::KakouneClient(const QString &session_id, QString arguments)
+KakouneClient::KakouneClient(const QString &session_id, QString arguments) : KakouneClient(session_id, arguments, {})
+{
+}
+
+KakouneClient::KakouneClient(const QString &session_id, QString arguments,
+                             QList<QPair<QString, QString>> environment_variables)
 {
     connect(&m_process, &QProcess::readyReadStandardOutput, [=]() {
         QByteArray buffer = m_process.readAllStandardOutput();
@@ -88,8 +93,14 @@ KakouneClient::KakouneClient(const QString &session_id, QString arguments)
 
     connect(&m_process, &QProcess::finished, this, &KakouneClient::finished);
 
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    for (auto variable : environment_variables)
+    {
+        env.insert(variable.first, variable.second);
+    }
+    m_process.setProcessEnvironment(env);
+
     QStringList process_arguments;
-    qDebug() << arguments;
     process_arguments << "-ui"
                       << "json"
                       << "-c" << session_id;

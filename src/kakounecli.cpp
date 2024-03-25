@@ -18,6 +18,14 @@ int KakouneCli::run(QStringList command)
             m_dbusiface.call("newClient", command.sliced(1).join(" "));
         }
     }
+    else if (command_name == "focus")
+    {
+        if (command.size() != 2)
+        {
+            return 1;
+        }
+        m_dbusiface.call("focusWindow", command[1]);
+    }
     else
     {
         return 1;
