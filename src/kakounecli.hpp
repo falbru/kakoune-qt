@@ -10,7 +10,7 @@ class KakouneCli
   public:
     KakouneCli(const QString &service_name);
 
-    int run(QList<QString> command);
+    int run(QStringList command);
 
   private:
     QDBusInterface m_dbusiface;

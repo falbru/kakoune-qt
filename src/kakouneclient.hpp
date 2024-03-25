@@ -11,6 +11,7 @@ class KakouneClient : public QObject
     Q_OBJECT
   public:
     KakouneClient(const QString &session_id);
+    KakouneClient(const QString &session_id, QString arguments);
     ~KakouneClient();
 
     void sendKeys(const QString &key);

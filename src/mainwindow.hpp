@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow
 
   public slots:
     void newClient();
+    void newClient(const QString &arguments);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;

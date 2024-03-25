@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     {
         KakouneCli cli(DBUS_SERVICE_NAME);
 
-        QList<QString> command;
+        QStringList command;
         for (int i = 2; i < argc; i++)
         {
             command.append(argv[i]);
