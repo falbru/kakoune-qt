@@ -17,6 +17,8 @@ class KakouneWidget : public QWidget
                   QWidget *parent = nullptr);
     ~KakouneWidget();
 
+    void installEventFilter(QObject *filter);
+
     QUuid getID();
     KakouneClient *getClient();
 

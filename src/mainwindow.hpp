@@ -15,6 +15,9 @@ class MainWindow : public QMainWindow
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void focusLeft();
+    void focusRight();
+
   public slots:
     void newClient();
     void newClient(const QString &arguments);

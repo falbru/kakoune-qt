@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "keybindings.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -9,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_session = new KakouneSession();
 
-    m_root = new QSplitter(parent);
+    m_root = new QSplitter(this);
     this->newClient();
 
     setCentralWidget(m_root);
@@ -32,6 +33,7 @@ void MainWindow::newClient()
 void MainWindow::newClient(const QString &arguments)
 {
     KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, arguments, m_root);
+    kakwidget->installEventFilter(new KeyBindingsFilter(this));
     connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
         kakwidget->setParent(nullptr);
         m_windows.removeOne(kakwidget);
@@ -56,4 +58,28 @@ void MainWindow::focusWindow(const QString &uuid)
             return;
         }
     }
+}
+
+void MainWindow::focusLeft()
+{
+    QWidget *focused_widget = qApp->focusWidget();
+    int index = m_root->indexOf((QWidget *)focused_widget->parent()); // TODO
+    if (index <= 0)
+    {
+        return;
+    }
+
+    m_windows[index - 1]->setFocus();
+}
+
+void MainWindow::focusRight()
+{
+    QWidget *focused_widget = qApp->focusWidget();
+    int index = m_root->indexOf((QWidget *)focused_widget->parent()); // TODO
+    if (index >= m_windows.size() - 1)
+    {
+        return;
+    }
+
+    m_windows[index + 1]->setFocus();
 }

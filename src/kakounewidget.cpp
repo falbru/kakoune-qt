@@ -60,3 +60,8 @@ void KakouneWidget::clientRefreshed()
     repaint();
     emit refresh();
 }
+
+void KakouneWidget::installEventFilter(QObject *filter)
+{
+    m_textedit->installEventFilter(filter);
+}
