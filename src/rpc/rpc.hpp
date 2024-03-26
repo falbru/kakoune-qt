@@ -33,7 +33,8 @@ struct DrawStatusRequest
 enum class MenuStyle
 {
     PROMPT,
-    INLINE
+    INLINE,
+    SEARCH
 };
 
 struct MenuShowRequest
@@ -78,8 +79,10 @@ Coord deserializeCoord(QJsonObject coord_serialized);
 Face deserializeFace(QJsonObject face_serialized);
 Atom deserializeAtom(QJsonObject atom_serialized);
 Line deserializeLine(QJsonArray line_serialized);
+Line deserializeLine(QJsonArray line_serialized);
 QList<Line> deserializeLines(QJsonObject lines_serialized);
-InfoStyle convertToInfoStyle(QString style);
+MenuStyle deserializeMenuStyle(QString style);
+InfoStyle deserializeInfoStyle(QString style);
 
 DrawRequest deserializeDrawRequest(QJsonArray request_params);
 DrawStatusRequest deserializeDrawStatusRequest(QJsonArray request_params);
