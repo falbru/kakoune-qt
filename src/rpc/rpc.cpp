@@ -57,7 +57,7 @@ MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params)
     return MenuShowRequest{
         deserializeLines(request_params.at(0).toArray()), deserializeCoord(request_params.at(1).toObject()),
         deserializeFace(request_params.at(2).toObject()), deserializeFace(request_params.at(3).toObject()),
-        request_params.at(4).toString() == "prompt" ? MenuStyle::PROMPT : MenuStyle::INLINE};
+        deserializeMenuStyle(request_params.at(4).toString())};
 }
 
 MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params)
@@ -65,7 +65,26 @@ MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params)
     return MenuSelectRequest{request_params.at(0).toInt()};
 }
 
-InfoStyle convertToInfoStyle(QString style)
+MenuStyle deserializeMenuStyle(QString style)
+{
+    if (style == "prompt")
+    {
+        return MenuStyle::PROMPT;
+    }
+    else if (style == "inline")
+    {
+        return MenuStyle::INLINE;
+    }
+    else if (style == "search")
+    {
+        return MenuStyle::SEARCH;
+    }
+
+    qDebug() << "Unknown MenuStyle: " << style;
+    return MenuStyle::PROMPT;
+}
+
+InfoStyle deserializeInfoStyle(QString style)
 {
     if (style == "prompt")
     {
@@ -99,9 +118,9 @@ InfoStyle convertToInfoStyle(QString style)
 InfoShowRequest deserializeInfoShowRequest(QJsonArray request_params)
 {
     return InfoShowRequest{
-        deserializeLine(request_params.at(0).toArray()),     deserializeLines(request_params.at(1).toArray()),
-        deserializeCoord(request_params.at(2).toObject()),   deserializeFace(request_params.at(3).toObject()),
-        convertToInfoStyle(request_params.at(4).toString()),
+        deserializeLine(request_params.at(0).toArray()),       deserializeLines(request_params.at(1).toArray()),
+        deserializeCoord(request_params.at(2).toObject()),     deserializeFace(request_params.at(3).toObject()),
+        deserializeInfoStyle(request_params.at(4).toString()),
     };
 }
 
