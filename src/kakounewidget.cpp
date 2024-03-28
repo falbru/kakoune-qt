@@ -16,6 +16,7 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
     m_client = new KakouneClient(session_id, client_arguments, {{"KAKQT_WINDOW_ID", m_id.toString()}});
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
+    connect(m_client, &KakouneClient::setUIOptions, this, &KakouneWidget::setUIOptions);
 
     m_textedit = new KakouneTextEdit(m_client, draw_options, this);
     m_menu = new KakouneMenu(m_client, draw_options, m_textedit);
@@ -64,4 +65,32 @@ void KakouneWidget::clientRefreshed()
 void KakouneWidget::installEventFilter(QObject *filter)
 {
     m_textedit->installEventFilter(filter);
+}
+
+void KakouneWidget::setUIOptions(QMap<QString, QString> options)
+{
+    for (auto option = options.begin(); option != options.end(); option++)
+    {
+        if (option.key() == "gui_set_font")
+        {
+            int lastSpaceIndex = option.value().lastIndexOf(' ');
+
+            QString font_name = option.value().left(lastSpaceIndex);
+            QString font_size_str = option.value().mid(lastSpaceIndex + 1);
+
+            bool ok;
+            int font_size = font_size_str.toInt(&ok);
+            if (!ok)
+            {
+                qDebug() << "Error converting font size to integer.";
+                continue;
+            }
+
+            m_draw_options->setFont(font_name, font_size);
+        }
+        else
+        {
+            qDebug() << "Unknown ui option: " << option.key();
+        }
+    }
 }

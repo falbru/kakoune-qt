@@ -75,6 +75,11 @@ struct RefreshRequest
     bool force;
 };
 
+struct SetUIOptionsRequest
+{
+    QMap<QString, QString> options;
+};
+
 Coord deserializeCoord(QJsonObject coord_serialized);
 Face deserializeFace(QJsonObject face_serialized);
 Atom deserializeAtom(QJsonObject atom_serialized);
@@ -90,6 +95,7 @@ MenuShowRequest deserializeMenuShowRequest(QJsonArray request_params);
 MenuSelectRequest deserializeMenuSelectRequest(QJsonArray request_params);
 InfoShowRequest deserializeInfoShowRequest(QJsonArray request_params);
 RefreshRequest deserializeRefreshRequest(QJsonArray request_params);
+SetUIOptionsRequest deserializeSetUIOptionsRequest(QJsonArray request_params);
 
 QByteArray serializeRequest(const QString &method_name, QJsonArray params);
 } // namespace RPC

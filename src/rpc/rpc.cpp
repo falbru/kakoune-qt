@@ -129,6 +129,18 @@ RefreshRequest deserializeRefreshRequest(QJsonArray request_params)
     return RefreshRequest{request_params.at(0).toBool()};
 }
 
+SetUIOptionsRequest deserializeSetUIOptionsRequest(QJsonArray request_params)
+{
+    QMap<QString, QString> options;
+    QJsonObject root = request_params.at(0).toObject();
+    for (auto it = root.begin(); it != root.end(); ++it)
+    {
+        options.insert(it.key(), it.value().toString());
+    }
+
+    return SetUIOptionsRequest{options};
+}
+
 QByteArray serializeRequest(const QString &method_name, QJsonArray params)
 {
     QJsonObject req{{{"jsonrpc", "2.0"}, {"method", method_name}, {"params", params}}};

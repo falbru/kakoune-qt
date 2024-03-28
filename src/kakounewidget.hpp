@@ -26,6 +26,7 @@ class KakouneWidget : public QWidget
 
   private slots:
     void clientRefreshed();
+    void setUIOptions(QMap<QString, QString> options);
   signals:
     void finished();
     void refresh();
