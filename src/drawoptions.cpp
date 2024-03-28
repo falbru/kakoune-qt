@@ -26,4 +26,6 @@ void DrawOptions::setFont(const QString &font_name, int font_size)
     QRect boundingBoxSingleChar = font_metrics.boundingRect("A");
     m_cell_size =
         QSize(boundingBoxSingleChar.width(), boundingBoxSingleChar.height()); // FIXME only works for monospaced fonts
+
+    emit updated();
 }

@@ -59,6 +59,11 @@ void KakouneClient::handleRequest(QJsonObject request)
     {
         emit hideInfoBox();
     }
+    else if (method == "set_ui_options")
+    {
+        RPC::SetUIOptionsRequest request = RPC::deserializeSetUIOptionsRequest(request_params);
+        emit setUIOptions(request.options);
+    }
     else
     {
         qDebug() << "Unkown method: " << method;

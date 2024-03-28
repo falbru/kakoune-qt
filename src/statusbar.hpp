@@ -17,6 +17,9 @@ class StatusBar : public QWidget
   protected:
     void paintEvent(QPaintEvent *ev) override;
 
+  protected slots:
+    void drawOptionsUpdated();
+
   private:
     KakouneClient *m_client;
     DrawOptions *m_draw_options;

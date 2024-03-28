@@ -48,6 +48,8 @@ class KakouneClient : public QObject
     void showInfoBox();
     void hideInfoBox();
 
+    void setUIOptions(QMap<QString, QString> options);
+
   private:
     void sendRequest(const QString &method_name, QJsonArray params);
     void handleRequest(QJsonObject request);

@@ -3,7 +3,8 @@
 StatusBar::StatusBar(DrawOptions *draw_options, QWidget *parent)
 {
     m_draw_options = draw_options;
-    setFixedHeight(m_draw_options->getCellSize().height());
+    connect(draw_options, &DrawOptions::updated, this, &StatusBar::drawOptionsUpdated);
+    drawOptionsUpdated();
 }
 
 StatusBar::~StatusBar()
@@ -35,4 +36,9 @@ void StatusBar::paintEvent(QPaintEvent *ev)
                    status_default_face);
 
     m_client->getStatusLine().draw(context, QPoint(), status_default_face);
+}
+
+void StatusBar::drawOptionsUpdated()
+{
+    setFixedHeight(m_draw_options->getCellSize().height());
 }
