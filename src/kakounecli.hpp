@@ -3,17 +3,18 @@
 
 #include <QList>
 #include <QString>
-#include <qdbusinterface.h>
+#include <QLocalSocket>
 
 class KakouneCli
 {
   public:
-    KakouneCli(const QString &service_name);
+    KakouneCli();
+    ~KakouneCli();
 
     int run(QStringList command);
 
   private:
-    QDBusInterface m_dbusiface;
+    QLocalSocket *m_socket;
 };
 
 #endif

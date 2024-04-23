@@ -19,7 +19,6 @@ class MainWindow : public QMainWindow
     void focusRight();
 
   public slots:
-    void newClient();
     void newClient(const QString &arguments);
     void focusWindow(const QString &uuid);
 

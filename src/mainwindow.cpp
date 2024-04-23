@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_session = new KakouneSession();
 
     m_root = new QSplitter(this);
-    this->newClient();
+    this->newClient("");
 
     setCentralWidget(m_root);
 }
@@ -23,11 +23,6 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent *ev)
 {
     delete m_session;
-}
-
-void MainWindow::newClient()
-{
-    newClient("");
 }
 
 void MainWindow::newClient(const QString &arguments)

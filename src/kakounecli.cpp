@@ -1,7 +1,20 @@
 #include "kakounecli.hpp"
 
-KakouneCli::KakouneCli(const QString &service_name) : m_dbusiface(service_name, "/")
+KakouneCli::KakouneCli()
 {
+    QString session_id = "";
+
+    m_socket = new QLocalSocket();
+    m_socket->connectToServer("KakouneQt.543");
+    if (!m_socket->waitForConnected()) {
+        qDebug() << "Failed to connect to server:" << m_socket->errorString();
+        return;
+    }
+}
+
+KakouneCli::~KakouneCli()
+{
+  m_socket->disconnectFromServer();
 }
 
 int KakouneCli::run(QStringList command)
@@ -11,11 +24,13 @@ int KakouneCli::run(QStringList command)
     {
         if (command.size() == 1)
         {
-            m_dbusiface.call("newClient");
+            m_socket->write("{\"method\":\"newClient\"}");
+            m_socket->flush();
         }
         else
         {
-            m_dbusiface.call("newClient", command.sliced(1).join(" "));
+            // m_socket->write("newClient", command.sliced(1).join(" "));
+            // m_socket->flush();
         }
     }
     else if (command_name == "focus")
@@ -24,7 +39,8 @@ int KakouneCli::run(QStringList command)
         {
             return 1;
         }
-        m_dbusiface.call("focusWindow", command[1]);
+        // m_socket->write("focusWindow", command[1]);
+        // m_socket->flush();
     }
     else
     {
