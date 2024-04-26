@@ -15,6 +15,7 @@ class KakouneServer : public QObject
     void bind(MainWindow* main_window);
   signals:
     void newClient(const QString& arguments);
+    void focusWindow(const QString& client_name);
   protected:
     void handleConnection();
     void handleCommand(QJsonObject request);

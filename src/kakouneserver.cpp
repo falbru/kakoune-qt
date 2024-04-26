@@ -26,6 +26,7 @@ KakouneServer::~KakouneServer()
 void KakouneServer::bind(MainWindow* main_window)
 {
     connect(this, &KakouneServer::newClient, main_window, &MainWindow::newClient);
+    connect(this, &KakouneServer::focusWindow , main_window, &MainWindow::focusWindow);
 }
 
 void KakouneServer::handleConnection()
@@ -38,7 +39,6 @@ void KakouneServer::handleConnection()
     if (client_socket->waitForReadyRead()) {
         QByteArray request = client_socket->readAll();
         QJsonObject request_json = QJsonDocument::fromJson(request).object();
-        qDebug() << request_json;
 
         handleCommand(request_json);
     }
@@ -49,7 +49,11 @@ void KakouneServer::handleConnection()
 void KakouneServer::handleCommand(QJsonObject request)
 {
     const QString method = request["method"].toString();
+    qDebug() << method;
     if (method == "newClient") {
       emit newClient("");
+    }else if (method == "focusWindow") {
+      qDebug() << request["client_name"].toString();
+      emit focusWindow(request["client_name"].toString());
     }
 }
