@@ -7,8 +7,7 @@ KakouneServer::KakouneServer(const QString& session_id)
 {
     m_server = new QLocalServer(this);
 
-    QString server_name = "KakouneQt.543";
-    if (!m_server->listen(server_name))
+    if (!m_server->listen(session_id))
     {
       qDebug() << "Unable to start the server: " << m_server->errorString();
       m_server->close();

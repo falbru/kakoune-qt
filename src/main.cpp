@@ -5,6 +5,11 @@
 
 #define DBUS_SERVICE_NAME "com.github.falbru.KakouneQt"
 
+QString generateRandomKakouneSessionId()
+{
+    return QString::number(QRandomGenerator::global()->bounded(1000, 9999));
+}
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -22,9 +27,10 @@ int main(int argc, char *argv[])
         return cli.run(command);
     }
 
-    MainWindow w;
+    QString session_id = generateRandomKakouneSessionId();
 
-    KakouneServer server("KakouneQt.123");
+    MainWindow w(session_id);
+    KakouneServer server("KakouneQt." + session_id);
     server.bind(&w);
 
     w.show();

@@ -1,14 +1,14 @@
 #include "mainwindow.hpp"
 #include "keybindings.hpp"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent)
 {
     resize(1024, 768);
 
     m_draw_options = new DrawOptions();
     m_draw_options->setFont("monospace", 11);
 
-    m_session = new KakouneSession();
+    m_session = new KakouneSession(session_id);
 
     m_root = new QSplitter(this);
     this->newClient("");
