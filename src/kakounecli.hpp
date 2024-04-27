@@ -2,18 +2,19 @@
 #define KAKOUNECLI_HPP
 
 #include <QList>
+#include <QLocalSocket>
 #include <QString>
-#include <qdbusinterface.h>
 
 class KakouneCli
 {
   public:
-    KakouneCli(const QString &service_name);
+    KakouneCli();
+    ~KakouneCli();
 
     int run(QStringList command);
 
   private:
-    QDBusInterface m_dbusiface;
+    QLocalSocket *m_socket;
 };
 
 #endif

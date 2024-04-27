@@ -1,7 +1,23 @@
 #include "kakounecli.hpp"
+#include <qprocess.h>
 
-KakouneCli::KakouneCli(const QString &service_name) : m_dbusiface(service_name, "/")
+KakouneCli::KakouneCli()
 {
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString session_id = env.value("KAKQT_SESSION_ID");
+
+    m_socket = new QLocalSocket();
+    m_socket->connectToServer("KakouneQt." + session_id);
+    if (!m_socket->waitForConnected())
+    {
+        qDebug() << "Failed to connect to server:" << m_socket->errorString();
+        return;
+    }
+}
+
+KakouneCli::~KakouneCli()
+{
+    m_socket->disconnectFromServer();
 }
 
 int KakouneCli::run(QStringList command)
@@ -11,11 +27,14 @@ int KakouneCli::run(QStringList command)
     {
         if (command.size() == 1)
         {
-            m_dbusiface.call("newClient");
+            m_socket->write("{\"method\":\"newClient\"}");
+            m_socket->flush();
         }
         else
         {
-            m_dbusiface.call("newClient", command.sliced(1).join(" "));
+            QString request = QString("{\"method\":\"newClient\",\"args\":\"%1\"}").arg(command[1]);
+            m_socket->write(request.toLocal8Bit());
+            m_socket->flush();
         }
     }
     else if (command_name == "focus")
@@ -24,7 +43,10 @@ int KakouneCli::run(QStringList command)
         {
             return 1;
         }
-        m_dbusiface.call("focusWindow", command[1]);
+        qDebug("FOCUS");
+        QString request = QString("{\"method\":\"focusWindow\",\"client_name\":\"%1\"}").arg(command[1]);
+        m_socket->write(request.toLocal8Bit());
+        m_socket->flush();
     }
     else
     {

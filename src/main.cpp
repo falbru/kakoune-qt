@@ -1,30 +1,22 @@
 #include "kakounecli.hpp"
+#include "kakouneserver.hpp"
 #include "mainwindow.hpp"
 #include <QApplication>
-#include <QDBusConnection>
-#include <QDBusError>
-#include <QDBusInterface>
-#include <QDBusReply>
 
 #define DBUS_SERVICE_NAME "com.github.falbru.KakouneQt"
+
+QString generateRandomKakouneSessionId()
+{
+    return QString::number(QRandomGenerator::global()->bounded(1000, 9999));
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    auto connection = QDBusConnection::sessionBus();
-
-    if (!connection.isConnected())
-    {
-        qWarning("Cannot connect to the D-Bus session bus.\n"
-                 "To start it, run:\n"
-                 "\teval `dbus-launch --auto-syntax`\n");
-        return 1;
-    }
-
     if (argc > 1 && strcmp(argv[1], "cli") == 0)
     {
-        KakouneCli cli(DBUS_SERVICE_NAME);
+        KakouneCli cli;
 
         QStringList command;
         for (int i = 2; i < argc; i++)
@@ -35,14 +27,11 @@ int main(int argc, char *argv[])
         return cli.run(command);
     }
 
-    if (!connection.registerService(DBUS_SERVICE_NAME))
-    {
-        qWarning("%s\n", qPrintable(connection.lastError().message()));
-        return 1;
-    }
+    QString session_id = generateRandomKakouneSessionId();
 
-    MainWindow w;
-    connection.registerObject("/", &w, QDBusConnection::ExportAllSlots);
+    MainWindow w(session_id);
+    KakouneServer server("KakouneQt." + session_id);
+    server.bind(&w);
 
     w.show();
     return app.exec();

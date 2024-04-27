@@ -12,14 +12,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QString session_id, QWidget *parent = nullptr);
     ~MainWindow();
 
     void focusLeft();
     void focusRight();
 
   public slots:
-    void newClient();
     void newClient(const QString &arguments);
     void focusWindow(const QString &uuid);
 
