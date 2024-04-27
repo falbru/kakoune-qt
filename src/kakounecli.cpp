@@ -4,11 +4,12 @@
 KakouneCli::KakouneCli()
 {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    QString session_id = env.value("KAKQT_SESSION_ID") ;
+    QString session_id = env.value("KAKQT_SESSION_ID");
 
     m_socket = new QLocalSocket();
     m_socket->connectToServer("KakouneQt." + session_id);
-    if (!m_socket->waitForConnected()) {
+    if (!m_socket->waitForConnected())
+    {
         qDebug() << "Failed to connect to server:" << m_socket->errorString();
         return;
     }
@@ -16,7 +17,7 @@ KakouneCli::KakouneCli()
 
 KakouneCli::~KakouneCli()
 {
-  m_socket->disconnectFromServer();
+    m_socket->disconnectFromServer();
 }
 
 int KakouneCli::run(QStringList command)

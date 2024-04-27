@@ -2,8 +2,8 @@
 #define KAKOUNECLI_HPP
 
 #include <QList>
-#include <QString>
 #include <QLocalSocket>
+#include <QString>
 
 class KakouneCli
 {

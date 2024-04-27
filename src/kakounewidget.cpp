@@ -13,7 +13,8 @@ KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_option
     m_id = QUuid::createUuid();
     m_draw_options = draw_options;
 
-    m_client = new KakouneClient(session_id, client_arguments, {{"KAKQT_SESSION_ID", session_id}, {"KAKQT_WINDOW_ID", m_id.toString()}});
+    m_client = new KakouneClient(session_id, client_arguments,
+                                 {{"KAKQT_SESSION_ID", session_id}, {"KAKQT_WINDOW_ID", m_id.toString()}});
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
     connect(m_client, &KakouneClient::setUIOptions, this, &KakouneWidget::setUIOptions);
