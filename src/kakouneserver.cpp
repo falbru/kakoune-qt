@@ -51,7 +51,7 @@ void KakouneServer::handleCommand(QJsonObject request)
     const QString method = request["method"].toString();
     qDebug() << method;
     if (method == "newClient") {
-      emit newClient("");
+      emit newClient(request["args"].isString() ? request["args"].toString() : "");
     }else if (method == "focusWindow") {
       qDebug() << request["client_name"].toString();
       emit focusWindow(request["client_name"].toString());

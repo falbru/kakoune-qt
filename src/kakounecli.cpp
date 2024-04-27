@@ -31,9 +31,9 @@ int KakouneCli::run(QStringList command)
         }
         else
         {
-            // TODO add arguments
-            // m_socket->write("newClient", command.sliced(1).join(" "));
-            // m_socket->flush();
+            QString request = QString("{\"method\":\"newClient\",\"args\":\"%1\"}").arg(command[1]);
+            m_socket->write(request.toLocal8Bit());
+            m_socket->flush();
         }
     }
     else if (command_name == "focus")
@@ -43,8 +43,8 @@ int KakouneCli::run(QStringList command)
             return 1;
         }
         qDebug("FOCUS");
-        QString a = QString("{\"method\":\"focusWindow\",\"client_name\":\"%1\"}").arg(command[1]);
-        m_socket->write(a.toLocal8Bit());
+        QString request = QString("{\"method\":\"focusWindow\",\"client_name\":\"%1\"}").arg(command[1]);
+        m_socket->write(request.toLocal8Bit());
         m_socket->flush();
     }
     else
