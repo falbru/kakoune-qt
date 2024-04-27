@@ -20,6 +20,7 @@ KakouneServer::KakouneServer(const QString& session_id)
 KakouneServer::~KakouneServer()
 {
     m_server->close();
+    QLocalServer::removeServer(m_server->serverName());
     delete m_server;
 }
 
