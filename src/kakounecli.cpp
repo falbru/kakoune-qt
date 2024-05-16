@@ -32,7 +32,7 @@ int KakouneCli::run(QStringList command)
         }
         else
         {
-            QString request = QString("{\"method\":\"newClient\",\"args\":\"%1\"}").arg(command[1]);
+            QString request = QString("{\"method\":\"newClient\",\"args\":\"%1\"}").arg(command.mid(1).join(" "));
             m_socket->write(request.toLocal8Bit());
             m_socket->flush();
         }

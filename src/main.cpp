@@ -3,8 +3,6 @@
 #include "mainwindow.hpp"
 #include <QApplication>
 
-#define DBUS_SERVICE_NAME "com.github.falbru.KakouneQt"
-
 QString generateRandomKakouneSessionId()
 {
     return QString::number(QRandomGenerator::global()->bounded(1000, 9999));

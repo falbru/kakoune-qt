@@ -18,7 +18,7 @@ void createFifo(const QString &path)
 {
     if (mkfifo(path.toStdString().c_str(), 0666) == -1)
     {
-        qFatal("Failed to create fifo");
+        qCritical("Failed to create fifo");
     }
 }
 
@@ -27,7 +27,7 @@ void waitForFifo(const QString &path)
     int fd = open(path.toStdString().c_str(), O_RDONLY);
     if (fd == -1)
     {
-        qFatal("Failed to read from fifo");
+        qCritical("Failed to read from fifo");
     }
 
     char buffer[16];
@@ -42,7 +42,7 @@ void deleteFifo(const QString &path)
 {
     if (unlink(path.toStdString().c_str()) == -1)
     {
-        qFatal("Failed to remove fifo");
+        qCritical("Failed to remove fifo");
     }
 }
 
@@ -51,7 +51,7 @@ KakouneSession::KakouneSession(QString session_id)
     m_session_id = session_id;
 
     connect(&m_process, &QProcess::readyReadStandardError,
-            [=]() { qFatal() << "KakouneSession: " << m_process.readAllStandardError(); });
+            [=]() { qCritical() << "KakouneSession: " << m_process.readAllStandardError(); });
 
     QString session_ready_path = "/tmp/" + session_id;
 
