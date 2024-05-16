@@ -94,7 +94,7 @@ KakouneClient::KakouneClient(const QString &session_id, QString arguments,
     });
 
     connect(&m_process, &QProcess::readyReadStandardError,
-            [=]() { qFatal() << "KakouneClient: " << m_process.readAllStandardError(); });
+            [=]() { qCritical() << "KakouneClient: " << m_process.readAllStandardError(); });
 
     connect(&m_process, &QProcess::finished, this, &KakouneClient::finished);
 
