@@ -74,6 +74,7 @@ void KakouneMenu::applyPromptStyle()
 void KakouneMenu::showMenu()
 {
     show();
+    m_selected_item = -1;
 
     if (m_client->getMenuStyle() == RPC::MenuStyle::INLINE)
     {
