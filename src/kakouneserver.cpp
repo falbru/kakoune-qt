@@ -28,6 +28,7 @@ void KakouneServer::bind(MainWindow *main_window)
 {
     connect(this, &KakouneServer::newClient, main_window, &MainWindow::newClient);
     connect(this, &KakouneServer::focusWindow, main_window, &MainWindow::focusWindow);
+    connect(this, &KakouneServer::renameSession, main_window, &MainWindow::renameSession);
 }
 
 void KakouneServer::handleConnection()
@@ -57,7 +58,10 @@ void KakouneServer::handleCommand(QJsonObject request)
     }
     else if (method == "focusWindow")
     {
-        qDebug() << request["client_name"].toString();
         emit focusWindow(request["client_name"].toString());
+    }
+    else if (method == "renameSession")
+    {
+        emit renameSession(request["session_name"].toString());
     }
 }

@@ -21,9 +21,11 @@ class MainWindow : public QMainWindow
   public slots:
     void newClient(const QString &arguments);
     void focusWindow(const QString &uuid);
+    void renameSession(const QString &session_name);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
+    void updateWindowTitle();
 
   private:
     QSplitter *m_root;

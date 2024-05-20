@@ -80,3 +80,8 @@ QString KakouneSession::getSessionId()
 {
     return m_session_id;
 }
+
+void KakouneSession::setSessionId(const QString &session_id)
+{
+    m_session_id = session_id;
+}

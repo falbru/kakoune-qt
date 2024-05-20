@@ -16,6 +16,7 @@ class KakouneServer : public QObject
   signals:
     void newClient(const QString &arguments);
     void focusWindow(const QString &client_name);
+    void renameSession(const QString &session_name);
 
   protected:
     void handleConnection();
