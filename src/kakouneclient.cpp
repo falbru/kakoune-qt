@@ -106,9 +106,7 @@ KakouneClient::KakouneClient(const QString &session_id, QString arguments,
     m_process.setProcessEnvironment(env);
 
     QStringList process_arguments;
-    process_arguments << "-ui"
-                      << "json"
-                      << "-c" << session_id;
+    process_arguments << "-ui" << "json" << "-c" << session_id;
     if (!arguments.isEmpty())
     {
         process_arguments << "-e" << arguments;

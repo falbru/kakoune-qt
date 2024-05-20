@@ -18,8 +18,8 @@ Face Atom::getFace()
 
 void Atom::draw(const DrawContext &context, const QPoint &position, const Face &default_face)
 {
-    QColor fg = m_face.getFg().toQColor(default_face.getFg());
-    QColor bg = m_face.getBg().toQColor(default_face.getBg());
+    QColor fg = m_face.getFg().toQColor(default_face.getFg(), context.color_palette);
+    QColor bg = m_face.getBg().toQColor(default_face.getBg(), context.color_palette);
 
     int width = context.cell_size.width() * m_contents.size();
     int height = context.cell_size.height();
