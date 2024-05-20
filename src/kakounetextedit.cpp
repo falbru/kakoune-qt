@@ -42,10 +42,11 @@ void KakouneTextEdit::paintEvent(QPaintEvent *)
     qDebug("Rerender kakounewidget");
 
     QPainter painter(this);
-    painter.setFont(m_draw_options->getFont());
-    painter.fillRect(rect(), m_client->getDefaultFace().getBg().toQColor(m_client->getDefaultFace().getBg()));
+    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
 
-    DrawContext context{painter, m_draw_options->getCellSize()};
+    painter.setFont(m_draw_options->getFont());
+    painter.fillRect(
+        rect(), m_client->getDefaultFace().getBg().toQColor(m_client->getDefaultFace().getBg(), context.color_palette));
 
     QList<RPC::Line> lines = m_client->getLines();
     for (int i = 0; i < lines.size(); ++i)

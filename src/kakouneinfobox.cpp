@@ -164,9 +164,9 @@ void KakouneInfoBox::paintEvent(QPaintEvent *ev)
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
-    DrawContext context{painter, m_draw_options->getCellSize()};
+    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
 
-    painter.fillRect(0, 0, width(), height(), m_client->getInfoFace().getBg().toQColor());
+    painter.fillRect(0, 0, width(), height(), m_client->getInfoFace().getBg().toQColor(context.color_palette));
 
     RPC::Line title = m_client->getInfoTitle();
     if (title.contentSize() > 0)

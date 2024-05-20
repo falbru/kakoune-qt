@@ -25,7 +25,7 @@ int KakouneMenu::getItemWidth()
         max_item_contentsize = qMax(max_item_contentsize, items[i].contentSize());
     }
 
-    return max_item_contentsize * m_draw_options->getCellSize().width();
+    return qMin(max_item_contentsize * m_draw_options->getCellSize().width(), parentWidget()->width());
 }
 
 void KakouneMenu::applyInlineStyle()
@@ -103,9 +103,9 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
     QPainter painter(this);
     painter.setFont(m_draw_options->getFont());
 
-    DrawContext context{painter, m_draw_options->getCellSize()};
+    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
 
-    painter.fillRect(0, 0, width(), height(), m_client->getMenuFace().getBg().toQColor());
+    painter.fillRect(0, 0, width(), height(), m_client->getMenuFace().getBg().toQColor(context.color_palette));
 
     QList<RPC::Line> items = m_client->getMenuItems();
 
@@ -124,7 +124,7 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
         if (m_selected_item == index)
         {
             painter.fillRect(position.x(), position.y(), item_width, item_height,
-                             m_client->getSelectedMenuItemFace().getBg().toQColor());
+                             m_client->getSelectedMenuItemFace().getBg().toQColor(context.color_palette));
             items[index].draw(context, position, m_client->getSelectedMenuItemFace());
         }
         else

@@ -1,4 +1,6 @@
 #include "kakounewidget.hpp"
+#include "colorpalette.hpp"
+#include "rpc/color.hpp"
 #include "statusbar.hpp"
 
 KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent)
@@ -88,6 +90,48 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
             }
 
             m_draw_options->setFont(font_name, font_size);
+        }
+        else if (option.key().length() > 13 && option.key().mid(0, 13) == "gui_set_color")
+        {
+            auto setColor = [&](auto setColorFunc) {
+                ColorPalette new_color_palette = m_draw_options->getColorPalette();
+                (new_color_palette.*
+                 setColorFunc)(RPC::Color(option.value()).toQColor(m_draw_options->getColorPalette()));
+                m_draw_options->setColorPalette(new_color_palette);
+            };
+
+            if (option.key() == "gui_set_color_gray")
+            {
+                setColor(&ColorPalette::setGray);
+            }
+            else if (option.key() == "gui_set_color_red")
+            {
+                setColor(&ColorPalette::setRed);
+            }
+            else if (option.key() == "gui_set_color_green")
+            {
+                setColor(&ColorPalette::setGreen);
+            }
+            else if (option.key() == "gui_set_color_yellow")
+            {
+                setColor(&ColorPalette::setYellow);
+            }
+            else if (option.key() == "gui_set_color_blue")
+            {
+                setColor(&ColorPalette::setBlue);
+            }
+            else if (option.key() == "gui_set_color_magenta")
+            {
+                setColor(&ColorPalette::setMagenta);
+            }
+            else if (option.key() == "gui_set_color_cyan")
+            {
+                setColor(&ColorPalette::setCyan);
+            }
+            else if (option.key() == "gui_set_color_white")
+            {
+                setColor(&ColorPalette::setWhite);
+            }
         }
         else
         {

@@ -11,12 +11,12 @@ QString Color::getValue() const
     return m_value;
 }
 
-QColor Color::toQColor()
+QColor Color::toQColor(const ColorPalette &color_palette)
 {
-    return toQColor(Color("black"));
+    return toQColor(Color("black"), color_palette);
 }
 
-QColor Color::toQColor(const Color &default_color)
+QColor Color::toQColor(const Color &default_color, const ColorPalette &color_palette)
 {
     QString color = m_value;
 
@@ -26,31 +26,31 @@ QColor Color::toQColor(const Color &default_color)
     }
     else if (color == "black" || color == "bright-black")
     {
-        return Qt::gray;
+        return color_palette.getGray();
     }
     else if (color == "red" || color == "bright-red")
     {
-        return Qt::red;
+        return color_palette.getRed();
     }
     else if (color == "green" || color == "bright-green")
     {
-        return Qt::green;
+        return color_palette.getGreen();
     }
     else if (color == "yellow" || color == "bright-yellow")
     {
-        return Qt::yellow;
+        return color_palette.getYellow();
     }
     else if (color == "blue" || color == "bright-blue")
     {
-        return Qt::blue;
+        return color_palette.getBlue();
     }
     else if (color == "magenta" || color == "bright-magenta")
     {
-        return Qt::magenta;
+        return color_palette.getMagenta();
     }
     else if (color == "cyan" || color == "bright-cyan")
     {
-        return Qt::cyan;
+        return color_palette.getCyan();
     }
     else if (color == "white" || color == "bright-white")
     {
