@@ -23,6 +23,7 @@ KakouneCli::~KakouneCli()
 int KakouneCli::run(QStringList command)
 {
     QString &command_name = command[0];
+    qDebug() << command_name;
     if (command_name == "new-client")
     {
         if (command.size() == 1)
@@ -43,8 +44,17 @@ int KakouneCli::run(QStringList command)
         {
             return 1;
         }
-        qDebug("FOCUS");
         QString request = QString("{\"method\":\"focusWindow\",\"client_name\":\"%1\"}").arg(command[1]);
+        m_socket->write(request.toLocal8Bit());
+        m_socket->flush();
+    }
+    else if (command_name == "rename-session")
+    {
+        if (command.size() != 2)
+        {
+            return 1;
+        }
+        QString request = QString("{\"method\":\"renameSession\",\"session_name\":\"%1\"}").arg(command[1]);
         m_socket->write(request.toLocal8Bit());
         m_socket->flush();
     }

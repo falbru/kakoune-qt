@@ -13,6 +13,7 @@ MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent
     m_root = new QSplitter(this);
     this->newClient("");
 
+    updateWindowTitle();
     setCentralWidget(m_root);
 }
 
@@ -77,4 +78,15 @@ void MainWindow::focusRight()
     }
 
     m_windows[index + 1]->setFocus();
+}
+
+void MainWindow::updateWindowTitle()
+{
+    setWindowTitle(m_session->getSessionId() + " - Kakoune Qt");
+}
+
+void MainWindow::renameSession(const QString &session_name)
+{
+    m_session->setSessionId(session_name);
+    updateWindowTitle();
 }
