@@ -1,4 +1,5 @@
 #include "atom.hpp"
+#include "attribute.hpp"
 
 namespace RPC
 {
@@ -25,6 +26,12 @@ void Atom::draw(const DrawContext &context, const QPoint &position, const Face &
     int height = context.cell_size.height();
 
     context.painter.setPen(fg);
+
+    QFont font = QFont{context.painter.font()};
+    font.setItalic(default_face.hasAttribute(Attribute::italic) || m_face.hasAttribute(Attribute::italic));
+    font.setBold(default_face.hasAttribute(Attribute::bold) || m_face.hasAttribute(Attribute::bold));
+    context.painter.setFont(font);
+
     context.painter.fillRect(position.x(), position.y(), width, height, bg);
 
     for (int i = 0; i < m_contents.size(); i++)

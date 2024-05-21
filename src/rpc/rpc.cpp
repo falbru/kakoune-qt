@@ -1,4 +1,5 @@
 #include "rpc.hpp"
+#include "attribute.hpp"
 #include <qjsondocument.h>
 
 namespace RPC
@@ -10,7 +11,60 @@ Coord deserializeCoord(QJsonObject coord_serialized)
 
 Face deserializeFace(QJsonObject face_serialized)
 {
-    return Face{face_serialized["fg"].toString(), face_serialized["bg"].toString(), QList<Attribute>()};
+    return Face{face_serialized["fg"].toString(), face_serialized["bg"].toString(),
+                deserializeAttributes(face_serialized["attributes"].toArray())};
+}
+
+Attribute deserializeAttribute(QString attribute)
+{
+    if (attribute == "underline")
+    {
+        return Attribute::underline;
+    }
+    if (attribute == "reverse")
+    {
+        return Attribute::reverse;
+    }
+    if (attribute == "blink")
+    {
+        return Attribute::blink;
+    }
+    if (attribute == "bold")
+    {
+        return Attribute::bold;
+    }
+    if (attribute == "dim")
+    {
+        return Attribute::dim;
+    }
+    if (attribute == "italic")
+    {
+        return Attribute::italic;
+    }
+    if (attribute == "final_fg")
+    {
+        return Attribute::final_fg;
+    }
+    if (attribute == "final_bg")
+    {
+        return Attribute::final_bg;
+    }
+    if (attribute == "final_attr")
+    {
+        return Attribute::final_attr;
+    }
+    qDebug() << "Unknown attribute: " << attribute;
+    return Attribute::bold;
+}
+
+QList<Attribute> deserializeAttributes(QJsonArray attributes_serialized)
+{
+    QList<Attribute> attributes;
+    for (const QJsonValue &atom_serialized : attributes_serialized)
+    {
+        attributes.append(deserializeAttribute(atom_serialized.toString()));
+    }
+    return attributes;
 }
 
 Atom deserializeAtom(QJsonObject atom_serialized)
