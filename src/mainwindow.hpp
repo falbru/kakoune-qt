@@ -6,6 +6,7 @@
 #include "kakounewidget.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
+#include <quuid.h>
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +19,8 @@ class MainWindow : public QMainWindow
     void focusLeft();
     void focusRight();
 
+    QUuid getID();
+
   public slots:
     void newClient(const QString &arguments);
     void focusWindow(const QString &uuid);
@@ -28,6 +31,7 @@ class MainWindow : public QMainWindow
     void updateWindowTitle();
 
   private:
+    QUuid m_id;
     QSplitter *m_root;
     KakouneSession *m_session;
 

@@ -3,20 +3,22 @@
 #include "rpc/color.hpp"
 #include "statusbar.hpp"
 
-KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QWidget *parent)
-    : KakouneWidget(session_id, draw_options, "", parent)
+KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, DrawOptions *draw_options,
+                             QWidget *parent)
+    : KakouneWidget(session_id, window_id, draw_options, "", parent)
 {
 }
 
-KakouneWidget::KakouneWidget(const QString &session_id, DrawOptions *draw_options, QString client_arguments,
-                             QWidget *parent)
+KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, DrawOptions *draw_options,
+                             QString client_arguments, QWidget *parent)
     : QWidget(parent)
 {
     m_id = QUuid::createUuid();
     m_draw_options = draw_options;
 
     m_client = new KakouneClient(session_id, client_arguments,
-                                 {{"KAKQT_SESSION_ID", session_id}, {"KAKQT_WINDOW_ID", m_id.toString()}});
+                                 {{"KAKQT_SESSION_ID", window_id.toString()}, {"KAKQT_WINDOW_ID", m_id.toString()}});
+
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);
     connect(m_client, &KakouneClient::setUIOptions, this, &KakouneWidget::setUIOptions);
