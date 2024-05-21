@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     QString session_id = generateRandomKakouneSessionId();
 
     MainWindow w(session_id);
-    KakouneServer server("KakouneQt." + session_id);
+    KakouneServer server("KakouneQt." + w.getID().toString());
     server.bind(&w);
 
     w.show();

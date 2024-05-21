@@ -1,8 +1,10 @@
 #include "mainwindow.hpp"
 #include "keybindings.hpp"
+#include <quuid.h>
 
 MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent)
 {
+    m_id = QUuid::createUuid();
     resize(1024, 768);
 
     m_draw_options = new DrawOptions();
@@ -26,9 +28,14 @@ void MainWindow::closeEvent(QCloseEvent *ev)
     delete m_session;
 }
 
+QUuid MainWindow::getID()
+{
+    return m_id;
+}
+
 void MainWindow::newClient(const QString &arguments)
 {
-    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_draw_options, arguments, m_root);
+    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_id, m_draw_options, arguments, m_root);
     kakwidget->installEventFilter(new KeyBindingsFilter(this));
     connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
         kakwidget->setParent(nullptr);
