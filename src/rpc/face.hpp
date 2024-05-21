@@ -16,6 +16,8 @@ class Face
     Color getFg() const;
     Color getBg() const;
 
+    bool hasAttribute(Attribute attribute) const;
+
   private:
     Color m_fg;
     Color m_bg;

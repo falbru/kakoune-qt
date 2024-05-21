@@ -1,4 +1,6 @@
 #include "face.hpp"
+#include "attribute.hpp"
+#include <qdebug.h>
 
 namespace RPC
 {
@@ -19,4 +21,10 @@ Color Face::getBg() const
 {
     return m_bg;
 }
+
+bool Face::hasAttribute(Attribute attribute) const
+{
+    return m_attributes.contains(attribute);
+}
+
 } // namespace RPC

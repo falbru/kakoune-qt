@@ -82,6 +82,8 @@ struct SetUIOptionsRequest
 
 Coord deserializeCoord(QJsonObject coord_serialized);
 Face deserializeFace(QJsonObject face_serialized);
+Attribute deserializeAttribute(QString attribute);
+QList<Attribute> deserializeAttributes(QJsonArray attributes_serialized);
 Atom deserializeAtom(QJsonObject atom_serialized);
 Line deserializeLine(QJsonArray line_serialized);
 Line deserializeLine(QJsonArray line_serialized);
