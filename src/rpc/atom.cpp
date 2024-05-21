@@ -39,5 +39,12 @@ void Atom::draw(const DrawContext &context, const QPoint &position, const Face &
         context.painter.drawText(QRect(position.x() + i * context.cell_size.width(), position.y(), width, height),
                                  Qt::AlignTop, m_contents.at(i));
     }
+
+    if (default_face.hasAttribute(Attribute::underline) || m_face.hasAttribute(Attribute::underline))
+    {
+        context.painter.drawLine(position.x(), position.y() + context.cell_size.height() - 1,
+                                 position.x() + context.cell_size.width() * m_contents.size(),
+                                 position.y() + context.cell_size.height() - 1);
+    }
 }
 } // namespace RPC
