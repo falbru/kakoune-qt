@@ -85,3 +85,8 @@ void KakouneSession::setSessionId(const QString &session_id)
 {
     m_session_id = session_id;
 }
+
+QString KakouneSession::generateRandomSessionId()
+{
+    return QString::number(QRandomGenerator::global()->bounded(1000, 9999));
+}

@@ -14,6 +14,8 @@ class KakouneSession : public QObject
     QString getSessionId();
     void setSessionId(const QString &session_id);
 
+    static QString generateRandomSessionId();
+
   private:
     QProcess m_process;
     QString m_session_id;
