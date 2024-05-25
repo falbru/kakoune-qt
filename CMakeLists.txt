@@ -19,10 +19,9 @@ qt_add_executable(kak-qt
     src/colorpalette.cpp
     src/keybindings.cpp
     src/drawoptions.cpp
-    src/kakouneserver.cpp
+    src/ipc.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
-    src/kakounecli.cpp
     src/kakounemenu.cpp
     src/kakouneinfobox.cpp
     src/kakounewidget.cpp
