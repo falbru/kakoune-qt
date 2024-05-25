@@ -1,8 +1,9 @@
 #include "ipc.hpp"
 #include <qjsondocument.h>
 
-namespace KakouneIPC {
-const QString getSocketName(const QString& session_id)
+namespace KakouneIPC
+{
+const QString getSocketName(const QString &session_id)
 {
     return "KakouneQt." + session_id;
 }
@@ -32,7 +33,6 @@ void IPCClient::send(QString method, QJsonObject parameters)
     m_socket->write(QJsonDocument(parameters).toJson(QJsonDocument::Compact));
     m_socket->flush();
 }
-
 
 IPCServer::IPCServer(const QString &session_id)
 {
@@ -97,4 +97,4 @@ void IPCServer::handleCommand(QJsonObject request)
     }
 }
 
-}
+} // namespace KakouneIPC
