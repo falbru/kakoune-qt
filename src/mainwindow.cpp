@@ -1,6 +1,11 @@
 #include "mainwindow.hpp"
+#include "container.hpp"
+#include "kakounewidget.hpp"
 #include "keybindings.hpp"
+#include <climits>
+#include <qnamespace.h>
 #include <quuid.h>
+#include <qwidget.h>
 
 MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent)
 {
@@ -12,11 +17,13 @@ MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent
 
     m_session = new KakouneSession(session_id);
 
-    m_root = new QSplitter(this);
-    this->newClient("");
+    m_root = new SplitContainer(Qt::Horizontal, this);
+    setCentralWidget(m_root);
+
+    KakouneWidget *kak_widget = createKakouneWidget();
+    m_root->addWidget(kak_widget);
 
     updateWindowTitle();
-    setCentralWidget(m_root);
 }
 
 MainWindow::~MainWindow()
@@ -33,58 +40,51 @@ QUuid MainWindow::getID()
     return m_id;
 }
 
-void MainWindow::newClient(const QString &arguments)
+void MainWindow::newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation)
 {
-    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_id, m_draw_options, arguments, m_root);
-    kakwidget->installEventFilter(new KeyBindingsFilter(this));
-    connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
-        kakwidget->setParent(nullptr);
-        m_windows.removeOne(kakwidget);
+    QWidget *source_widget = findKakouneWidget(client_name);
+    if (source_widget == nullptr)
+    {
+        qWarning() << "MainWindow::newSplit: Could not find KakouneWidget with client name: " << client_name;
+        return;
+    }
 
-        if (m_root->count() == 0)
-        {
-            close();
-        }
-    });
-
-    m_windows.append(kakwidget);
-    m_root->addWidget(kakwidget);
+    if (SplitContainer *parent_split = (SplitContainer *)Container::findParentContainer(source_widget))
+    {
+        KakouneWidget *new_kak_widget = createKakouneWidget(arguments);
+        parent_split->split(source_widget, new_kak_widget, orientation);
+        new_kak_widget->setFocus();
+    }
+    else
+    {
+        qWarning("MainWindow::newSplit: Couldn't find parent container");
+    }
 }
 
-void MainWindow::focusWindow(const QString &uuid)
+void MainWindow::focusWindow(const QString &client_name)
 {
-    for (KakouneWidget *window : m_windows)
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
+
+    if (kak_widget == nullptr)
     {
-        if (window->getID().toString() == uuid)
-        {
-            window->setFocus();
-            return;
-        }
+        qWarning() << "MainWindow::focusWindow: Could not find KakouneWidget with client name: " << client_name;
+        return;
     }
+
+    kak_widget->setFocus();
 }
 
 void MainWindow::focusLeft()
 {
-    QWidget *focused_widget = qApp->focusWidget();
-    int index = m_root->indexOf((QWidget *)focused_widget->parent()); // TODO
-    if (index <= 0)
-    {
-        return;
-    }
-
-    m_windows[index - 1]->setFocus();
+    // TODO
 }
 
 void MainWindow::focusRight()
 {
-    QWidget *focused_widget = qApp->focusWidget();
-    int index = m_root->indexOf((QWidget *)focused_widget->parent()); // TODO
-    if (index >= m_windows.size() - 1)
-    {
-        return;
-    }
-
-    m_windows[index + 1]->setFocus();
+    // TODO
+    // Container: have a lastFocusedWidget() method
+    // Iterate up to closest container that is Horizontal. Focus lastFocusedWidget
+    // When a Container gains focus, focus the last focused widget
 }
 
 void MainWindow::updateWindowTitle()
@@ -96,4 +96,37 @@ void MainWindow::renameSession(const QString &session_name)
 {
     m_session->setSessionId(session_name);
     updateWindowTitle();
+}
+
+KakouneWidget *MainWindow::findKakouneWidget(const QString &client_name)
+{
+    for (KakouneWidget *window : m_windows)
+    {
+        if (window->getID().toString() == client_name)
+        {
+            return window;
+        }
+    }
+    return nullptr;
+}
+
+KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
+{
+    KakouneWidget *kakwidget = new KakouneWidget(m_session->getSessionId(), m_id, m_draw_options, arguments, m_root);
+
+    kakwidget->installEventFilter(new KeyBindingsFilter(this));
+
+    connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
+        m_windows.removeOne(kakwidget);
+
+        if (m_windows.size() == 0)
+        {
+            close();
+            return;
+        }
+    });
+
+    m_windows.append(kakwidget);
+
+    return kakwidget;
 }

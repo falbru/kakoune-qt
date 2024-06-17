@@ -4,10 +4,17 @@ hook global SessionRenamed .*:.* %{
     nop %sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli rename-session $kak_session }
 }
 
-define-command -override -docstring "new [<commands>]: create a new Kakoune client" new -params .. %{ nop %sh{
-    KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli new-client $@
+define-command kakqt-split-horizontal -params .. -docstring "kakqt-split-horizontal [<commands>]: create a new Kakoune client" %{ nop %sh{
+    KAKQT_WINDOW_ID=$kak_client_env_KAKQT_WINDOW_ID KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli split-horizontal $@
 }}
-complete-command -menu new command
+complete-command -menu kakqt-split-horizontal command
+
+define-command kakqt-split-vertical -params .. -docstring "kakqt-split-vertical [<commands>]: create a new Kakoune client" %{ nop %sh{
+    KAKQT_WINDOW_ID=$kak_client_env_KAKQT_WINDOW_ID KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli split-vertical $@
+}}
+complete-command -menu kakqt-split-vertical command
+
+alias global new kakqt-split-horizontal
 
 define-command kakqt-focus -params ..1 -docstring '
 kakqt-focus [<client>]: focus the given client

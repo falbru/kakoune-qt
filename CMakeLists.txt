@@ -20,6 +20,8 @@ qt_add_executable(kak-qt
     src/keybindings.cpp
     src/drawoptions.cpp
     src/ipc.cpp
+    src/container.cpp
+    src/splitcontainer.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
     src/kakounemenu.cpp
