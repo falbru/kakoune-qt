@@ -22,6 +22,7 @@ qt_add_executable(kak-qt
     src/ipc.cpp
     src/container.cpp
     src/splitcontainer.cpp
+    src/lastfocusedfilter.cpp
     src/kakounesession.cpp
     src/kakouneclient.cpp
     src/kakounemenu.cpp
