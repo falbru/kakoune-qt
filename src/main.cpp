@@ -5,7 +5,10 @@
 #include <qcommandlineoption.h>
 #include <qcommandlineparser.h>
 #include <qcoreapplication.h>
+#include <qhashfunctions.h>
 #include <qjsonobject.h>
+#include <qnamespace.h>
+#include <qprocess.h>
 
 int main(int argc, char *argv[])
 {
@@ -36,9 +39,12 @@ int main(int argc, char *argv[])
 
         const QString subcommand = positional_arguments[0];
 
-        if (subcommand == "new-client")
+        if (subcommand == "split-horizontal" || subcommand == "split-vertical")
         {
-            ipc.send("newClient", {{"args", positional_arguments.mid(1).join(" ")}});
+            auto orientation = subcommand == "split-vertical" ? "vertical" : "horizontal";
+            ipc.send("newSplit", {{"args", positional_arguments.mid(1).join(" ")},
+                                  {"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_WINDOW_ID")},
+                                  {"orientation", orientation}});
         }
         else if (subcommand == "focus")
         {

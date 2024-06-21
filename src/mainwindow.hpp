@@ -4,6 +4,7 @@
 #include "drawoptions.hpp"
 #include "kakounesession.hpp"
 #include "kakounewidget.hpp"
+#include "splitcontainer.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
 #include <quuid.h>
@@ -22,8 +23,8 @@ class MainWindow : public QMainWindow
     QUuid getID();
 
   public slots:
-    void newClient(const QString &arguments);
-    void focusWindow(const QString &uuid);
+    void newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation);
+    void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
 
   protected:
@@ -32,11 +33,13 @@ class MainWindow : public QMainWindow
 
   private:
     QUuid m_id;
-    QSplitter *m_root;
     KakouneSession *m_session;
 
-    QList<KakouneWidget *> m_windows;
+    KakouneWidget *createKakouneWidget(const QString &arguments = "");
+    KakouneWidget *findKakouneWidget(const QString &client_name);
 
+    SplitContainer *m_root;
+    QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
 };
 

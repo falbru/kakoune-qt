@@ -30,7 +30,7 @@ class IPCServer : public QObject
 
     void bind(MainWindow *main_window);
   signals:
-    void newClient(const QString &arguments);
+    void newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation);
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
 

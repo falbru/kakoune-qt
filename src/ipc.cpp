@@ -1,5 +1,6 @@
 #include "ipc.hpp"
 #include <qjsondocument.h>
+#include <qnamespace.h>
 
 namespace KakouneIPC
 {
@@ -57,7 +58,7 @@ IPCServer::~IPCServer()
 
 void IPCServer::bind(MainWindow *main_window)
 {
-    connect(this, &IPCServer::newClient, main_window, &MainWindow::newClient);
+    connect(this, &IPCServer::newSplit, main_window, &MainWindow::newSplit);
     connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
     connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
 }
@@ -82,10 +83,10 @@ void IPCServer::handleConnection()
 void IPCServer::handleCommand(QJsonObject request)
 {
     const QString method = request["method"].toString();
-    qDebug() << method;
-    if (method == "newClient")
+    if (method == "newSplit")
     {
-        emit newClient(request["args"].isString() ? request["args"].toString() : "");
+        emit newSplit(request["client_name"].toString(), request["args"].isString() ? request["args"].toString() : "",
+                      request["orientation"].toString() == "vertical" ? Qt::Vertical : Qt::Horizontal);
     }
     else if (method == "focusWindow")
     {
