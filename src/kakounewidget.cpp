@@ -141,3 +141,18 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
         }
     }
 }
+
+KakouneWidget *KakouneWidget::findParentKakouneWidget(QWidget *widget)
+{
+    QWidget *parent_kak_widget = widget->parentWidget();
+    while (parent_kak_widget)
+    {
+        KakouneWidget *kak_widget = qobject_cast<KakouneWidget *>(parent_kak_widget);
+        if (kak_widget)
+        {
+            return kak_widget;
+        }
+        parent_kak_widget = parent_kak_widget->parentWidget();
+    }
+    return nullptr;
+}

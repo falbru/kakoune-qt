@@ -25,6 +25,8 @@ class KakouneWidget : public QWidget
 
     QSize sizeHint() const override;
 
+    static KakouneWidget *findParentKakouneWidget(QWidget *widget);
+
   private slots:
     void clientRefreshed();
     void setUIOptions(QMap<QString, QString> options);

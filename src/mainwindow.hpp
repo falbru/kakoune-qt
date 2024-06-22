@@ -4,6 +4,7 @@
 #include "drawoptions.hpp"
 #include "kakounesession.hpp"
 #include "kakounewidget.hpp"
+#include "lastfocusedfilter.hpp"
 #include "splitcontainer.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
@@ -19,6 +20,9 @@ class MainWindow : public QMainWindow
 
     void focusLeft();
     void focusRight();
+    void focusUp();
+    void focusDown();
+    void focusInDirection(std::function<bool(const QRect &, const QRect &)> isWithinBounds);
 
     QUuid getID();
 
@@ -30,6 +34,7 @@ class MainWindow : public QMainWindow
   protected:
     void closeEvent(QCloseEvent *ev) override;
     void updateWindowTitle();
+    void installLastFocusedFilter(QWidget *widget);
 
   private:
     QUuid m_id;
@@ -41,6 +46,8 @@ class MainWindow : public QMainWindow
     SplitContainer *m_root;
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
+
+    LastFocusedFilter *m_last_focused_filter;
 };
 
 #endif
