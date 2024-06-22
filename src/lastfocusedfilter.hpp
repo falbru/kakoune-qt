@@ -2,28 +2,28 @@
 #define LASTFOCUSEDFILTER_HPP
 
 #include "kakounewidget.hpp"
-#include <QObject>
 #include <QEvent>
+#include <QObject>
 #include <QWidget>
 
-class LastFocusedFilter : public QObject {
+class LastFocusedFilter : public QObject
+{
     Q_OBJECT
 
-public:
+  public:
     LastFocusedFilter(QObject *parent = nullptr);
 
-    size_t getLastTimeFocused(KakouneWidget* kak_widget) const;
+    size_t getLastTimeFocused(KakouneWidget *kak_widget) const;
 
-protected:
+  protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
-signals:
+  signals:
     void lastFocusedChanged(QWidget *widget);
 
-private:
+  private:
     int m_counter;
-    QMap<KakouneWidget*, size_t> m_last_focused_widgets;
+    QMap<KakouneWidget *, size_t> m_last_focused_widgets;
 };
-
 
 #endif

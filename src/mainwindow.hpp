@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
     void focusRight();
     void focusUp();
     void focusDown();
-    void focusInDirection(std::function<bool(const QRect&, const QRect&)> isWithinBounds);
+    void focusInDirection(std::function<bool(const QRect &, const QRect &)> isWithinBounds);
 
     QUuid getID();
 
@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow
   protected:
     void closeEvent(QCloseEvent *ev) override;
     void updateWindowTitle();
-    void installLastFocusedFilter(QWidget* widget);
+    void installLastFocusedFilter(QWidget *widget);
 
   private:
     QUuid m_id;
@@ -47,7 +47,7 @@ class MainWindow : public QMainWindow
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
 
-    LastFocusedFilter* m_last_focused_filter;
+    LastFocusedFilter *m_last_focused_filter;
 };
 
 #endif
