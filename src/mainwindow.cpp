@@ -4,6 +4,7 @@
 #include "keybindings.hpp"
 #include "lastfocusedfilter.hpp"
 #include <climits>
+#include <qaccessible_base.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
 #include <qpainter.h>
@@ -66,6 +67,36 @@ void MainWindow::newSplit(const QString &client_name, const QString &arguments, 
     }
 }
 
+void MainWindow::setWindowVisible(const QString &client_name, bool visible)
+{
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
+
+    if (kak_widget == nullptr)
+    {
+        qWarning() << "MainWindow::setWindowVisible: Could not find KakouneWidget with client name: " << client_name;
+        return;
+    }
+
+    kak_widget->setVisible(visible);
+
+    if (!visible && focusWidget() == kak_widget) {
+        // TODO
+    }
+}
+
+bool MainWindow::getWindowVisible(const QString &client_name)
+{
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
+
+    if (kak_widget == nullptr)
+    {
+        qWarning() << "MainWindow::setWindowVisible: Could not find KakouneWidget with client name: " << client_name;
+        return false;
+    }
+
+    return kak_widget->isVisible();
+}
+
 void MainWindow::focusWindow(const QString &client_name)
 {
     KakouneWidget *kak_widget = findKakouneWidget(client_name);
@@ -74,6 +105,10 @@ void MainWindow::focusWindow(const QString &client_name)
     {
         qWarning() << "MainWindow::focusWindow: Could not find KakouneWidget with client name: " << client_name;
         return;
+    }
+
+    if (!kak_widget->isVisible()) {
+        kak_widget->setVisible(true);
     }
 
     kak_widget->setFocus();

@@ -35,6 +35,15 @@ void IPCClient::send(QString method, QJsonObject parameters)
     m_socket->flush();
 }
 
+QString IPCClient::readResponse()
+{
+    if (!m_socket->waitForReadyRead())
+        return "";
+
+    QByteArray response_data = m_socket->readAll();
+    return QString(response_data);
+}
+
 IPCServer::IPCServer(const QString &session_id)
 {
     m_server = new QLocalServer(this);
@@ -59,6 +68,8 @@ IPCServer::~IPCServer()
 void IPCServer::bind(MainWindow *main_window)
 {
     connect(this, &IPCServer::newSplit, main_window, &MainWindow::newSplit);
+    connect(this, &IPCServer::setWindowVisible, main_window, &MainWindow::setWindowVisible);
+    connect(this, &IPCServer::getWindowVisible, main_window, &MainWindow::getWindowVisible);
     connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
     connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
 }
@@ -74,19 +85,33 @@ void IPCServer::handleConnection()
         QByteArray request = client_socket->readAll();
         QJsonObject request_json = QJsonDocument::fromJson(request).object();
 
-        handleCommand(request_json);
+        QString response = handleCommand(request_json);
+        if (!response.isEmpty()) {
+            QByteArray response_data = response.toUtf8();
+            client_socket->write(response_data);
+            client_socket->flush();
+        }
     }
 
     client_socket->disconnectFromServer();
 }
 
-void IPCServer::handleCommand(QJsonObject request)
+QString IPCServer::handleCommand(QJsonObject request)
 {
     const QString method = request["method"].toString();
     if (method == "newSplit")
     {
         emit newSplit(request["client_name"].toString(), request["args"].isString() ? request["args"].toString() : "",
                       request["orientation"].toString() == "vertical" ? Qt::Vertical : Qt::Horizontal);
+    }
+    else if (method == "setWindowVisible")
+    {
+        emit setWindowVisible(request["client_name"].toString(), request["visible"].toBool(true));
+    }
+    else if (method == "getWindowVisible")
+    {
+        bool visible = emit getWindowVisible(request["client_name"].toString());
+        return visible ? "true" : "false";
     }
     else if (method == "focusWindow")
     {
@@ -96,6 +121,8 @@ void IPCServer::handleCommand(QJsonObject request)
     {
         emit renameSession(request["session_name"].toString());
     }
+
+    return "";
 }
 
 } // namespace KakouneIPC

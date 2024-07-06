@@ -30,4 +30,32 @@ If no client is passed then the current one is used' \
 }
 complete-command -menu kakqt-focus client
 
+define-command kakqt-show -params ..1 -docstring '
+kakqt-show [<client>]: show the given client
+' \
+%{
+    evaluate-commands %sh{
+        if [ $# -eq 1 ]; then
+            printf "evaluate-commands -client '%s' kakqt-show" "$1"
+        elif [ -n "$kak_client_env_KAKQT_WINDOW_ID" ]; then
+            KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli show $kak_client_env_KAKQT_WINDOW_ID
+        fi
+    }
+}
+complete-command -menu kakqt-show client
+
+define-command kakqt-hide -params ..1 -docstring '
+kakqt-hide [<client>]: hide the given client
+' \
+%{
+    evaluate-commands %sh{
+        if [ $# -eq 1 ]; then
+            printf "evaluate-commands -client '%s' kakqt-hide" "$1"
+        elif [ -n "$kak_client_env_KAKQT_WINDOW_ID" ]; then
+            KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli hide $kak_client_env_KAKQT_WINDOW_ID
+        fi
+    }
+}
+complete-command -menu kakqt-hide client
+
 }
