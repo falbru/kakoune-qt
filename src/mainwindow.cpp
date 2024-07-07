@@ -223,7 +223,7 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
     kakwidget->installEventFilter(new KeyBindingsFilter(this));
     installLastFocusedFilter(kakwidget);
 
-    connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
+    connect(kakwidget, &KakouneWidget::finished, this, [=]() {
         m_windows.removeOne(kakwidget);
 
         if (m_windows.size() == 0)
@@ -231,11 +231,29 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
             close();
             return;
         }
+
+        ensureOneVisibleKakouneWidget();
     });
+
+    connect(kakwidget, &KakouneWidget::hidden, this, &MainWindow::ensureOneVisibleKakouneWidget);
 
     m_windows.append(kakwidget);
 
     return kakwidget;
+}
+
+void MainWindow::ensureOneVisibleKakouneWidget()
+{
+    for (KakouneWidget* kak_widget : m_windows) {
+        if (kak_widget->isVisible())
+            return;
+    }
+
+    KakouneWidget* last_focused = m_last_focused_filter->findLastFocusedWidget(m_windows);
+    if (last_focused) {
+        last_focused->show();
+        last_focused->setFocus();
+    }
 }
 
 void MainWindow::installLastFocusedFilter(QWidget *widget)

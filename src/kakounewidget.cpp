@@ -156,3 +156,8 @@ KakouneWidget *KakouneWidget::findParentKakouneWidget(QWidget *widget)
     }
     return nullptr;
 }
+
+void KakouneWidget::hideEvent(QHideEvent *event)
+{
+    emit hidden();
+}

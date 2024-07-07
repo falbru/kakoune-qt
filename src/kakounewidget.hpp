@@ -33,6 +33,10 @@ class KakouneWidget : public QWidget
   signals:
     void finished();
     void refresh();
+    void hidden();
+
+  protected:
+    void hideEvent(QHideEvent *event) override;
 
   private:
     QUuid m_id;
