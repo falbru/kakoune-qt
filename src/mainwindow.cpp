@@ -77,11 +77,24 @@ void MainWindow::setWindowVisible(const QString &client_name, bool visible)
         return;
     }
 
-    kak_widget->setVisible(visible);
 
     if (!visible && focusWidget() == kak_widget) {
-        // TODO
+        QList<KakouneWidget*> find_candidates = QList<KakouneWidget*>();
+        for (KakouneWidget* candidate : m_windows) {
+            if (candidate == kak_widget)
+                continue;
+
+            find_candidates.append(candidate);
+        }
+
+        QWidget* last_focused = m_last_focused_filter->findLastFocusedWidget(find_candidates);
+        if (last_focused)
+        {
+            last_focused->setFocus();
+        }
     }
+
+    kak_widget->setVisible(visible);
 }
 
 bool MainWindow::getWindowVisible(const QString &client_name)
@@ -123,7 +136,7 @@ void MainWindow::focusInDirection(std::function<bool(const QRect &, const QRect 
 
     for (KakouneWidget *kak_widget : m_windows)
     {
-        if (kak_widget)
+        if (kak_widget && kak_widget->isVisible())
         {
             QPoint kak_widget_pos = kak_widget->mapToGlobal(kak_widget->rect().topLeft());
 
@@ -138,26 +151,15 @@ void MainWindow::focusInDirection(std::function<bool(const QRect &, const QRect 
         }
     }
 
-    KakouneWidget *last_focused_candidate = nullptr;
-    int max_last_focused = INT_MIN;
+    KakouneWidget *last_focused = m_last_focused_filter->findLastFocusedWidget(focus_candidates);
 
-    for (auto &kak_widget : focus_candidates)
+    if (last_focused)
     {
-        int last_focused = m_last_focused_filter->getLastTimeFocused(kak_widget);
-        if (last_focused > max_last_focused)
-        {
-            last_focused_candidate = kak_widget;
-            max_last_focused = last_focused;
-        }
-    }
-
-    if (last_focused_candidate)
-    {
-        last_focused_candidate->setFocus();
+        last_focused->setFocus();
     }
 }
 
-const qreal WIDGET_DIFF_TOLERANCE = 25;
+const qreal WIDGET_DIFF_TOLERANCE = 32;
 
 void MainWindow::focusLeft()
 {
