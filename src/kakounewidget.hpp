@@ -7,6 +7,7 @@
 #include "kakounemenu.hpp"
 #include "kakounetextedit.hpp"
 #include <QtWidgets>
+#include <qevent.h>
 
 class KakouneWidget : public QWidget
 {
@@ -27,12 +28,15 @@ class KakouneWidget : public QWidget
 
     static KakouneWidget *findParentKakouneWidget(QWidget *widget);
 
+    void setVisible(bool visible) override;
+
   private slots:
     void clientRefreshed();
     void setUIOptions(QMap<QString, QString> options);
   signals:
     void finished();
     void refresh();
+    void changedVisibility(bool visible);
 
   private:
     QUuid m_id;

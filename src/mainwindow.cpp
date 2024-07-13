@@ -4,6 +4,7 @@
 #include "keybindings.hpp"
 #include "lastfocusedfilter.hpp"
 #include <climits>
+#include <qaccessible_base.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
 #include <qpainter.h>
@@ -66,6 +67,50 @@ void MainWindow::newSplit(const QString &client_name, const QString &arguments, 
     }
 }
 
+void MainWindow::setWindowVisible(const QString &client_name, bool visible)
+{
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
+
+    if (kak_widget == nullptr)
+    {
+        qWarning() << "MainWindow::setWindowVisible: Could not find KakouneWidget with client name: " << client_name;
+        return;
+    }
+
+    if (!visible)
+    {
+        QList<KakouneWidget *> find_candidates = QList<KakouneWidget *>();
+        for (KakouneWidget *candidate : m_windows)
+        {
+            if (candidate == kak_widget || !candidate->isVisible())
+                continue;
+
+            find_candidates.append(candidate);
+        }
+
+        QWidget *last_focused = m_last_focused_filter->findLastFocusedWidget(find_candidates);
+        if (last_focused)
+        {
+            last_focused->setFocus();
+        }
+    }
+
+    kak_widget->setVisible(visible);
+}
+
+bool MainWindow::getWindowVisible(const QString &client_name)
+{
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
+
+    if (kak_widget == nullptr)
+    {
+        qWarning() << "MainWindow::setWindowVisible: Could not find KakouneWidget with client name: " << client_name;
+        return false;
+    }
+
+    return kak_widget->isVisible();
+}
+
 void MainWindow::focusWindow(const QString &client_name)
 {
     KakouneWidget *kak_widget = findKakouneWidget(client_name);
@@ -74,6 +119,11 @@ void MainWindow::focusWindow(const QString &client_name)
     {
         qWarning() << "MainWindow::focusWindow: Could not find KakouneWidget with client name: " << client_name;
         return;
+    }
+
+    if (!kak_widget->isVisible())
+    {
+        kak_widget->setVisible(true);
     }
 
     kak_widget->setFocus();
@@ -88,7 +138,7 @@ void MainWindow::focusInDirection(std::function<bool(const QRect &, const QRect 
 
     for (KakouneWidget *kak_widget : m_windows)
     {
-        if (kak_widget)
+        if (kak_widget && kak_widget->isVisible())
         {
             QPoint kak_widget_pos = kak_widget->mapToGlobal(kak_widget->rect().topLeft());
 
@@ -103,26 +153,15 @@ void MainWindow::focusInDirection(std::function<bool(const QRect &, const QRect 
         }
     }
 
-    KakouneWidget *last_focused_candidate = nullptr;
-    int max_last_focused = INT_MIN;
+    KakouneWidget *last_focused = m_last_focused_filter->findLastFocusedWidget(focus_candidates);
 
-    for (auto &kak_widget : focus_candidates)
+    if (last_focused)
     {
-        int last_focused = m_last_focused_filter->getLastTimeFocused(kak_widget);
-        if (last_focused > max_last_focused)
-        {
-            last_focused_candidate = kak_widget;
-            max_last_focused = last_focused;
-        }
-    }
-
-    if (last_focused_candidate)
-    {
-        last_focused_candidate->setFocus();
+        last_focused->setFocus();
     }
 }
 
-const qreal WIDGET_DIFF_TOLERANCE = 25;
+const qreal WIDGET_DIFF_TOLERANCE = 32;
 
 void MainWindow::focusLeft()
 {
@@ -186,7 +225,7 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
     kakwidget->installEventFilter(new KeyBindingsFilter(this));
     installLastFocusedFilter(kakwidget);
 
-    connect(kakwidget, &KakouneWidget::finished, m_root, [=]() {
+    connect(kakwidget, &KakouneWidget::finished, this, [=]() {
         m_windows.removeOne(kakwidget);
 
         if (m_windows.size() == 0)
@@ -194,11 +233,61 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
             close();
             return;
         }
+
+        if (kakwidget->isAncestorOf(focusWidget()))
+        {
+            focusLastFocusedVisibleKakouneWidget();
+        }
+        ensureOneVisibleKakouneWidget();
+    });
+
+    connect(kakwidget, &KakouneWidget::changedVisibility, this, [=](bool visible) {
+        if (!visible)
+        {
+            if (kakwidget->isAncestorOf(focusWidget()))
+            {
+                focusLastFocusedVisibleKakouneWidget();
+            }
+            ensureOneVisibleKakouneWidget();
+        }
     });
 
     m_windows.append(kakwidget);
 
     return kakwidget;
+}
+
+void MainWindow::ensureOneVisibleKakouneWidget()
+{
+    for (KakouneWidget *kak_widget : m_windows)
+    {
+        if (kak_widget && kak_widget->isVisible())
+            return;
+    }
+
+    KakouneWidget *last_focused = m_last_focused_filter->findLastFocusedWidget(m_windows);
+    if (last_focused)
+    {
+        last_focused->show();
+        last_focused->setFocus();
+    }
+}
+
+void MainWindow::focusLastFocusedVisibleKakouneWidget()
+{
+    QList<KakouneWidget *> visible_windows;
+    for (KakouneWidget *kak_widget : visible_windows)
+    {
+        if (!kak_widget->isVisible())
+            continue;
+        visible_windows.append(kak_widget);
+    }
+
+    KakouneWidget *last_focused = m_last_focused_filter->findLastFocusedWidget(visible_windows);
+    if (last_focused)
+    {
+        last_focused->setFocus();
+    }
 }
 
 void MainWindow::installLastFocusedFilter(QWidget *widget)

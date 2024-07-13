@@ -28,6 +28,8 @@ class MainWindow : public QMainWindow
 
   public slots:
     void newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation);
+    void setWindowVisible(const QString &client_name, bool visible);
+    bool getWindowVisible(const QString &client_name);
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
 
@@ -42,6 +44,8 @@ class MainWindow : public QMainWindow
 
     KakouneWidget *createKakouneWidget(const QString &arguments = "");
     KakouneWidget *findKakouneWidget(const QString &client_name);
+    void ensureOneVisibleKakouneWidget();
+    void focusLastFocusedVisibleKakouneWidget();
 
     SplitContainer *m_root;
     QList<KakouneWidget *> m_windows;

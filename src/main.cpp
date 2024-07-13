@@ -5,6 +5,7 @@
 #include <qcommandlineoption.h>
 #include <qcommandlineparser.h>
 #include <qcoreapplication.h>
+#include <qdebug.h>
 #include <qhashfunctions.h>
 #include <qjsonobject.h>
 #include <qnamespace.h>
@@ -21,9 +22,14 @@ int main(int argc, char *argv[])
         QCommandLineParser parser;
         const QCommandLineOption helpOption = parser.addHelpOption();
 
-        parser.addPositionalArgument("subcommand", "new-client: Create a new Kakoune client with <args>\n"
-                                                   "focus: Focus the Kakoune client with <name>\n"
-                                                   "rename-session: Rename the Kakoune session to <id>\n");
+        parser.addPositionalArgument("subcommand",
+                                     "split-horizontal <args>: Create a new horizontal split <args>\n"
+                                     "split-vertical <args>: Create a new vertical split <args>\n"
+                                     "focus <name>: Focus the Kakoune client with <name>\n"
+                                     "hide <name>: Hide the Kakoune client with <name>\n"
+                                     "show <name>: Show the Kakoune client with <name>\n"
+                                     "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
+                                     "rename-session <id>: Rename the Kakoune session to <id>\n");
 
         parser.process(cli_app);
 
@@ -45,6 +51,22 @@ int main(int argc, char *argv[])
             ipc.send("newSplit", {{"args", positional_arguments.mid(1).join(" ")},
                                   {"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_WINDOW_ID")},
                                   {"orientation", orientation}});
+        }
+        else if (subcommand == "show" || subcommand == "hide")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+
+            bool visible = subcommand == "show";
+            ipc.send("setWindowVisible", {{"client_name", positional_arguments[1]}, {"visible", visible}});
+        }
+        else if (subcommand == "get-visible")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+            ipc.send("getWindowVisible", {{"client_name", positional_arguments[1]}});
+
+            QTextStream(stdout) << ipc.readResponse() << Qt::endl;
         }
         else if (subcommand == "focus")
         {
