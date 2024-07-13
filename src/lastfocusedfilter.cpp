@@ -28,7 +28,7 @@ bool LastFocusedFilter::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
-KakouneWidget* LastFocusedFilter::findLastFocusedWidget(const QList<KakouneWidget*>& kak_widgets) const
+KakouneWidget *LastFocusedFilter::findLastFocusedWidget(const QList<KakouneWidget *> &kak_widgets) const
 {
     KakouneWidget *last_focused_widget = nullptr;
     int max_last_focused = INT_MIN;

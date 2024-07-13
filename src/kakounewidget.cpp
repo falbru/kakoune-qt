@@ -160,10 +160,13 @@ KakouneWidget *KakouneWidget::findParentKakouneWidget(QWidget *widget)
     return nullptr;
 }
 
-void KakouneWidget::setVisible(bool visible) {
-    if (visible) {
-        Container* parent_container = Container::findParentContainer(this);
-        if (parent_container) parent_container->show();
+void KakouneWidget::setVisible(bool visible)
+{
+    if (visible)
+    {
+        Container *parent_container = Container::findParentContainer(this);
+        if (parent_container)
+            parent_container->show();
     }
 
     QWidget::setVisible(visible);

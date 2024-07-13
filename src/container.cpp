@@ -37,7 +37,8 @@ void Container::connectWidget(QWidget *widget)
         }
         else
         {
-            if(m_splitter->widget(0)->isVisible()) m_splitter->widget(0)->setFocus(); // TODO Utilize LastFocusedFilter
+            if (m_splitter->widget(0)->isVisible())
+                m_splitter->widget(0)->setFocus(); // TODO Utilize LastFocusedFilter
         }
     });
 }
@@ -50,12 +51,14 @@ void Container::connectKakouneWidget(KakouneWidget *kak_widget)
     });
 
     connect(kak_widget, &KakouneWidget::changedVisibility, this, [=](bool visible) {
-        if (visible) {
+        if (visible)
+        {
             show();
             return;
         }
 
-        for (int i = 0; i < m_splitter->count(); i++) {
+        for (int i = 0; i < m_splitter->count(); i++)
+        {
             if (m_splitter->widget(i)->isVisible())
                 return;
         }
@@ -64,7 +67,8 @@ void Container::connectKakouneWidget(KakouneWidget *kak_widget)
     });
 }
 
-void Container::disconnectWidget(QWidget *widget) {
+void Container::disconnectWidget(QWidget *widget)
+{
     disconnect(widget, nullptr, this, nullptr);
 }
 

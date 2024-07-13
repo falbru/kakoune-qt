@@ -22,13 +22,14 @@ int main(int argc, char *argv[])
         QCommandLineParser parser;
         const QCommandLineOption helpOption = parser.addHelpOption();
 
-        parser.addPositionalArgument("subcommand", "split-horizontal <args>: Create a new horizontal split <args>\n"
-                                                   "split-vertical <args>: Create a new vertical split <args>\n"
-                                                   "focus <name>: Focus the Kakoune client with <name>\n"
-                                                   "hide <name>: Hide the Kakoune client with <name>\n"
-                                                   "show <name>: Show the Kakoune client with <name>\n"
-                                                   "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
-                                                   "rename-session <id>: Rename the Kakoune session to <id>\n");
+        parser.addPositionalArgument("subcommand",
+                                     "split-horizontal <args>: Create a new horizontal split <args>\n"
+                                     "split-vertical <args>: Create a new vertical split <args>\n"
+                                     "focus <name>: Focus the Kakoune client with <name>\n"
+                                     "hide <name>: Hide the Kakoune client with <name>\n"
+                                     "show <name>: Show the Kakoune client with <name>\n"
+                                     "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
+                                     "rename-session <id>: Rename the Kakoune session to <id>\n");
 
         parser.process(cli_app);
 

@@ -14,7 +14,7 @@ class LastFocusedFilter : public QObject
     LastFocusedFilter(QObject *parent = nullptr);
 
     size_t getLastTimeFocused(KakouneWidget *kak_widget) const;
-    KakouneWidget* findLastFocusedWidget(const QList<KakouneWidget*>& kak_widgets) const;
+    KakouneWidget *findLastFocusedWidget(const QList<KakouneWidget *> &kak_widgets) const;
 
   protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

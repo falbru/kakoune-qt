@@ -86,7 +86,8 @@ void IPCServer::handleConnection()
         QJsonObject request_json = QJsonDocument::fromJson(request).object();
 
         QString response = handleCommand(request_json);
-        if (!response.isEmpty()) {
+        if (!response.isEmpty())
+        {
             QByteArray response_data = response.toUtf8();
             client_socket->write(response_data);
             client_socket->flush();
