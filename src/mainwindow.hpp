@@ -45,6 +45,7 @@ class MainWindow : public QMainWindow
     KakouneWidget *createKakouneWidget(const QString &arguments = "");
     KakouneWidget *findKakouneWidget(const QString &client_name);
     void ensureOneVisibleKakouneWidget();
+    void focusLastFocusedVisibleKakouneWidget();
 
     SplitContainer *m_root;
     QList<KakouneWidget *> m_windows;

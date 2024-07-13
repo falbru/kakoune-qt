@@ -37,7 +37,7 @@ void Container::connectWidget(QWidget *widget)
         }
         else
         {
-            m_splitter->widget(0)->setFocus();
+            if(m_splitter->widget(0)->isVisible()) m_splitter->widget(0)->setFocus(); // TODO Utilize LastFocusedFilter
         }
     });
 }
@@ -48,6 +48,24 @@ void Container::connectKakouneWidget(KakouneWidget *kak_widget)
         kak_widget->setParent(nullptr);
         kak_widget->deleteLater();
     });
+
+    connect(kak_widget, &KakouneWidget::changedVisibility, this, [=](bool visible) {
+        if (visible) {
+            show();
+            return;
+        }
+
+        for (int i = 0; i < m_splitter->count(); i++) {
+            if (m_splitter->widget(i)->isVisible())
+                return;
+        }
+
+        hide();
+    });
+}
+
+void Container::disconnectWidget(QWidget *widget) {
+    disconnect(widget, nullptr, this, nullptr);
 }
 
 void Container::focusInEvent(QFocusEvent *event)

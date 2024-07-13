@@ -1,7 +1,10 @@
 #include "kakounewidget.hpp"
 #include "colorpalette.hpp"
+#include "container.hpp"
 #include "rpc/color.hpp"
 #include "statusbar.hpp"
+#include <qcoreevent.h>
+#include <qevent.h>
 
 KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, DrawOptions *draw_options,
                              QWidget *parent)
@@ -157,7 +160,13 @@ KakouneWidget *KakouneWidget::findParentKakouneWidget(QWidget *widget)
     return nullptr;
 }
 
-void KakouneWidget::hideEvent(QHideEvent *event)
-{
-    emit hidden();
+void KakouneWidget::setVisible(bool visible) {
+    if (visible) {
+        Container* parent_container = Container::findParentContainer(this);
+        if (parent_container) parent_container->show();
+    }
+
+    QWidget::setVisible(visible);
+
+    emit changedVisibility(visible);
 }

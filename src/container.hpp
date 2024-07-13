@@ -23,6 +23,7 @@ class Container : public QWidget
   protected:
     void connectWidget(QWidget *widget);
     void connectKakouneWidget(KakouneWidget *kak_widget);
+    void disconnectWidget(QWidget *widget);
 
     void focusInEvent(QFocusEvent *event) override;
 

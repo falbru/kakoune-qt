@@ -78,10 +78,10 @@ void MainWindow::setWindowVisible(const QString &client_name, bool visible)
     }
 
 
-    if (!visible && focusWidget() == kak_widget) {
+    if (!visible) {
         QList<KakouneWidget*> find_candidates = QList<KakouneWidget*>();
         for (KakouneWidget* candidate : m_windows) {
-            if (candidate == kak_widget)
+            if (candidate == kak_widget || !candidate->isVisible())
                 continue;
 
             find_candidates.append(candidate);
@@ -232,10 +232,20 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
             return;
         }
 
+        if (kakwidget->isAncestorOf(focusWidget())) {
+            focusLastFocusedVisibleKakouneWidget();
+        }
         ensureOneVisibleKakouneWidget();
     });
 
-    connect(kakwidget, &KakouneWidget::hidden, this, &MainWindow::ensureOneVisibleKakouneWidget);
+    connect(kakwidget, &KakouneWidget::changedVisibility, this, [=](bool visible) {
+        if (!visible) {
+            if (kakwidget->isAncestorOf(focusWidget())) {
+                focusLastFocusedVisibleKakouneWidget();
+            }
+            ensureOneVisibleKakouneWidget();
+        }
+    });
 
     m_windows.append(kakwidget);
 
@@ -245,13 +255,27 @@ KakouneWidget *MainWindow::createKakouneWidget(const QString &arguments)
 void MainWindow::ensureOneVisibleKakouneWidget()
 {
     for (KakouneWidget* kak_widget : m_windows) {
-        if (kak_widget->isVisible())
+        if (kak_widget && kak_widget->isVisible())
             return;
     }
 
     KakouneWidget* last_focused = m_last_focused_filter->findLastFocusedWidget(m_windows);
     if (last_focused) {
         last_focused->show();
+        last_focused->setFocus();
+    }
+}
+
+void MainWindow::focusLastFocusedVisibleKakouneWidget() {
+    QList<KakouneWidget *> visible_windows;
+    for (KakouneWidget* kak_widget : visible_windows) {
+        if (!kak_widget->isVisible())
+            continue;
+        visible_windows.append(kak_widget);
+    }
+
+    KakouneWidget* last_focused = m_last_focused_filter->findLastFocusedWidget(visible_windows);
+    if (last_focused) {
         last_focused->setFocus();
     }
 }
