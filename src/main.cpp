@@ -79,8 +79,9 @@ int main(int argc, char *argv[])
         {
             if (positional_arguments.size() < 2)
                 return 1;
-            ipc.send("renameClient", {{"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_CLIENT_ID")},
-                                      {"new_client_name", positional_arguments[1]}});
+            ipc.send("renameClient",
+                     {{"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_CLIENT_ID")},
+                      {"new_client_name", positional_arguments[1]}});
         }
         else if (subcommand == "rename-session")
         {

@@ -154,7 +154,7 @@ void KakouneClient::setClientName(QString client_name)
     m_client_name = client_name;
 }
 
-const QString& KakouneClient::getClientName() const
+const QString &KakouneClient::getClientName() const
 {
     return m_client_name;
 }

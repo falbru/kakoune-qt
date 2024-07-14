@@ -21,7 +21,7 @@ class KakouneClient : public QObject
     void sendMouseRelease(const QString &button, int line, int column);
     void resize(int rows, int columns);
 
-    const QString& getClientName() const;
+    const QString &getClientName() const;
     void setClientName(QString client_name);
 
     QList<RPC::Line> getLines();

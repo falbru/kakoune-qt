@@ -209,7 +209,7 @@ void MainWindow::renameSession(const QString &session_name)
 
 void MainWindow::renameClient(const QString &client_name, const QString &new_client_name)
 {
-    KakouneWidget* kak_widget = findKakouneWidget(client_name);
+    KakouneWidget *kak_widget = findKakouneWidget(client_name);
     if (!kak_widget)
     {
         qWarning("MainWindow::renameClient client_name does not exist");
