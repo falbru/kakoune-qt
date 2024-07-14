@@ -20,7 +20,7 @@ KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, 
     m_draw_options = draw_options;
 
     m_client = new KakouneClient(session_id, client_arguments,
-                                 {{"KAKQT_SESSION_ID", window_id.toString()}, {"KAKQT_WINDOW_ID", m_id.toString()}});
+                                 {{"KAKQT_SESSION_ID", window_id.toString()}, {"KAKQT_CLIENT_ID", m_id.toString()}});
 
     connect(m_client, &KakouneClient::refresh, this, &KakouneWidget::clientRefreshed);
     connect(m_client, &KakouneClient::finished, this, &KakouneWidget::finished);

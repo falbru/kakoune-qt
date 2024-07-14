@@ -21,6 +21,9 @@ class KakouneClient : public QObject
     void sendMouseRelease(const QString &button, int line, int column);
     void resize(int rows, int columns);
 
+    const QString &getClientName() const;
+    void setClientName(QString client_name);
+
     QList<RPC::Line> getLines();
     RPC::Face getDefaultFace();
     RPC::Face getPaddingFace();
@@ -54,6 +57,7 @@ class KakouneClient : public QObject
     void sendRequest(const QString &method_name, QJsonArray params);
     void handleRequest(QJsonObject request);
 
+    QString m_client_name;
     QProcess m_process;
 
     QList<RPC::Line> m_lines;
