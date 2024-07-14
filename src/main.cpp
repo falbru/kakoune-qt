@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
                                      "hide <name>: Hide the Kakoune client with <name>\n"
                                      "show <name>: Show the Kakoune client with <name>\n"
                                      "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
+                                     "rename-client <name>: Rename the Kakoune client to <name>\n"
                                      "rename-session <id>: Rename the Kakoune session to <id>\n");
 
         parser.process(cli_app);
@@ -73,6 +74,13 @@ int main(int argc, char *argv[])
             if (positional_arguments.size() < 2)
                 return 1;
             ipc.send("focusWindow", {{"client_name", positional_arguments[1]}});
+        }
+        else if (subcommand == "rename-client")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+            ipc.send("renameClient", {{"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_CLIENT_ID")},
+                                      {"new_client_name", positional_arguments[1]}});
         }
         else if (subcommand == "rename-session")
         {

@@ -5,6 +5,7 @@
 #include "lastfocusedfilter.hpp"
 #include <climits>
 #include <qaccessible_base.h>
+#include <qglobal.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
 #include <qpainter.h>
@@ -206,11 +207,24 @@ void MainWindow::renameSession(const QString &session_name)
     updateWindowTitle();
 }
 
+void MainWindow::renameClient(const QString &client_name, const QString &new_client_name)
+{
+    KakouneWidget* kak_widget = findKakouneWidget(client_name);
+    if (!kak_widget)
+    {
+        qWarning("MainWindow::renameClient client_name does not exist");
+        return;
+    }
+
+    qDebug() << new_client_name;
+    kak_widget->getClient()->setClientName(new_client_name);
+}
+
 KakouneWidget *MainWindow::findKakouneWidget(const QString &client_name)
 {
     for (KakouneWidget *window : m_windows)
     {
-        if (window->getID().toString() == client_name)
+        if (window->getID().toString() == client_name || window->getClient()->getClientName() == client_name)
         {
             return window;
         }

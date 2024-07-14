@@ -149,6 +149,16 @@ void KakouneClient::resize(int rows, int columns)
     sendRequest("resize", QJsonArray{rows, columns});
 }
 
+void KakouneClient::setClientName(QString client_name)
+{
+    m_client_name = client_name;
+}
+
+const QString& KakouneClient::getClientName() const
+{
+    return m_client_name;
+}
+
 QList<RPC::Line> KakouneClient::getLines()
 {
     return m_lines;

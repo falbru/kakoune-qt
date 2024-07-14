@@ -38,6 +38,7 @@ class IPCServer : public QObject
     void setWindowVisible(const QString &client_name, bool visible);
     bool getWindowVisible(const QString &client_name);
     void focusWindow(const QString &client_name);
+    void renameClient(const QString &client_id, const QString &new_client_name);
     void renameSession(const QString &session_name);
 
   protected:

@@ -72,6 +72,7 @@ void IPCServer::bind(MainWindow *main_window)
     connect(this, &IPCServer::getWindowVisible, main_window, &MainWindow::getWindowVisible);
     connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
     connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
+    connect(this, &IPCServer::renameClient, main_window, &MainWindow::renameClient);
 }
 
 void IPCServer::handleConnection()
@@ -117,6 +118,10 @@ QString IPCServer::handleCommand(QJsonObject request)
     else if (method == "focusWindow")
     {
         emit focusWindow(request["client_name"].toString());
+    }
+    else if (method == "renameClient")
+    {
+        emit renameClient(request["client_name"].toString(), request["new_client_name"].toString());
     }
     else if (method == "renameSession")
     {
