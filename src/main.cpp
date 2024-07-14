@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         {
             auto orientation = subcommand == "split-vertical" ? "vertical" : "horizontal";
             ipc.send("newSplit", {{"args", positional_arguments.mid(1).join(" ")},
-                                  {"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_WINDOW_ID")},
+                                  {"client_name", QProcessEnvironment::systemEnvironment().value("KAKQT_CLIENT_ID")},
                                   {"orientation", orientation}});
         }
         else if (subcommand == "show" || subcommand == "hide")
