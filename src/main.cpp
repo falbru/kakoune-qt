@@ -103,6 +103,10 @@ int main(int argc, char *argv[])
         QCommandLineParser parser;
         parser.addPositionalArgument("mode", "cli: Use the CLI interface");
         parser.setApplicationDescription("Kakoune Qt - A Qt-based frontend for Kakoune.");
+
+        const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
+        parser.addOption(setSessionIdOption);
+
         const QCommandLineOption helpOption = parser.addHelpOption();
         const QCommandLineOption versionOption = parser.addVersionOption();
 
@@ -119,7 +123,10 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        MainWindow main_window(KakouneSession::generateRandomSessionId());
+        QString session_id = parser.isSet(setSessionIdOption) ? parser.value(setSessionIdOption)
+                                                              : KakouneSession::generateRandomSessionId();
+
+        MainWindow main_window(session_id);
         KakouneIPC::IPCServer server(main_window.getID().toString());
         server.bind(&main_window);
 
