@@ -1,7 +1,11 @@
 provide-module kakoune-qt %{
 
 hook global SessionRenamed .*:.* %{
-    nop %sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli rename-session $kak_session }
+    evaluate-commands %sh{
+        for client in $kak_client_list; do
+            printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt cli rename-session %s }}\n' $client $kak_session
+        done
+    }
 }
 
 hook global ClientCreate .* %{

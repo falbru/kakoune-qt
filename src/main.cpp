@@ -1,6 +1,7 @@
 #include "ipc.hpp"
 #include "kakounesession.hpp"
 #include "mainwindow.hpp"
+#include "remotekakounesession.hpp"
 #include <QApplication>
 #include <qcommandlineoption.h>
 #include <qcommandlineparser.h>
@@ -105,7 +106,9 @@ int main(int argc, char *argv[])
         parser.setApplicationDescription("Kakoune Qt - A Qt-based frontend for Kakoune.");
 
         const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
+        const QCommandLineOption connectSessionIdOption("c", "Connect to the given kakoune session", "session_id");
         parser.addOption(setSessionIdOption);
+        parser.addOption(connectSessionIdOption);
 
         const QCommandLineOption helpOption = parser.addHelpOption();
         const QCommandLineOption versionOption = parser.addVersionOption();
@@ -123,10 +126,19 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        QString session_id = parser.isSet(setSessionIdOption) ? parser.value(setSessionIdOption)
-                                                              : KakouneSession::generateRandomSessionId();
+        KakouneSession* session;
+        if (parser.isSet(setSessionIdOption) && parser.isSet(connectSessionIdOption)) {
+            QTextStream(stdout) << "-s is incompatible with -c" << Qt::endl;
+            return 1;
+        }else if (parser.isSet(setSessionIdOption)) {
+            session = new KakouneSession(parser.value(setSessionIdOption));
+        }else if (parser.isSet(connectSessionIdOption)) {
+            session = new RemoteKakouneSession(parser.value(connectSessionIdOption));
+        }else {
+            session = new KakouneSession(KakouneSession::generateRandomSessionId());
+        }
 
-        MainWindow main_window(session_id);
+        MainWindow main_window(session);
         KakouneIPC::IPCServer server(main_window.getID().toString());
         server.bind(&main_window);
 
