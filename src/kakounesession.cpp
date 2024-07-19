@@ -46,7 +46,11 @@ void deleteFifo(const QString &path)
     }
 }
 
-KakouneSession::KakouneSession(QString session_id)
+KakouneSession::KakouneSession(QString session_id) : KakouneSession(session_id, QStringList())
+{
+}
+
+KakouneSession::KakouneSession(QString session_id, QStringList session_arguments)
 {
     m_session_id = session_id;
 
@@ -59,7 +63,10 @@ KakouneSession::KakouneSession(QString session_id)
 
     createFifo(session_ready_path);
 
-    m_process->start("kak", {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)});
+    QStringList process_arguments = {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)};
+    process_arguments.append(session_arguments);
+
+    m_process->start("kak", process_arguments);
 
     waitForFifo(session_ready_path);
     deleteFifo(session_ready_path);

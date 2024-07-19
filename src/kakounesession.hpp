@@ -8,6 +8,7 @@ class KakouneSession : public QObject
     Q_OBJECT
   public:
     KakouneSession(QString session_id);
+    KakouneSession(QString session_id, QStringList session_arguments);
     ~KakouneSession();
 
     QString getSessionId();

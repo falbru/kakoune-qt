@@ -104,6 +104,7 @@ int main(int argc, char *argv[])
 
         QCommandLineParser parser;
         parser.setApplicationDescription("Kakoune Qt - A Qt-based frontend for Kakoune.");
+        parser.addPositionalArgument("files", "open files in session");
 
         const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
         const QCommandLineOption connectSessionIdOption("c", "Connect to the given kakoune session", "session_id");
@@ -128,15 +129,19 @@ int main(int argc, char *argv[])
         }
 
         KakouneSession* session;
+        QStringList session_arguments;
+
+        session_arguments = parser.positionalArguments();
+
         if (parser.isSet(setSessionIdOption) && parser.isSet(connectSessionIdOption)) {
             QTextStream(stdout) << "-s is incompatible with -c" << Qt::endl;
             return 1;
-        }else if (parser.isSet(setSessionIdOption)) {
-            session = new KakouneSession(parser.value(setSessionIdOption));
         }else if (parser.isSet(connectSessionIdOption)) {
             session = new RemoteKakouneSession(parser.value(connectSessionIdOption));
+        }else if (parser.isSet(setSessionIdOption)) {
+            session = new KakouneSession(parser.value(setSessionIdOption), session_arguments);
         }else {
-            session = new KakouneSession(KakouneSession::generateRandomSessionId());
+            session = new KakouneSession(KakouneSession::generateRandomSessionId(), session_arguments);
         }
 
         MainWindow main_window(session);
