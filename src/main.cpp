@@ -14,7 +14,8 @@
 
 int main(int argc, char *argv[])
 {
-    bool is_cli_mode = (argc > 1 && QString(argv[1]) == "cli");
+    const QCommandLineOption cliOption("cli", "Use the CLI interface");
+    bool is_cli_mode = (argc > 1 && QString(argv[1]) == "--cli");
 
     if (is_cli_mode)
     {
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
 
         QCommandLineParser parser;
         const QCommandLineOption helpOption = parser.addHelpOption();
+        parser.addOption(cliOption);
 
         parser.addPositionalArgument("subcommand",
                                      "split-horizontal <args>: Create a new horizontal split <args>\n"
@@ -32,10 +34,9 @@ int main(int argc, char *argv[])
                                      "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
                                      "rename-client <name>: Rename the Kakoune client to <name>\n"
                                      "rename-session <id>: Rename the Kakoune session to <id>\n");
-
         parser.process(cli_app);
 
-        const QStringList positional_arguments = parser.positionalArguments().mid(1);
+        const QStringList positional_arguments = parser.positionalArguments();
 
         if (positional_arguments.size() == 0 || parser.isSet(helpOption))
         {
@@ -102,11 +103,11 @@ int main(int argc, char *argv[])
         QApplication app(argc, argv);
 
         QCommandLineParser parser;
-        parser.addPositionalArgument("mode", "cli: Use the CLI interface");
         parser.setApplicationDescription("Kakoune Qt - A Qt-based frontend for Kakoune.");
 
         const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
         const QCommandLineOption connectSessionIdOption("c", "Connect to the given kakoune session", "session_id");
+        parser.addOption(cliOption);
         parser.addOption(setSessionIdOption);
         parser.addOption(connectSessionIdOption);
 
