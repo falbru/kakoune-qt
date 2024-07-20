@@ -63,7 +63,8 @@ KakouneSession::KakouneSession(QString session_id, QStringList session_arguments
 
     createFifo(session_ready_path);
 
-    QStringList process_arguments = {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)};
+    QStringList process_arguments = {"-s", session_id, "-d", "-E",
+                                     QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)};
     process_arguments.append(session_arguments);
 
     m_process->start("kak", process_arguments);

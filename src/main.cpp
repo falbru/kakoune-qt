@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
 
         const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
         const QCommandLineOption connectSessionIdOption("c", "Connect to the given kakoune session", "session_id");
-        const QCommandLineOption executeCommandClientOption("e", "Execute command after the client initialization phase", "command");
+        const QCommandLineOption executeCommandClientOption(
+            "e", "Execute command after the client initialization phase", "command");
         parser.addOption(cliOption);
         parser.addOption(executeCommandClientOption);
         parser.addOption(setSessionIdOption);
@@ -130,18 +131,26 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        KakouneSession* session;
+        KakouneSession *session;
         QStringList session_arguments = parser.positionalArguments();
-        QString client_arguments = parser.isSet(executeCommandClientOption) ? parser.value(executeCommandClientOption) : "";
+        QString client_arguments =
+            parser.isSet(executeCommandClientOption) ? parser.value(executeCommandClientOption) : "";
 
-        if (parser.isSet(setSessionIdOption) && parser.isSet(connectSessionIdOption)) {
+        if (parser.isSet(setSessionIdOption) && parser.isSet(connectSessionIdOption))
+        {
             QTextStream(stdout) << "-s is incompatible with -c" << Qt::endl;
             return 1;
-        }else if (parser.isSet(connectSessionIdOption)) {
+        }
+        else if (parser.isSet(connectSessionIdOption))
+        {
             session = new RemoteKakouneSession(parser.value(connectSessionIdOption));
-        }else if (parser.isSet(setSessionIdOption)) {
+        }
+        else if (parser.isSet(setSessionIdOption))
+        {
             session = new KakouneSession(parser.value(setSessionIdOption), session_arguments);
-        }else {
+        }
+        else
+        {
             session = new KakouneSession(KakouneSession::generateRandomSessionId(), session_arguments);
         }
 

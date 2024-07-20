@@ -13,12 +13,11 @@
 #include <quuid.h>
 #include <qwidget.h>
 
-MainWindow::MainWindow(KakouneSession* session, QWidget *parent) : MainWindow(session, "", parent)
+MainWindow::MainWindow(KakouneSession *session, QWidget *parent) : MainWindow(session, "", parent)
 {
-
 }
 
-MainWindow::MainWindow(KakouneSession* session, QString client_arguments, QWidget *parent)
+MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidget *parent)
 {
     m_session = session;
 
@@ -37,7 +36,6 @@ MainWindow::MainWindow(KakouneSession* session, QString client_arguments, QWidge
     m_root->addWidget(kak_widget);
 
     updateWindowTitle();
-
 }
 
 MainWindow::~MainWindow()

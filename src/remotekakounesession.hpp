@@ -10,6 +10,7 @@ class RemoteKakouneSession : public KakouneSession
   public:
     RemoteKakouneSession(QString session_id);
     ~RemoteKakouneSession();
+
   private:
     RemoteKakouneSession();
 };

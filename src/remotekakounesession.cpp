@@ -8,5 +8,4 @@ RemoteKakouneSession::RemoteKakouneSession(QString session_id)
 
 RemoteKakouneSession::~RemoteKakouneSession()
 {
-
 }

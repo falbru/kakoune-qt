@@ -18,7 +18,7 @@ class KakouneSession : public QObject
 
   protected:
     KakouneSession();
-    QProcess* m_process;
+    QProcess *m_process;
     QString m_session_id;
 };
 
