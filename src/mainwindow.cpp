@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "container.hpp"
+#include "kakounesession.hpp"
 #include "kakounewidget.hpp"
 #include "keybindings.hpp"
 #include "lastfocusedfilter.hpp"
@@ -12,8 +13,14 @@
 #include <quuid.h>
 #include <qwidget.h>
 
-MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(KakouneSession *session, QWidget *parent) : MainWindow(session, "", parent)
 {
+}
+
+MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidget *parent)
+{
+    m_session = session;
+
     m_id = QUuid::createUuid();
     resize(1024, 768);
 
@@ -22,12 +29,10 @@ MainWindow::MainWindow(QString session_id, QWidget *parent) : QMainWindow(parent
     m_draw_options = new DrawOptions();
     m_draw_options->setFont("monospace", 11);
 
-    m_session = new KakouneSession(session_id);
-
     m_root = new SplitContainer(Qt::Horizontal, this);
     setCentralWidget(m_root);
 
-    KakouneWidget *kak_widget = createKakouneWidget();
+    KakouneWidget *kak_widget = createKakouneWidget(client_arguments);
     m_root->addWidget(kak_widget);
 
     updateWindowTitle();
@@ -216,7 +221,6 @@ void MainWindow::renameClient(const QString &client_name, const QString &new_cli
         return;
     }
 
-    qDebug() << new_client_name;
     kak_widget->getClient()->setClientName(new_client_name);
 }
 

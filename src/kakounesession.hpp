@@ -7,8 +7,8 @@ class KakouneSession : public QObject
 {
     Q_OBJECT
   public:
-    KakouneSession();
     KakouneSession(QString session_id);
+    KakouneSession(QString session_id, QStringList session_arguments);
     ~KakouneSession();
 
     QString getSessionId();
@@ -16,8 +16,9 @@ class KakouneSession : public QObject
 
     static QString generateRandomSessionId();
 
-  private:
-    QProcess m_process;
+  protected:
+    KakouneSession();
+    QProcess *m_process;
     QString m_session_id;
 };
 

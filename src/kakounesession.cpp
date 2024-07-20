@@ -10,7 +10,7 @@ QString generateRandomSessionId()
     return QString::number(QRandomGenerator::global()->bounded(1000, 9999));
 }
 
-KakouneSession::KakouneSession() : KakouneSession(generateRandomSessionId())
+KakouneSession::KakouneSession()
 {
 }
 
@@ -46,18 +46,28 @@ void deleteFifo(const QString &path)
     }
 }
 
-KakouneSession::KakouneSession(QString session_id)
+KakouneSession::KakouneSession(QString session_id) : KakouneSession(session_id, QStringList())
+{
+}
+
+KakouneSession::KakouneSession(QString session_id, QStringList session_arguments)
 {
     m_session_id = session_id;
 
-    connect(&m_process, &QProcess::readyReadStandardError,
-            [=]() { qCritical() << "KakouneSession: " << m_process.readAllStandardError(); });
+    m_process = new QProcess(this);
+
+    connect(m_process, &QProcess::readyReadStandardError,
+            [=]() { qCritical() << "KakouneSession: " << m_process->readAllStandardError(); });
 
     QString session_ready_path = "/tmp/" + session_id;
 
     createFifo(session_ready_path);
 
-    m_process.start("kak", {"-s", session_id, "-d", "-E", QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)});
+    QStringList process_arguments = {"-s", session_id, "-d", "-E",
+                                     QString("\"nop %sh{ echo > %1 }\"").arg(session_ready_path)};
+    process_arguments.append(session_arguments);
+
+    m_process->start("kak", process_arguments);
 
     waitForFifo(session_ready_path);
     deleteFifo(session_ready_path);
@@ -73,7 +83,7 @@ KakouneSession::~KakouneSession()
     kill_session.waitForFinished();
     kill_session.close();
 
-    m_process.close();
+    m_process->close();
 }
 
 QString KakouneSession::getSessionId()

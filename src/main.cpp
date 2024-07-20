@@ -1,6 +1,7 @@
 #include "ipc.hpp"
 #include "kakounesession.hpp"
 #include "mainwindow.hpp"
+#include "remotekakounesession.hpp"
 #include <QApplication>
 #include <qcommandlineoption.h>
 #include <qcommandlineparser.h>
@@ -13,7 +14,8 @@
 
 int main(int argc, char *argv[])
 {
-    bool is_cli_mode = (argc > 1 && QString(argv[1]) == "cli");
+    const QCommandLineOption cliOption("cli", "Use the CLI interface");
+    bool is_cli_mode = (argc > 1 && QString(argv[1]) == "--cli");
 
     if (is_cli_mode)
     {
@@ -21,6 +23,7 @@ int main(int argc, char *argv[])
 
         QCommandLineParser parser;
         const QCommandLineOption helpOption = parser.addHelpOption();
+        parser.addOption(cliOption);
 
         parser.addPositionalArgument("subcommand",
                                      "split-horizontal <args>: Create a new horizontal split <args>\n"
@@ -31,10 +34,9 @@ int main(int argc, char *argv[])
                                      "get-visible <name>: Returns true if the Kakoune client with <name> is visible\n"
                                      "rename-client <name>: Rename the Kakoune client to <name>\n"
                                      "rename-session <id>: Rename the Kakoune session to <id>\n");
-
         parser.process(cli_app);
 
-        const QStringList positional_arguments = parser.positionalArguments().mid(1);
+        const QStringList positional_arguments = parser.positionalArguments();
 
         if (positional_arguments.size() == 0 || parser.isSet(helpOption))
         {
@@ -101,8 +103,18 @@ int main(int argc, char *argv[])
         QApplication app(argc, argv);
 
         QCommandLineParser parser;
-        parser.addPositionalArgument("mode", "cli: Use the CLI interface");
         parser.setApplicationDescription("Kakoune Qt - A Qt-based frontend for Kakoune.");
+        parser.addPositionalArgument("files", "open files in session");
+
+        const QCommandLineOption setSessionIdOption("s", "Set the kakoune session id", "session_id");
+        const QCommandLineOption connectSessionIdOption("c", "Connect to the given kakoune session", "session_id");
+        const QCommandLineOption executeCommandClientOption(
+            "e", "Execute command after the client initialization phase", "command");
+        parser.addOption(cliOption);
+        parser.addOption(executeCommandClientOption);
+        parser.addOption(setSessionIdOption);
+        parser.addOption(connectSessionIdOption);
+
         const QCommandLineOption helpOption = parser.addHelpOption();
         const QCommandLineOption versionOption = parser.addVersionOption();
 
@@ -119,7 +131,30 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        MainWindow main_window(KakouneSession::generateRandomSessionId());
+        KakouneSession *session;
+        QStringList session_arguments = parser.positionalArguments();
+        QString client_arguments =
+            parser.isSet(executeCommandClientOption) ? parser.value(executeCommandClientOption) : "";
+
+        if (parser.isSet(setSessionIdOption) && parser.isSet(connectSessionIdOption))
+        {
+            QTextStream(stdout) << "-s is incompatible with -c" << Qt::endl;
+            return 1;
+        }
+        else if (parser.isSet(connectSessionIdOption))
+        {
+            session = new RemoteKakouneSession(parser.value(connectSessionIdOption));
+        }
+        else if (parser.isSet(setSessionIdOption))
+        {
+            session = new KakouneSession(parser.value(setSessionIdOption), session_arguments);
+        }
+        else
+        {
+            session = new KakouneSession(KakouneSession::generateRandomSessionId(), session_arguments);
+        }
+
+        MainWindow main_window(session, client_arguments);
         KakouneIPC::IPCServer server(main_window.getID().toString());
         server.bind(&main_window);
 

@@ -15,7 +15,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
   public:
-    MainWindow(QString session_id, QWidget *parent = nullptr);
+    MainWindow(KakouneSession *session, QWidget *parent = nullptr);
+    MainWindow(KakouneSession *session, QString client_arguments, QWidget *parent = nullptr);
     ~MainWindow();
 
     void focusLeft();
