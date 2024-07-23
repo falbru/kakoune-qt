@@ -1,6 +1,7 @@
 #include "kakouneclient.hpp"
 
 #include "rpc/rpc.hpp"
+#include <qjsondocument.h>
 
 void KakouneClient::handleRequest(QJsonObject request)
 {
@@ -83,13 +84,27 @@ KakouneClient::KakouneClient(const QString &session_id, QString arguments,
 {
     connect(&m_process, &QProcess::readyReadStandardOutput, [=]() {
         QByteArray buffer = m_process.readAllStandardOutput();
+        if (!m_request_buffer.isEmpty())
+        {
+            buffer = m_request_buffer + buffer;
+        }
 
         QList<QByteArray> requests = buffer.split('\n');
         for (QByteArray request : requests)
         {
             if (request == "")
                 continue;
+
+            auto doc = QJsonDocument::fromJson(request);
+            if (!doc.isObject()) // Will occur when the remaining part of the request is sent in the next "chunk" of
+                                 // standard output
+            {
+                m_request_buffer = request;
+                break;
+            }
+
             handleRequest(QJsonDocument::fromJson(request).object());
+            m_request_buffer.clear();
         }
     });
 
