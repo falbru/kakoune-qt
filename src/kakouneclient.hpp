@@ -5,6 +5,7 @@
 #include "rpc/line.hpp"
 #include "rpc/rpc.hpp"
 #include <QtWidgets>
+#include <qglobal.h>
 
 class KakouneClient : public QObject
 {
@@ -59,6 +60,8 @@ class KakouneClient : public QObject
 
     QString m_client_name;
     QProcess m_process;
+
+    QByteArray m_request_buffer;
 
     QList<RPC::Line> m_lines;
     RPC::Face m_default_face;
