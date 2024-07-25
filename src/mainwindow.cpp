@@ -24,6 +24,8 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
     m_id = QUuid::createUuid();
     resize(1024, 768);
 
+    this->setWindowIcon(QIcon(QPixmap(":/res/logo.svg")));
+
     m_last_focused_filter = new LastFocusedFilter(this);
 
     m_draw_options = new DrawOptions();

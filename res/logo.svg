@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="200"
+   height="200"
+   version="1.1"
+   id="svg38"
+   sodipodi:docname="kakoune_logo2.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview38"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="3.325"
+     inkscape:cx="119.84962"
+     inkscape:cy="120"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg38" />
+  <defs
+     id="defs30">
+    <linearGradient
+       id="gtl"
+       x1="-110.05122"
+       y1="-109.15063"
+       x2="11.647758"
+       y2="12.54834"
+       gradientTransform="scale(0.99589995,1.0041169)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#ffa"
+         id="stop1" />
+      <stop
+         offset="75%"
+         stop-color="#cc8"
+         id="stop2" />
+      <stop
+         offset="100%"
+         stop-color="#8b6"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       id="gtr"
+       x1="-9.6395226"
+       y1="-109.15063"
+       x2="112.05945"
+       y2="12.54834"
+       gradientTransform="scale(0.99589995,1.0041169)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#ac7"
+         id="stop4" />
+      <stop
+         offset="60%"
+         stop-color="#896"
+         id="stop5" />
+      <stop
+         offset="100%"
+         stop-color="#685"
+         id="stop6" />
+    </linearGradient>
+    <linearGradient
+       id="gbl"
+       x1="-110.05122"
+       y1="-9.5606394"
+       x2="11.647758"
+       y2="112.13833"
+       gradientTransform="scale(0.99589995,1.0041169)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#8a7"
+         id="stop7" />
+      <stop
+         offset="50%"
+         stop-color="#ba5"
+         id="stop8" />
+      <stop
+         offset="100%"
+         stop-color="#226a3a"
+         id="stop9" />
+    </linearGradient>
+    <linearGradient
+       id="gbr"
+       x1="-9.6395226"
+       y1="-9.5606394"
+       x2="112.05945"
+       y2="112.13833"
+       gradientTransform="scale(0.99589995,1.0041169)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#798"
+         id="stop10" />
+      <stop
+         offset="15%"
+         stop-color="#586"
+         id="stop11" />
+      <stop
+         offset="100%"
+         stop-color="#232"
+         id="stop12" />
+    </linearGradient>
+    <linearGradient
+       id="grad2"
+       x1="1"
+       y1="1"
+       x2="0"
+       y2="0">
+      <stop
+         offset="0%"
+         stop-color="rgb(178, 255, 160)"
+         id="stop13" />
+      <stop
+         offset="25%"
+         stop-color="rgb(178, 245, 118)"
+         id="stop14" />
+      <stop
+         offset="50%"
+         stop-color="rgb(138, 235, 118)"
+         id="stop15" />
+      <stop
+         offset="100%"
+         stop-color="rgb(108, 185, 88)"
+         id="stop16" />
+    </linearGradient>
+    <linearGradient
+       id="grad3"
+       x1="-7.3588085"
+       y1="-7.1392002"
+       x2="49.884586"
+       y2="88.266457"
+       gradientTransform="scale(1.0816969,0.92447343)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="rgb(60, 80, 130)"
+         id="stop17" />
+      <stop
+         offset="40%"
+         stop-color="rgb(20, 80, 130)"
+         id="stop18" />
+      <stop
+         offset="80%"
+         stop-color="rgb(20, 115, 140)"
+         id="stop19" />
+      <stop
+         offset="100%"
+         stop-color="rgb(50, 120, 150)"
+         id="stop20" />
+    </linearGradient>
+    <linearGradient
+       id="grad4"
+       x1="-31.55106"
+       y1="44.118961"
+       x2="75.069763"
+       y2="-62.501862"
+       gradientTransform="scale(0.91914503,1.0879676)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="rgb(200, 75, 65)"
+         id="stop21" />
+      <stop
+         offset="50%"
+         stop-color="rgb(250, 100, 77)"
+         id="stop22" />
+      <stop
+         offset="100%"
+         stop-color="rgb(250, 150, 97)"
+         id="stop23" />
+    </linearGradient>
+    <linearGradient
+       id="grad5"
+       x1="-82.222305"
+       y1="-39.11834"
+       x2="-74.226051"
+       y2="40.844151"
+       gradientTransform="scale(0.57526972,1.738315)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="rgb(255, 130, 100)"
+         id="stop24" />
+      <stop
+         offset="20%"
+         stop-color="rgb(235, 90, 65)"
+         id="stop25" />
+      <stop
+         offset="50%"
+         stop-color="rgb(220, 95, 70)"
+         id="stop26" />
+      <stop
+         offset="80%"
+         stop-color="rgb(200, 75, 55)"
+         id="stop27" />
+      <stop
+         offset="100%"
+         stop-color="rgb(220, 95, 75)"
+         id="stop28" />
+    </linearGradient>
+    <filter
+       id="blur2"
+       x="-0.096"
+       y="-0.096"
+       width="1.212"
+       height="1.222">
+      <feOffset
+         result="offOut"
+         in="SourceGraphic"
+         dx="2"
+         dy="3"
+         id="feOffset28" />
+      <feColorMatrix
+         result="matrixOut"
+         in="offOut"
+         type="matrix"
+         values="0.3 0 0 0 0 0 0.3 0 0 0 0 0 0.3 0 0 0 0 0 0.1 0"
+         id="feColorMatrix28" />
+      <feGaussianBlur
+         result="blurOut"
+         in="matrixOut"
+         stdDeviation="4"
+         id="feGaussianBlur28" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut"
+         mode="normal"
+         id="feBlend28" />
+    </filter>
+    <filter
+       id="blur3"
+       x="-0.11707317"
+       y="-0.14545455"
+       width="1.2585366"
+       height="1.3363636">
+      <feOffset
+         result="offOut"
+         in="SourceGraphic"
+         dx="2"
+         dy="3"
+         id="feOffset29" />
+      <feColorMatrix
+         result="matrixOut"
+         in="offOut"
+         type="matrix"
+         values="0.0 0 0 0 0 0 0.0 0 0 0 0 0 0.0 0 0 0 0 0 0.3 0"
+         id="feColorMatrix29" />
+      <feGaussianBlur
+         result="blurOut"
+         in="matrixOut"
+         stdDeviation="4"
+         id="feGaussianBlur29" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut"
+         mode="normal"
+         id="feBlend29" />
+    </filter>
+    <filter
+       id="blur4"
+       x="-0.10510949"
+       y="-0.10359712"
+       width="1.2394161"
+       height="1.2359712">
+      <feOffset
+         result="offOut"
+         in="SourceGraphic"
+         dx="4"
+         dy="4"
+         id="feOffset30" />
+      <feColorMatrix
+         result="matrixOut"
+         in="offOut"
+         type="matrix"
+         values="0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.25 0"
+         id="feColorMatrix30" />
+      <feGaussianBlur
+         result="blurOut"
+         in="matrixOut"
+         stdDeviation="6"
+         id="feGaussianBlur30" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut"
+         mode="normal"
+         id="feBlend30" />
+    </filter>
+  </defs>
+  <!-- Logo part -->
+  <g
+     transform="translate(99.916587,100.11631)"
+     id="g38">
+    <!-- green rombus -->
+    <polygon
+       fill="url(#gtr)"
+       filter="url(#blur2)"
+       points="0,-100 100,0 0,0 "
+       id="polygon30"
+       style="fill:url(#gtr)" />
+    <!-- top-right -->
+    <polygon
+       fill="url(#gtl)"
+       filter="url(#blur2)"
+       points="0,-100 -100,0 0,0 "
+       id="polygon31"
+       style="fill:url(#gtl)" />
+    <!-- top-left -->
+    <polygon
+       fill="url(#gbr)"
+       filter="url(#blur2)"
+       points="0,100 100,0 0,0 "
+       id="polygon32"
+       style="fill:url(#gbr)" />
+    <!-- bottom-right -->
+    <polygon
+       fill="url(#gbl)"
+       filter="url(#blur2)"
+       points="0,100 -100,0 0,0 "
+       id="polygon33"
+       style="fill:url(#gbl)" />
+    <!-- bottom-left -->
+    <!-- K letter -->
+    <g
+       transform="translate(6)"
+       id="g37">
+      <polygon
+         fill="url(#grad3)"
+         filter="url(#blur3)"
+         points="-19,34 9,3 63,69 19,69 "
+         id="polygon34"
+         style="fill:url(#grad3)" />
+      <g
+         filter="url(#blur4)"
+         id="g36">
+        <polygon
+           fill="url(#grad4)"
+           points="-26,-10 -29,48 69,-68 30,-68 "
+           id="polygon35"
+           style="fill:url(#grad4)" />
+        <polygon
+           fill="url(#grad5)"
+           points="-30,71 -22,-68 -68,-68 -68,71 "
+           id="polygon36"
+           style="fill:url(#grad5)" />
+      </g>
+    </g>
+  </g>
+</svg>
