@@ -9,7 +9,9 @@ class ColorPalette
   public:
     ColorPalette();
 
-    void setGray(QColor color);
+    void setFg(QColor color);
+    void setBg(QColor color);
+    void setBlack(QColor color);
     void setRed(QColor color);
     void setGreen(QColor color);
     void setYellow(QColor color);
@@ -18,7 +20,9 @@ class ColorPalette
     void setCyan(QColor color);
     void setWhite(QColor color);
 
-    QColor getGray() const;
+    QColor getFg() const;
+    QColor getBg() const;
+    QColor getBlack() const;
     QColor getRed() const;
     QColor getGreen() const;
     QColor getYellow() const;
@@ -28,7 +32,9 @@ class ColorPalette
     QColor getWhite() const;
 
   private:
-    QColor m_gray;
+    QColor m_fg;
+    QColor m_bg;
+    QColor m_black;
     QColor m_red;
     QColor m_green;
     QColor m_yellow;

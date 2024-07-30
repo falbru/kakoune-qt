@@ -13,8 +13,7 @@ class Color
     Color(QString value);
 
     QString getValue() const;
-    QColor toQColor(const ColorPalette &color_palette);
-    QColor toQColor(const Color &default_color, const ColorPalette &color_palette);
+    QColor toQColor(const ColorPalette &color_palette, const QColor &fallback_color) const;
 
   private:
     QString m_value;

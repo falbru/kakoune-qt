@@ -11,22 +11,17 @@ QString Color::getValue() const
     return m_value;
 }
 
-QColor Color::toQColor(const ColorPalette &color_palette)
-{
-    return toQColor(Color("black"), color_palette);
-}
-
-QColor Color::toQColor(const Color &default_color, const ColorPalette &color_palette)
+QColor Color::toQColor(const ColorPalette &color_palette, const QColor &fallback_color) const
 {
     QString color = m_value;
 
     if (color == "default")
     {
-        color = default_color.getValue();
+        return fallback_color;
     }
     else if (color == "black" || color == "bright-black")
     {
-        return color_palette.getGray();
+        return color_palette.getBlack();
     }
     else if (color == "red" || color == "bright-red")
     {

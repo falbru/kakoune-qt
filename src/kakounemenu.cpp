@@ -105,7 +105,7 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
 
     DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
 
-    painter.fillRect(0, 0, width(), height(), m_client->getMenuFace().getBg().toQColor(context.color_palette));
+    painter.fillRect(0, 0, width(), height(), m_client->getMenuFace().getBgAsQColor(context.color_palette));
 
     QList<RPC::Line> items = m_client->getMenuItems();
 
@@ -124,7 +124,7 @@ void KakouneMenu::paintEvent(QPaintEvent *ev)
         if (m_selected_item == index)
         {
             painter.fillRect(position.x(), position.y(), item_width, item_height,
-                             m_client->getSelectedMenuItemFace().getBg().toQColor(context.color_palette));
+                             m_client->getSelectedMenuItemFace().getBgAsQColor(context.color_palette));
             items[index].draw(context, position, m_client->getSelectedMenuItemFace());
         }
         else
