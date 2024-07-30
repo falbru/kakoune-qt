@@ -2,14 +2,22 @@
 #include <qnamespace.h>
 
 ColorPalette::ColorPalette()
-    : m_gray(Qt::gray), m_red(Qt::red), m_green(Qt::green), m_yellow(Qt::yellow), m_blue(Qt::blue),
-      m_magenta(Qt::magenta), m_cyan(Qt::cyan), m_white(Qt::white)
+    : m_fg(Qt::white), m_bg(Qt::black), m_black(Qt::black), m_red(Qt::red), m_green(Qt::green), m_yellow(Qt::yellow),
+      m_blue(Qt::blue), m_magenta(Qt::magenta), m_cyan(Qt::cyan), m_white(Qt::white)
 {
 }
 
-void ColorPalette::setGray(QColor color)
+void ColorPalette::setFg(QColor color)
 {
-    m_gray = color;
+    m_fg = color;
+}
+void ColorPalette::setBg(QColor color)
+{
+    m_bg = color;
+}
+void ColorPalette::setBlack(QColor color)
+{
+    m_black = color;
 }
 void ColorPalette::setRed(QColor color)
 {
@@ -40,9 +48,17 @@ void ColorPalette::setWhite(QColor color)
     m_white = color;
 }
 
-QColor ColorPalette::getGray() const
+QColor ColorPalette::getFg() const
 {
-    return m_gray;
+    return m_fg;
+}
+QColor ColorPalette::getBg() const
+{
+    return m_bg;
+}
+QColor ColorPalette::getBlack() const
+{
+    return m_black;
 }
 QColor ColorPalette::getRed() const
 {

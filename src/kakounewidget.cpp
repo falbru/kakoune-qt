@@ -98,45 +98,43 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
         }
         else if (option.key().length() > 13 && option.key().mid(0, 13) == "gui_set_color")
         {
-            auto setColor = [&](auto setColorFunc) {
-                ColorPalette new_color_palette = m_draw_options->getColorPalette();
-                (new_color_palette.*
-                 setColorFunc)(RPC::Color(option.value()).toQColor(m_draw_options->getColorPalette()));
-                m_draw_options->setColorPalette(new_color_palette);
-            };
+            ColorPalette color_palette = m_draw_options->getColorPalette();
+            RPC::Color value(option.value());
 
             if (option.key() == "gui_set_color_gray")
             {
-                setColor(&ColorPalette::setGray);
+                color_palette.setBlack(value.toQColor(color_palette, color_palette.getBlack()));
             }
             else if (option.key() == "gui_set_color_red")
             {
-                setColor(&ColorPalette::setRed);
+                color_palette.setRed(value.toQColor(color_palette, color_palette.getRed()));
             }
             else if (option.key() == "gui_set_color_green")
             {
-                setColor(&ColorPalette::setGreen);
+                color_palette.setGreen(value.toQColor(color_palette, color_palette.getGreen()));
             }
             else if (option.key() == "gui_set_color_yellow")
             {
-                setColor(&ColorPalette::setYellow);
+                color_palette.setYellow(value.toQColor(color_palette, color_palette.getYellow()));
             }
             else if (option.key() == "gui_set_color_blue")
             {
-                setColor(&ColorPalette::setBlue);
+                color_palette.setBlue(value.toQColor(color_palette, color_palette.getBlue()));
             }
             else if (option.key() == "gui_set_color_magenta")
             {
-                setColor(&ColorPalette::setMagenta);
+                color_palette.setMagenta(value.toQColor(color_palette, color_palette.getMagenta()));
             }
             else if (option.key() == "gui_set_color_cyan")
             {
-                setColor(&ColorPalette::setCyan);
+                color_palette.setCyan(value.toQColor(color_palette, color_palette.getCyan()));
             }
             else if (option.key() == "gui_set_color_white")
             {
-                setColor(&ColorPalette::setWhite);
+                color_palette.setWhite(value.toQColor(color_palette, color_palette.getWhite()));
             }
+
+            m_draw_options->setColorPalette(color_palette);
         }
         else
         {

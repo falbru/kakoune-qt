@@ -24,8 +24,7 @@ void StatusBar::paintEvent(QPaintEvent *ev)
     DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
 
     RPC::Face status_default_face = m_client->getStatusDefaultFace();
-    painter.fillRect(
-        rect(), status_default_face.getBg().toQColor(status_default_face.getBg(), m_draw_options->getColorPalette()));
+    painter.fillRect(rect(), status_default_face.getBgAsQColor(m_draw_options->getColorPalette()));
 
     RPC::Line mode_line = m_client->getModeLine();
     int length = 0;
