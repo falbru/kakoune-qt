@@ -79,7 +79,7 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
 {
     for (auto option = options.begin(); option != options.end(); option++)
     {
-        if (option.key() == "gui_set_font")
+        if (option.key() == "kakqt_set_font")
         {
             int lastSpaceIndex = option.value().lastIndexOf(' ');
 
@@ -96,40 +96,40 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
 
             m_draw_options->setFont(font_name, font_size);
         }
-        else if (option.key().length() > 13 && option.key().mid(0, 13) == "gui_set_color")
+        else if (option.key().length() > 13 && option.key().mid(0, 13) == "kakqt_set_color")
         {
             ColorPalette color_palette = m_draw_options->getColorPalette();
             RPC::Color value(option.value());
 
-            if (option.key() == "gui_set_color_gray")
+            if (option.key() == "kakqt_set_color_gray")
             {
                 color_palette.setBlack(value.toQColor(color_palette, color_palette.getBlack()));
             }
-            else if (option.key() == "gui_set_color_red")
+            else if (option.key() == "kakqt_set_color_red")
             {
                 color_palette.setRed(value.toQColor(color_palette, color_palette.getRed()));
             }
-            else if (option.key() == "gui_set_color_green")
+            else if (option.key() == "kakqt_set_color_green")
             {
                 color_palette.setGreen(value.toQColor(color_palette, color_palette.getGreen()));
             }
-            else if (option.key() == "gui_set_color_yellow")
+            else if (option.key() == "kakqt_set_color_yellow")
             {
                 color_palette.setYellow(value.toQColor(color_palette, color_palette.getYellow()));
             }
-            else if (option.key() == "gui_set_color_blue")
+            else if (option.key() == "kakqt_set_color_blue")
             {
                 color_palette.setBlue(value.toQColor(color_palette, color_palette.getBlue()));
             }
-            else if (option.key() == "gui_set_color_magenta")
+            else if (option.key() == "kakqt_set_color_magenta")
             {
                 color_palette.setMagenta(value.toQColor(color_palette, color_palette.getMagenta()));
             }
-            else if (option.key() == "gui_set_color_cyan")
+            else if (option.key() == "kakqt_set_color_cyan")
             {
                 color_palette.setCyan(value.toQColor(color_palette, color_palette.getCyan()));
             }
-            else if (option.key() == "gui_set_color_white")
+            else if (option.key() == "kakqt_set_color_white")
             {
                 color_palette.setWhite(value.toQColor(color_palette, color_palette.getWhite()));
             }
