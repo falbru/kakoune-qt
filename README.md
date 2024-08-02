@@ -12,7 +12,7 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 - Show and hide clients with `:kakqt-show <client_name>` and `:kakqt-hide <client_name>`
 
-- Navigate between splits with keybindings `<c-h>`, `<c-j>`, `<c-k>` and `<c-l>`
+- Navigate between splits with keybindings `<c-s-h>`, `<c-s-j>`, `<c-s-k>` and `<c-s-l>`
 
 ## Build from source
 
