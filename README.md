@@ -4,7 +4,7 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 ![screenshot](https://github.com/user-attachments/assets/8bdba0c8-3921-4b37-94a4-0a599819c58b)
 
-# Features
+## Features
 
 - Create splits with `:kakqt-split-horizontal` and `:kakqt-split-vertical`
 
@@ -14,7 +14,7 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 - Navigate between splits with keybindings `<c-h>`, `<c-j>`, `<c-k>` and `<c-l>`
 
-# Install from source
+## Build from source
 
 1. Install the necessary build dependencies
 
@@ -42,7 +42,7 @@ You can then run the application with `./kak-qt`
 
 > NOTE: Make sure Kakoune is installed on your system!
 
-# Configuration
+## Configuration
 
 Kakoune Qt is configured using the `ui_option` in Kakoune. The following options are implemented:
 
