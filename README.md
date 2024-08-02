@@ -1,6 +1,6 @@
 # Kakoune Qt
 
-Kakoune Qt is a Qt-based GUI for Kakoune written in C++.
+Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 ![screenshot](https://github.com/user-attachments/assets/8bdba0c8-3921-4b37-94a4-0a599819c58b)
 
@@ -18,7 +18,9 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++.
 
 1. Install the necessary build dependencies
 
-`sudo apt install -y git build-essentials cmake qt6-base-dev qt6-svg-dev`
+```sh
+sudo apt install -y git build-essentials cmake qt6-base-dev qt6-svg-dev
+```
 
 2. Clone the repository
 
@@ -50,4 +52,6 @@ Kakoune Qt is configured using the `ui_option` in Kakoune. The following options
 
 Example configuration:
 
-`set global ui_options 'kakqt_set_font="Ubuntu Mono 12" kakqt_set_color_red="rgb:FF0000"'`
+```
+set-option global ui_options 'kakqt_set_font=Ubuntu Mono 12' 'kakqt_set_color_red=rgb:FF0000'
+```
