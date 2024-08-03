@@ -19,13 +19,13 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 1. Install the necessary build dependencies
 
 ```sh
-sudo apt install -y git build-essentials cmake qt6-base-dev qt6-svg-dev
+sudo apt install -y git build-essential cmake qt6-base-dev qt6-svg-dev
 ```
 
 2. Clone the repository
 
 ```sh
-git clone https://github.com/falbru/kakoune-qt ~/.config/kak/autoload/
+git clone https://github.com/falbru/kakoune-qt ~/.config/kak/autoload/kakoune-qt
 ```
 
 3. Build the project
