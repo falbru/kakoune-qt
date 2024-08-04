@@ -14,7 +14,7 @@ Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 - Navigate between splits with keybindings `<c-s-h>`, `<c-s-j>`, `<c-s-k>` and `<c-s-l>`
 
-## Build from source
+## Install from source
 
 1. Install the necessary build dependencies
 
@@ -28,7 +28,7 @@ sudo apt install -y git build-essential cmake qt6-base-dev qt6-svg-dev
 git clone https://github.com/falbru/kakoune-qt ~/.config/kak/autoload/kakoune-qt
 ```
 
-3. Build the project
+3. Build and install the project
 
 ```sh
 cd ~/.config/kak/autoload/kakoune-qt
@@ -36,11 +36,12 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
+sudo install -D ./kak-qt /usr/local/bin
 ```
 
-You can then run the application with `./kak-qt`
+You can then run the application with the command `kak-qt`
 
-> NOTE: Make sure Kakoune is installed on your system!
+> NOTE: Make sure Kakoune version>=2024.05.18 is installed on your system!
 
 ## Configuration
 

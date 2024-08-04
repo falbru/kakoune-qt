@@ -28,17 +28,15 @@ complete-command -menu kakqt-split-vertical command
 
 alias global new kakqt-split-horizontal
 
-define-command kakqt-focus -params ..1 -docstring '
-kakqt-focus [<client>]: focus the given client
-If no client is passed then the current one is used' \
-%{
+define-command kakqt-focus -params 1 -docstring '
+kakqt-focus [<client>]: focus the given client' %{
     nop %sh{
         KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli focus $1
     }
 }
 complete-command -menu kakqt-focus client
 
-define-command kakqt-show -params ..1 -docstring '
+define-command kakqt-show -params 1 -docstring '
 kakqt-show [<client>]: show the given client
 ' \
 %{
@@ -48,7 +46,7 @@ kakqt-show [<client>]: show the given client
 }
 complete-command -menu kakqt-show client
 
-define-command kakqt-hide -params ..1 -docstring '
+define-command kakqt-hide -params 1 -docstring '
 kakqt-hide [<client>]: hide the given client
 ' \
 %{
@@ -58,4 +56,10 @@ kakqt-hide [<client>]: hide the given client
 }
 complete-command -menu kakqt-hide client
 
+}
+
+hook global ClientCreate .* %{
+    evaluate-commands %sh{
+        [ -z "${kak_client_env_KAKQT_SESSION_ID}" ] || echo "require-module kakoune-qt"
+    }
 }
