@@ -33,6 +33,7 @@ void Container::connectWidget(QWidget *widget)
     connect(widget, &QWidget::destroyed, this, [=]() {
         if (m_splitter->count() == 0)
         {
+            setParent(nullptr);
             deleteLater();
         }
         else
