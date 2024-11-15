@@ -96,7 +96,7 @@ void KakouneWidget::setUIOptions(QMap<QString, QString> options)
 
             m_draw_options->setFont(font_name, font_size);
         }
-        else if (option.key().length() > 13 && option.key().mid(0, 13) == "kakqt_set_color")
+        else if (option.key().length() > 13 && option.key().mid(0, 15) == "kakqt_set_color")
         {
             ColorPalette color_palette = m_draw_options->getColorPalette();
             RPC::Color value(option.value());
