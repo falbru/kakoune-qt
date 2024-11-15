@@ -6,10 +6,13 @@ SplitContainer::SplitContainer(Qt::Orientation orientation, QWidget *parent) : C
 
 void SplitContainer::split(QWidget *source_widget, QWidget *new_widget, Qt::Orientation orientation)
 {
-    if (m_splitter->count() <= 1) {
+    if (m_splitter->count() <= 1)
+    {
         addWidget(new_widget);
         m_splitter->setOrientation(orientation);
-    }else {
+    }
+    else
+    {
         disconnectWidget(source_widget);
 
         int index = m_splitter->indexOf(source_widget);
@@ -30,8 +33,8 @@ void SplitContainer::split(QWidget *source_widget, QWidget *new_widget, Qt::Orie
         if (regain_focus_widget)
             regain_focus_widget->setFocus();
 
-        // NOTE: Adding the source_widget to the container after calling replaceWidget() will ensure that the splitter ratio
-        // will be preserved.
+        // NOTE: Adding the source_widget to the container after calling replaceWidget() will ensure that the splitter
+        // ratio will be preserved.
         container->addWidget(source_widget);
         container->addWidget(new_widget);
         container->m_splitter->setSizes(QList<int>({INT_MAX, INT_MAX}));
