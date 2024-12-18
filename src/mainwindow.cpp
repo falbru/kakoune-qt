@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "container.hpp"
+#include "kakounecontent.hpp"
 #include "kakounesession.hpp"
 #include "kakounewidget.hpp"
 #include "keybindings.hpp"
