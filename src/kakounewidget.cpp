@@ -1,7 +1,6 @@
 #include "kakounewidget.hpp"
 #include "colorpalette.hpp"
 #include "container.hpp"
-#include "kakounecontent.hpp"
 #include "rpc/color.hpp"
 #include "statusbar.hpp"
 #include <qcoreevent.h>
@@ -41,9 +40,6 @@ KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, 
     layout->addWidget(m_textedit);
     layout->addWidget(status_bar);
 
-    m_content = new KakouneContent(m_client->getMenuItems(), m_client->getMenuFace(), draw_options);
-    layout->addWidget(m_content);
-
     setFocusProxy(m_textedit);
     this->setLayout(layout);
 }
@@ -70,8 +66,6 @@ KakouneClient *KakouneWidget::getClient()
 
 void KakouneWidget::clientRefreshed()
 {
-    m_content->setLines(m_client->getLines());
-    m_content->setDefaultFace(m_client->getDefaultFace());
     repaint();
     emit refresh();
 }

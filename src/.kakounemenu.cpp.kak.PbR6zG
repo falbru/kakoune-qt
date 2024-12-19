@@ -19,6 +19,7 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
         m_content->setDefaultFace(m_client->getMenuFace());
     });
     this->setLayout(layout);
+    
 }
 
 KakouneMenu::~KakouneMenu()

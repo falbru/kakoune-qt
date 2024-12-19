@@ -3,6 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
+#include "kakounecontent.hpp"
 #include <QtWidgets>
 
 class KakouneMenu : public QWidget
@@ -11,9 +12,6 @@ class KakouneMenu : public QWidget
   public:
     KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneMenu();
-
-  protected:
-    void paintEvent(QPaintEvent *ev) override;
 
   private slots:
     void showMenu();
@@ -34,6 +32,8 @@ class KakouneMenu : public QWidget
     void applyPromptStyle();
 
     int getItemWidth();
+
+    KakouneContent* m_content;
 };
 
 #endif
