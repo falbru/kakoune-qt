@@ -10,7 +10,7 @@ Line::Line(QList<Atom> atoms) : m_atoms(atoms)
 {
 }
 
-int Line::contentSize()
+int Line::contentSize() const
 {
     int content_size = 0;
     for (Atom atom : m_atoms)

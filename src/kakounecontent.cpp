@@ -7,6 +7,18 @@ KakouneContent::KakouneContent(QList<RPC::Line> lines, RPC::Face default_face,
 
 KakouneContent::~KakouneContent() {}
 
+QSize KakouneContent::sizeHint() const {
+  int longest_line_length = 0;
+  for (int i = 0; i < m_lines.length(); i++) {
+    longest_line_length = qMax(longest_line_length, m_lines[i].contentSize());
+  }
+
+  int width = longest_line_length * m_draw_options->getCellSize().width();
+  int height = m_lines.size() * m_draw_options->getCellSize().height();
+
+  return QSize(width, height);
+}
+
 void KakouneContent::paintEvent(QPaintEvent *ev) {
   QPainter painter(this);
   DrawContext context{painter, m_draw_options->getColorPalette(),
@@ -23,12 +35,11 @@ void KakouneContent::paintEvent(QPaintEvent *ev) {
 
 QList<RPC::Line> KakouneContent::getLines() { return m_lines; }
 
-void KakouneContent::setLines(QList<RPC::Line> lines) { m_lines = lines; }
-
-RPC::Face KakouneContent::getDefaultFace() {
-  return m_default_face;
+void KakouneContent::setLines(QList<RPC::Line> lines) {
+  m_lines = lines;
+  updateGeometry();
 }
 
-void KakouneContent::setDefaultFace(RPC::Face face) {
-  m_default_face = face;
-}
+RPC::Face KakouneContent::getDefaultFace() { return m_default_face; }
+
+void KakouneContent::setDefaultFace(RPC::Face face) { m_default_face = face; }

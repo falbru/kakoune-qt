@@ -29,6 +29,7 @@ qt_add_executable(kak-qt
     src/remotekakounesession.cpp
     src/kakouneclient.cpp
     src/kakounecontent.cpp
+    src/kakouneoverlay.cpp
     src/kakounemenu.cpp
     src/kakouneinfobox.cpp
     src/kakounewidget.cpp

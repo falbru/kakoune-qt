@@ -1,4 +1,5 @@
 #include "kakounemenu.hpp"
+#include "kakounecontent.hpp"
 #include "rpc/line.hpp"
 
 KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
@@ -10,15 +11,31 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
 
     hide();
 
-    m_content = new KakouneContent(client->getMenuItems(), client->getMenuFace(), m_draw_options);
+    QFrame *borderedFrame = new QFrame(this);
+    borderedFrame->setFrameShape(QFrame::Box);
+    borderedFrame->setLineWidth(1);
+    borderedFrame->setAutoFillBackground(true);
+
+    QVBoxLayout *borderedFrameLayout = new QVBoxLayout(borderedFrame);
+    borderedFrameLayout->setContentsMargins(3, 1, 3, 1);
+
+    m_content = new KakouneContent(client->getMenuItems(), client->getMenuFace(), m_draw_options, borderedFrame);
+    m_content->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred); // Allow content to grow/shrink
+    borderedFrameLayout->addWidget(m_content);
+    borderedFrame->setLayout(borderedFrameLayout);
 
     QVBoxLayout *layout = new QVBoxLayout();
-    layout->addWidget(m_content);
+    layout->addWidget(borderedFrame);
+
     connect(client, &KakouneClient::refresh, this, [=]() {
         m_content->setLines(m_client->getMenuItems());
         m_content->setDefaultFace(m_client->getMenuFace());
+        this->adjustSize();
     });
     this->setLayout(layout);
+    this->adjustSize();
+
+    this->setMaximumHeight(max_item_grid_columns * m_draw_options->getCellSize().height());
 }
 
 KakouneMenu::~KakouneMenu()
@@ -63,7 +80,7 @@ void KakouneMenu::applyInlineStyle()
     }
 
     move(menu_position);
-    resize(item_width, item_grid_height);
+    // resize(item_width, item_grid_height);
 }
 
 void KakouneMenu::applyPromptStyle()
@@ -78,7 +95,7 @@ void KakouneMenu::applyPromptStyle()
     int item_grid_height = m_item_grid_columns * m_draw_options->getCellSize().height();
 
     move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
-    resize(parentWidget()->width(), item_grid_height);
+    // resize(parentWidget()->width(), item_grid_height);
 }
 
 void KakouneMenu::showMenu()

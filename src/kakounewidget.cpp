@@ -1,6 +1,7 @@
 #include "kakounewidget.hpp"
 #include "colorpalette.hpp"
 #include "container.hpp"
+#include "kakouneoverlay.hpp"
 #include "rpc/color.hpp"
 #include "statusbar.hpp"
 #include <qcoreevent.h>

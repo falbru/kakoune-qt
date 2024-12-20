@@ -18,6 +18,8 @@ class KakouneContent : public QWidget {
     RPC::Face getDefaultFace();
     void setDefaultFace(RPC::Face face);
 
+    QSize sizeHint() const override;
+
   protected:
     void paintEvent(QPaintEvent *ev) override;
 
