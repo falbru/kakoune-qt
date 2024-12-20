@@ -7,6 +7,27 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
     connect(m_client, &KakouneClient::hideInfoBox, this, &KakouneInfoBox::hide);
 
     hide();
+
+    QFrame *borderedFrame = new QFrame(this);
+    borderedFrame->setFrameShape(QFrame::Box);
+    borderedFrame->setLineWidth(1);
+    borderedFrame->setAutoFillBackground(true);
+
+    QVBoxLayout *borderedFrameLayout = new QVBoxLayout(borderedFrame);
+    borderedFrameLayout->setContentsMargins(3, 1, 3, 1);
+
+    m_content = new KakouneContent(client->getMenuItems(), client->getMenuFace(), m_draw_options, borderedFrame);
+    m_content->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred); // Allow content to grow/shrink
+    borderedFrameLayout->addWidget(m_content);
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(borderedFrame);
+
+    connect(client, &KakouneClient::refresh, this, [=]() {
+        m_content->setLines(m_client->getInfoContent());
+        m_content->setDefaultFace(m_client->getInfoFace());
+        this->adjustSize();
+    });
 }
 void KakouneInfoBox::resizeToFitContent()
 {
@@ -157,49 +178,4 @@ void KakouneInfoBox::showInfoBox()
 
 KakouneInfoBox::~KakouneInfoBox()
 {
-}
-
-void KakouneInfoBox::paintEvent(QPaintEvent *ev)
-{
-    QPainter painter(this);
-    painter.setFont(m_draw_options->getFont());
-
-    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
-
-    painter.fillRect(0, 0, width(), height(), m_client->getInfoFace().getBgAsQColor(context.color_palette));
-
-    RPC::Line title = m_client->getInfoTitle();
-    if (title.contentSize() > 0)
-    {
-        title.draw(context, QPoint((width() - title.contentSize() * m_draw_options->getCellSize().width()) / 2, 0),
-                   m_client->getInfoFace());
-    }
-
-    QList<RPC::Line> lines = m_client->getInfoContent();
-
-    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width();
-    QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
-    for (int i = 0; i < lines.size(); ++i)
-    {
-        RPC::Line line = lines[i];
-        RPC::Line cutoff;
-
-        while (line.contentSize() > 0)
-        {
-            if (line.contentSize() > max_characters_per_line)
-            {
-                cutoff = line.slice(max_characters_per_line);
-                line = line.slice(0, max_characters_per_line);
-            }
-            else
-            {
-                cutoff = RPC::Line();
-            }
-
-            line.draw(context, position, m_client->getInfoFace());
-            position.setY(position.y() + m_draw_options->getCellSize().height());
-
-            line = cutoff;
-        }
-    }
 }

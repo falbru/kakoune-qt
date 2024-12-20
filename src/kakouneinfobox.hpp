@@ -20,14 +20,12 @@ class KakouneInfoBox : public QWidget
     KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneInfoBox();
 
-  protected:
-    void paintEvent(QPaintEvent *ev) override;
-
   private slots:
     void showInfoBox();
 
   private:
     KakouneClient *m_client;
+    KakouneContent *m_content;
     KakouneMenu *m_menu;
     DrawOptions *m_draw_options;
 
