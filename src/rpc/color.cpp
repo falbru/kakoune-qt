@@ -52,7 +52,17 @@ QColor Color::toQColor(const ColorPalette &color_palette, const QColor &fallback
         return Qt::white;
     }
 
-    QString hexCode = color.mid(color.indexOf(":") + 1);
+    int separatorIndex = color.indexOf(":");
+    QString colorFormat = color.mid(0, separatorIndex);
+    QString hexCode = color.mid(separatorIndex + 1);
+
+    if (colorFormat == "rgba")
+    {
+        QString rgbValue = hexCode.mid(0, 6);
+        QString alphaValue = hexCode.mid(6);
+        hexCode = alphaValue + rgbValue;
+    }
+
     return QColor("#" + hexCode);
 }
 } // namespace RPC
