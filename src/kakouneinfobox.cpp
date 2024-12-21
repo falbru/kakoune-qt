@@ -1,4 +1,5 @@
 #include "kakouneinfobox.hpp"
+#include <qsizepolicy.h>
 
 KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent)
     : QWidget(parent), m_client(client), m_menu(menu), m_draw_options(draw_options)
@@ -17,7 +18,6 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
     borderedFrameLayout->setContentsMargins(3, 1, 3, 1);
 
     m_content = new KakouneContent(client->getMenuItems(), client->getMenuFace(), m_draw_options, borderedFrame);
-    m_content->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred); // Allow content to grow/shrink
     borderedFrameLayout->addWidget(m_content);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -29,6 +29,7 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
         this->adjustSize();
     });
 }
+
 void KakouneInfoBox::resizeToFitContent()
 {
     QList<RPC::Line> lines = m_client->getInfoContent();
@@ -47,7 +48,7 @@ void KakouneInfoBox::resizeToFitContent()
         height += m_draw_options->getCellSize().height();
     }
 
-    resize(width, height);
+    // resize(width, height);
 }
 
 void KakouneInfoBox::resizeToFitParent()
@@ -62,7 +63,6 @@ void KakouneInfoBox::resizeToFitParent()
 
         int cutoff_index = width / (float)m_draw_options->getCellSize().width();
         int wrapped_lines_count = 0;
-
         for (RPC::Line line : lines)
         {
             wrapped_lines_count += line.contentSize() / cutoff_index;
@@ -71,7 +71,7 @@ void KakouneInfoBox::resizeToFitParent()
         height += wrapped_lines_count * m_draw_options->getCellSize().height();
     }
 
-    resize(width, height);
+    // resize(width, height);
 }
 
 void KakouneInfoBox::applyPromptStyle()

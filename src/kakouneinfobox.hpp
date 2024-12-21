@@ -4,6 +4,7 @@
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
 #include "kakounemenu.hpp"
+#include "kakounecontent.hpp"
 #include <QtWidgets>
 
 enum class InlineType

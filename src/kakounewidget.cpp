@@ -50,6 +50,11 @@ QSize KakouneWidget::sizeHint() const
     return QSize(512, 256);
 }
 
+void KakouneWidget::resizeEvent(QResizeEvent* event)
+{
+    m_info_box->setMaximumSize(this->width(), this->height());
+}
+
 KakouneWidget::~KakouneWidget()
 {
     delete m_client;

@@ -26,6 +26,8 @@ class KakouneWidget : public QWidget
 
     QSize sizeHint() const override;
 
+    void resizeEvent(QResizeEvent* event) override;
+
     static KakouneWidget *findParentKakouneWidget(QWidget *widget);
 
     void setVisible(bool visible) override;
