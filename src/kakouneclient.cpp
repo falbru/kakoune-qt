@@ -7,6 +7,7 @@ void KakouneClient::handleRequest(QJsonObject request)
 {
     const QString method = request["method"].toString();
     QJsonArray request_params = request["params"].toArray();
+    qDebug() << method;
 
     if (method == "draw")
     {

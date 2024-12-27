@@ -22,33 +22,6 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(borderedFrame);
-
-    connect(client, &KakouneClient::refresh, this, [=]() {
-        m_content->setLines(m_client->getInfoContent());
-        m_content->setDefaultFace(m_client->getInfoFace());
-        this->adjustSize();
-    });
-}
-
-void KakouneInfoBox::resizeToFitContent()
-{
-    QList<RPC::Line> lines = m_client->getInfoContent();
-
-    int max_item_contentsize = 0;
-    for (int i = 0; i < lines.length(); i++)
-    {
-        max_item_contentsize = qMax(max_item_contentsize, lines[i].contentSize());
-    }
-
-    int width = max_item_contentsize * m_draw_options->getCellSize().width();
-    int height = lines.size() * m_draw_options->getCellSize().height();
-
-    if (m_client->getInfoTitle().contentSize() > 0)
-    {
-        height += m_draw_options->getCellSize().height();
-    }
-
-    // resize(width, height);
 }
 
 void KakouneInfoBox::resizeToFitParent()
@@ -146,10 +119,13 @@ void KakouneInfoBox::applyModalStyle()
 
 void KakouneInfoBox::showInfoBox()
 {
+    m_content->setLines(m_client->getInfoContent());
+    m_content->setDefaultFace(m_client->getInfoFace());
+    this->adjustSize();
+
     RPC::InfoStyle style = m_client->getInfoStyle();
 
-    resizeToFitContent();
-    resizeToFitParent();
+    // resizeToFitParent();
 
     switch (style)
     {

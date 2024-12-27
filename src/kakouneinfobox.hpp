@@ -30,7 +30,6 @@ class KakouneInfoBox : public QWidget
     KakouneMenu *m_menu;
     DrawOptions *m_draw_options;
 
-    void resizeToFitContent();
     void resizeToFitParent();
 
     void applyPromptStyle();
