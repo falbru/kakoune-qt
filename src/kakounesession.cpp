@@ -75,15 +75,18 @@ KakouneSession::KakouneSession(QString session_id, QStringList session_arguments
 
 KakouneSession::~KakouneSession()
 {
-    QProcess kill_session;
-    kill_session.start("kak", {"-p", m_session_id});
-    kill_session.waitForStarted();
-    kill_session.write("kill");
-    kill_session.closeWriteChannel();
-    kill_session.waitForFinished();
-    kill_session.close();
+    if (m_process != nullptr)
+    {
+        QProcess kill_session;
+        kill_session.start("kak", {"-p", m_session_id});
+        kill_session.waitForStarted();
+        kill_session.write("kill");
+        kill_session.closeWriteChannel();
+        kill_session.waitForFinished();
+        kill_session.close();
 
-    m_process->close();
+        m_process->close();
+    }
 }
 
 QString KakouneSession::getSessionId()

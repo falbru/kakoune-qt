@@ -51,7 +51,6 @@ QSize KakouneWidget::sizeHint() const
 
 KakouneWidget::~KakouneWidget()
 {
-    delete m_client;
 }
 
 QUuid KakouneWidget::getID()
