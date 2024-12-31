@@ -1,5 +1,6 @@
 #include "atom.hpp"
 #include "attribute.hpp"
+#include <qtextboundaryfinder.h>
 
 namespace RPC
 {
@@ -32,14 +33,26 @@ void Atom::draw(const DrawContext &context, const QPoint &position, const Face &
     font.setBold(default_face.hasAttribute(Attribute::bold) || m_face.hasAttribute(Attribute::bold));
     context.painter.setFont(font);
 
+    // Draw background
     context.painter.fillRect(position.x(), position.y(), width, height, bg);
 
-    for (int i = 0; i < m_contents.size(); i++)
-    {
-        context.painter.drawText(QRect(position.x() + i * context.cell_size.width(), position.y(), width, height),
-                                 Qt::AlignTop, m_contents.at(i));
+    // Draw foreground
+    QTextBoundaryFinder grapheme_finder(QTextBoundaryFinder::Grapheme, m_contents);
+    int start_offset = 0;
+    QPoint grapheme_position = position;
+
+    while (grapheme_finder.toNextBoundary() >= 0) {
+        int length = grapheme_finder.position() - start_offset;
+        QString grapheme = m_contents.mid(start_offset, length);
+
+        context.painter.drawText(QRect(grapheme_position.x(), grapheme_position.y(), context.cell_size.width() * length, context.cell_size.height()),
+                         Qt::AlignCenter, grapheme);
+
+        grapheme_position.setX(grapheme_position.x() + context.cell_size.width() * length);
+        start_offset = grapheme_finder.position();
     }
 
+    // Draw underline
     if (default_face.hasAttribute(Attribute::underline) || m_face.hasAttribute(Attribute::underline))
     {
         context.painter.drawLine(position.x(), position.y() + context.cell_size.height() - 1,
