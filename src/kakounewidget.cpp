@@ -1,6 +1,7 @@
 #include "kakounewidget.hpp"
 #include "colorpalette.hpp"
 #include "container.hpp"
+#include "kakounecontent.hpp"
 #include "rpc/color.hpp"
 #include "statusbar.hpp"
 #include <qcoreevent.h>
@@ -42,6 +43,9 @@ KakouneWidget::KakouneWidget(const QString &session_id, const QUuid &window_id, 
 
     setFocusProxy(m_textedit);
     this->setLayout(layout);
+
+    KakouneContent* content = new KakouneContent(m_client->getMenuFace(), draw_options, this);
+    content->setLines(m_client->getMenuItems());
 }
 
 QSize KakouneWidget::sizeHint() const
