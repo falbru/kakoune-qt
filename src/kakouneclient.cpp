@@ -159,6 +159,11 @@ void KakouneClient::sendMouseRelease(const QString &button, int line, int column
     sendRequest("mouse_release", QJsonArray{button, line, column});
 }
 
+void KakouneClient::sendScroll(int amount)
+{
+    sendRequest("scroll", QJsonArray{amount});
+}
+
 void KakouneClient::resize(int rows, int columns)
 {
     sendRequest("resize", QJsonArray{rows, columns});

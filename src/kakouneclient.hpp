@@ -20,6 +20,7 @@ class KakouneClient : public QObject
     void sendMouseMove(int line, int column);
     void sendMousePress(const QString &button, int line, int column);
     void sendMouseRelease(const QString &button, int line, int column);
+    void sendScroll(int amount);
     void resize(int rows, int columns);
 
     const QString &getClientName() const;

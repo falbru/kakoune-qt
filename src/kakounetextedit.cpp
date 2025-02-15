@@ -1,4 +1,5 @@
 #include "kakounetextedit.hpp"
+#include <qevent.h>
 
 bool TabIgnoreFilter::eventFilter(QObject *object, QEvent *event)
 {
@@ -219,4 +220,29 @@ void KakouneTextEdit::focusInEvent(QFocusEvent *ev)
 void KakouneTextEdit::focusOutEvent(QFocusEvent *ev)
 {
     m_client->sendKeys("<focus_out>");
+}
+
+void KakouneTextEdit::wheelEvent(QWheelEvent *ev)
+{
+    static int scroll = 0;
+    static constexpr int scroll_sensitivity = 120;
+    static constexpr int scroll_threshold = 7;
+
+    const QPoint num_degrees = ev->angleDelta() / 8;
+
+    if (!num_degrees.isNull())
+    {
+        const int scroll_amount = num_degrees.y() * 120 / scroll_sensitivity;
+        scroll += scroll_amount;
+
+        if (std::abs(scroll) >= scroll_threshold)
+        {
+            m_client->sendScroll(-scroll / scroll_threshold);
+            scroll %= scroll_threshold;
+        }
+    }
+    else
+    {
+        scroll = 0;
+    }
 }
