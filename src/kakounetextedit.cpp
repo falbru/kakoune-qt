@@ -225,26 +225,24 @@ void KakouneTextEdit::focusOutEvent(QFocusEvent *ev)
 void KakouneTextEdit::wheelEvent(QWheelEvent *ev)
 {
     static int scroll = 0;
-    static constexpr int scrollSensitivity = 120;
-    static constexpr int scrollThreshold = 7;
+    static constexpr int scroll_sensitivity = 120;
+    static constexpr int scroll_threshold = 7;
 
-    const QPoint numDegrees = ev->angleDelta() / 8;
+    const QPoint num_degrees = ev->angleDelta() / 8;
 
-    if (!numDegrees.isNull())
+    if (!num_degrees.isNull())
     {
-        const int scrollAmount = numDegrees.y() * 120 / scrollSensitivity;
-        scroll += scrollAmount;
+        const int scroll_amount = num_degrees.y() * 120 / scroll_sensitivity;
+        scroll += scroll_amount;
 
-        if (std::abs(scroll) >= scrollThreshold)
+        if (std::abs(scroll) >= scroll_threshold)
         {
-            m_client->sendScroll(-scroll / scrollThreshold);
-            scroll %= scrollThreshold;
+            m_client->sendScroll(-scroll / scroll_threshold);
+            scroll %= scroll_threshold;
         }
     }
     else
     {
         scroll = 0;
     }
-
-    ev->accept();
 }
