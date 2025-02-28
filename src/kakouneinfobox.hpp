@@ -3,6 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
+#include "kakounecontent.hpp"
 #include "kakounemenu.hpp"
 #include <QtWidgets>
 
@@ -20,9 +21,6 @@ class KakouneInfoBox : public QWidget
     KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneInfoBox();
 
-  protected:
-    void paintEvent(QPaintEvent *ev) override;
-
   private slots:
     void showInfoBox();
 
@@ -30,8 +28,8 @@ class KakouneInfoBox : public QWidget
     KakouneClient *m_client;
     KakouneMenu *m_menu;
     DrawOptions *m_draw_options;
+    KakouneContent *m_content;
 
-    void resizeToFitContent();
     void resizeToFitParent();
 
     void applyPromptStyle();
