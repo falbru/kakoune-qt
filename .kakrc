@@ -1,1 +1,3 @@
-set-option global formatcmd 'clang-format --style Microsoft'
+hook global BufSetOption cpp %{
+    set-option buffer formatcmd 'clang-format --style Microsoft'
+}

@@ -14,7 +14,7 @@ enum class InlineType
     BELOW,
 };
 
-class KakouneInfoBox : public QWidget
+class KakouneInfoBox : public QFrame
 {
     Q_OBJECT
   public:

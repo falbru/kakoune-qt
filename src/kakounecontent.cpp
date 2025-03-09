@@ -75,7 +75,6 @@ void KakouneContent::paintEvent(QPaintEvent *)
     QList<RPC::Line> lines = getContent();
     int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width();
     QPoint position(0, 0);
-    std::cout << "LINE COUNT:" << lines.size() << "\n";
     for (int i = 0; i < lines.size(); ++i)
     {
         RPC::Line line = lines[i];
