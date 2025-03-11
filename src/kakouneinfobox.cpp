@@ -14,9 +14,9 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_title, 0, Qt::AlignHCenter);
 
-    QFrame *line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    layout->addWidget(line);
+    m_title_separator = new QFrame();
+    m_title_separator->setFrameShape(QFrame::HLine);
+    layout->addWidget(m_title_separator);
 
     layout->addWidget(m_content);
 
@@ -121,10 +121,12 @@ void KakouneInfoBox::showInfoBox()
     {
         m_title->setContent(QList{m_client->getInfoTitle()});
         m_title->show();
+        m_title_separator->show();
     }
     else
     {
         m_title->hide();
+        m_title_separator->hide();
     }
     m_content->setContent(m_client->getInfoContent());
     m_title->setDefaultFace(m_client->getInfoFace());
