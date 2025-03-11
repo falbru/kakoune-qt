@@ -29,6 +29,7 @@ class KakouneInfoBox : public QFrame
     KakouneMenu *m_menu;
     DrawOptions *m_draw_options;
     KakouneContent *m_title;
+    QFrame *m_title_separator;
     KakouneContent *m_content;
 
     void resizeToFitParent();
