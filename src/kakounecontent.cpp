@@ -3,18 +3,21 @@
 #include <iostream>
 #include <qsizepolicy.h>
 
-KakouneContent::KakouneContent(DrawOptions* draw_options, RPC::Face default_face, QWidget *parent) : QWidget(parent), m_draw_options(draw_options), m_default_face(default_face) {
+KakouneContent::KakouneContent(DrawOptions *draw_options, RPC::Face default_face, QWidget *parent)
+    : QWidget(parent), m_draw_options(draw_options), m_default_face(default_face)
+{
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     policy.setHeightForWidth(true);
     policy.setVerticalStretch(1);
     setSizePolicy(policy);
 }
 
-KakouneContent::~KakouneContent() {
-
+KakouneContent::~KakouneContent()
+{
 }
 
-QSize KakouneContent::sizeHint() const {
+QSize KakouneContent::sizeHint() const
+{
     QList<RPC::Line> lines = getContent();
 
     int max_item_contentsize = 0;
@@ -29,40 +32,46 @@ QSize KakouneContent::sizeHint() const {
     return QSize(width, height);
 }
 
-void KakouneContent::setContent(QList<RPC::Line> content) {
+void KakouneContent::setContent(QList<RPC::Line> content)
+{
     m_content = content;
     updateGeometry();
     parentWidget()->layout()->invalidate();
     parentWidget()->adjustSize();
 }
 
-const QList<RPC::Line>& KakouneContent::getContent() const {
+const QList<RPC::Line> &KakouneContent::getContent() const
+{
     return m_content;
 }
 
-void KakouneContent::setDefaultFace(RPC::Face default_face) {
+void KakouneContent::setDefaultFace(RPC::Face default_face)
+{
     m_default_face = default_face;
 }
 
-const RPC::Face &KakouneContent::getDefaultFace() const {
+const RPC::Face &KakouneContent::getDefaultFace() const
+{
     return m_default_face;
 }
 
-int KakouneContent::heightForWidth(int width) const {
+int KakouneContent::heightForWidth(int width) const
+{
     int height = sizeHint().height();
-    if (width > 0 && width < sizeHint().width()) {
+    if (width > 0 && width < sizeHint().width())
+    {
         int cutoff_index = width / (float)m_draw_options->getCellSize().width();
         int wrapped_lines_count = 0;
 
-        for (RPC::Line line : m_content) {
-          wrapped_lines_count += line.contentSize() / cutoff_index;
+        for (RPC::Line line : m_content)
+        {
+            wrapped_lines_count += line.contentSize() / cutoff_index;
         }
 
         height += wrapped_lines_count * m_draw_options->getCellSize().height();
     }
     return height;
 }
-
 
 void KakouneContent::paintEvent(QPaintEvent *)
 {
@@ -96,15 +105,16 @@ void KakouneContent::paintEvent(QPaintEvent *)
             position.setY(position.y() + m_draw_options->getCellSize().height());
 
             line = cutoff;
-        }while (line.contentSize() > 0);
+        } while (line.contentSize() > 0);
     }
 }
 
-QSize KakouneContent::minimumSizeHint() const {
+QSize KakouneContent::minimumSizeHint() const
+{
     return QSize(0, 0);
-
 }
 
-bool KakouneContent::hasHeightForWidth() const {
+bool KakouneContent::hasHeightForWidth() const
+{
     return true;
 }

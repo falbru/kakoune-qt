@@ -5,32 +5,32 @@
 #include "rpc/line.hpp"
 #include <QtWidgets>
 
-class KakouneContent : public QWidget {
-  Q_OBJECT
+class KakouneContent : public QWidget
+{
+    Q_OBJECT
 
-public:
-  KakouneContent(DrawOptions *draw_options, RPC::Face default_face,
-                 QWidget *parent = nullptr);
-  ~KakouneContent();
+  public:
+    KakouneContent(DrawOptions *draw_options, RPC::Face default_face, QWidget *parent = nullptr);
+    ~KakouneContent();
 
-  QSize sizeHint() const override;
-  QSize minimumSizeHint() const override;
-  bool hasHeightForWidth() const override;
-  int heightForWidth(int width) const override;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
+    bool hasHeightForWidth() const override;
+    int heightForWidth(int width) const override;
 
-  void setContent(QList<RPC::Line> content);
-  const QList<RPC::Line> &getContent() const;
+    void setContent(QList<RPC::Line> content);
+    const QList<RPC::Line> &getContent() const;
 
-  void setDefaultFace(RPC::Face default_face);
-  const RPC::Face &getDefaultFace() const;
+    void setDefaultFace(RPC::Face default_face);
+    const RPC::Face &getDefaultFace() const;
 
-protected:
-  void paintEvent(QPaintEvent *ev) override;
+  protected:
+    void paintEvent(QPaintEvent *ev) override;
 
-private:
-  QList<RPC::Line> m_content;
-  DrawOptions *m_draw_options;
-  RPC::Face m_default_face;
+  private:
+    QList<RPC::Line> m_content;
+    DrawOptions *m_draw_options;
+    RPC::Face m_default_face;
 };
 
 #endif

@@ -1,5 +1,5 @@
-#include "kakounecontent.hpp"
 #include "kakouneinfobox.hpp"
+#include "kakounecontent.hpp"
 #include <qnamespace.h>
 
 KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent)
@@ -14,7 +14,7 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_title, 0, Qt::AlignHCenter);
 
-    QFrame* line = new QFrame();
+    QFrame *line = new QFrame();
     line->setFrameShape(QFrame::HLine);
     layout->addWidget(line);
 
@@ -117,10 +117,13 @@ void KakouneInfoBox::showInfoBox()
 {
     RPC::InfoStyle style = m_client->getInfoStyle();
 
-    if (m_client->getInfoTitle().contentSize() > 0) {
+    if (m_client->getInfoTitle().contentSize() > 0)
+    {
         m_title->setContent(QList{m_client->getInfoTitle()});
         m_title->show();
-    }else {
+    }
+    else
+    {
         m_title->hide();
     }
     m_content->setContent(m_client->getInfoContent());
