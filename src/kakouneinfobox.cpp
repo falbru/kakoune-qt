@@ -1,53 +1,43 @@
 #include "kakouneinfobox.hpp"
+#include "kakounecontent.hpp"
+#include <qnamespace.h>
 
 KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent)
-    : QWidget(parent), m_client(client), m_menu(menu), m_draw_options(draw_options)
+    : QFrame(parent), m_client(client), m_menu(menu), m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showInfoBox, this, &KakouneInfoBox::showInfoBox);
     connect(m_client, &KakouneClient::hideInfoBox, this, &KakouneInfoBox::hide);
 
+    m_content = new KakouneContent(draw_options, client->getInfoFace());
+    m_title = new KakouneContent(draw_options, client->getInfoFace());
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(m_title, 0, Qt::AlignHCenter);
+
+    QFrame *line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    layout->addWidget(line);
+
+    layout->addWidget(m_content);
+
+    this->setAutoFillBackground(true);
+
+    this->setFrameStyle(QFrame::Panel | QFrame::Plain);
+    this->setFrameShadow(QFrame::Plain);
+    this->setLineWidth(1);
+
     hide();
-}
-void KakouneInfoBox::resizeToFitContent()
-{
-    QList<RPC::Line> lines = m_client->getInfoContent();
-
-    int max_item_contentsize = 0;
-    for (int i = 0; i < lines.length(); i++)
-    {
-        max_item_contentsize = qMax(max_item_contentsize, lines[i].contentSize());
-    }
-
-    int width = max_item_contentsize * m_draw_options->getCellSize().width();
-    int height = lines.size() * m_draw_options->getCellSize().height();
-
-    if (m_client->getInfoTitle().contentSize() > 0)
-    {
-        height += m_draw_options->getCellSize().height();
-    }
-
-    resize(width, height);
 }
 
 void KakouneInfoBox::resizeToFitParent()
 {
-    QList<RPC::Line> lines = m_client->getInfoContent();
     int width = this->width();
     int height = this->height();
 
     if (width > parentWidget()->width())
     {
         width = parentWidget()->width();
-
-        int cutoff_index = width / (float)m_draw_options->getCellSize().width();
-        int wrapped_lines_count = 0;
-
-        for (RPC::Line line : lines)
-        {
-            wrapped_lines_count += line.contentSize() / cutoff_index;
-        }
-
-        height += wrapped_lines_count * m_draw_options->getCellSize().height();
+        height = heightForWidth(width);
     }
 
     resize(width, height);
@@ -127,7 +117,24 @@ void KakouneInfoBox::showInfoBox()
 {
     RPC::InfoStyle style = m_client->getInfoStyle();
 
-    resizeToFitContent();
+    if (m_client->getInfoTitle().contentSize() > 0)
+    {
+        m_title->setContent(QList{m_client->getInfoTitle()});
+        m_title->show();
+    }
+    else
+    {
+        m_title->hide();
+    }
+    m_content->setContent(m_client->getInfoContent());
+    m_title->setDefaultFace(m_client->getInfoFace());
+    m_content->setDefaultFace(m_client->getInfoFace());
+
+    QPalette pal;
+    pal.setColor(QPalette::WindowText, m_client->getInfoFace().getFgAsQColor(ColorPalette()));
+    pal.setColor(QPalette::Window, m_client->getInfoFace().getBgAsQColor(ColorPalette()));
+    setPalette(pal);
+
     resizeToFitParent();
 
     switch (style)
@@ -157,49 +164,4 @@ void KakouneInfoBox::showInfoBox()
 
 KakouneInfoBox::~KakouneInfoBox()
 {
-}
-
-void KakouneInfoBox::paintEvent(QPaintEvent *ev)
-{
-    QPainter painter(this);
-    painter.setFont(m_draw_options->getFont());
-
-    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
-
-    painter.fillRect(0, 0, width(), height(), m_client->getInfoFace().getBgAsQColor(context.color_palette));
-
-    RPC::Line title = m_client->getInfoTitle();
-    if (title.contentSize() > 0)
-    {
-        title.draw(context, QPoint((width() - title.contentSize() * m_draw_options->getCellSize().width()) / 2, 0),
-                   m_client->getInfoFace());
-    }
-
-    QList<RPC::Line> lines = m_client->getInfoContent();
-
-    int max_characters_per_line = width() / (float)m_draw_options->getCellSize().width();
-    QPoint position(0, title.contentSize() > 0 ? m_draw_options->getCellSize().height() : 0);
-    for (int i = 0; i < lines.size(); ++i)
-    {
-        RPC::Line line = lines[i];
-        RPC::Line cutoff;
-
-        while (line.contentSize() > 0)
-        {
-            if (line.contentSize() > max_characters_per_line)
-            {
-                cutoff = line.slice(max_characters_per_line);
-                line = line.slice(0, max_characters_per_line);
-            }
-            else
-            {
-                cutoff = RPC::Line();
-            }
-
-            line.draw(context, position, m_client->getInfoFace());
-            position.setY(position.y() + m_draw_options->getCellSize().height());
-
-            line = cutoff;
-        }
-    }
 }

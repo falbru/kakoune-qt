@@ -3,6 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
+#include "kakounecontent.hpp"
 #include "kakounemenu.hpp"
 #include <QtWidgets>
 
@@ -13,15 +14,12 @@ enum class InlineType
     BELOW,
 };
 
-class KakouneInfoBox : public QWidget
+class KakouneInfoBox : public QFrame
 {
     Q_OBJECT
   public:
     KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent = nullptr);
     ~KakouneInfoBox();
-
-  protected:
-    void paintEvent(QPaintEvent *ev) override;
 
   private slots:
     void showInfoBox();
@@ -30,8 +28,9 @@ class KakouneInfoBox : public QWidget
     KakouneClient *m_client;
     KakouneMenu *m_menu;
     DrawOptions *m_draw_options;
+    KakouneContent *m_title;
+    KakouneContent *m_content;
 
-    void resizeToFitContent();
     void resizeToFitParent();
 
     void applyPromptStyle();
