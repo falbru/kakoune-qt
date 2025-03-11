@@ -9,8 +9,15 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
     connect(m_client, &KakouneClient::hideInfoBox, this, &KakouneInfoBox::hide);
 
     m_content = new KakouneContent(draw_options, client->getInfoFace());
+    m_title = new KakouneContent(draw_options, client->getInfoFace());
 
     QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(m_title, 0, Qt::AlignHCenter);
+
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    layout->addWidget(line);
+
     layout->addWidget(m_content);
 
     this->setAutoFillBackground(true);
@@ -110,7 +117,14 @@ void KakouneInfoBox::showInfoBox()
 {
     RPC::InfoStyle style = m_client->getInfoStyle();
 
+    if (m_client->getInfoTitle().contentSize() > 0) {
+        m_title->setContent(QList{m_client->getInfoTitle()});
+        m_title->show();
+    }else {
+        m_title->hide();
+    }
     m_content->setContent(m_client->getInfoContent());
+    m_title->setDefaultFace(m_client->getInfoFace());
     m_content->setDefaultFace(m_client->getInfoFace());
 
     QPalette pal;
