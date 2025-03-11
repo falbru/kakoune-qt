@@ -50,7 +50,7 @@ const RPC::Face &KakouneContent::getDefaultFace() const {
 
 int KakouneContent::heightForWidth(int width) const {
     int height = sizeHint().height();
-    if (width < sizeHint().width()) {
+    if (width > 0 && width < sizeHint().width()) {
         int cutoff_index = width / (float)m_draw_options->getCellSize().width();
         int wrapped_lines_count = 0;
 
