@@ -3,7 +3,7 @@
 #include <qnamespace.h>
 
 KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOptions *draw_options, QWidget *parent)
-    : QFrame(parent), m_client(client), m_menu(menu), m_draw_options(draw_options)
+    : KakouneOverlay(parent), m_client(client), m_menu(menu), m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showInfoBox, this, &KakouneInfoBox::showInfoBox);
     connect(m_client, &KakouneClient::hideInfoBox, this, &KakouneInfoBox::hide);
@@ -20,27 +20,7 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
 
     layout->addWidget(m_content);
 
-    this->setAutoFillBackground(true);
-
-    this->setFrameStyle(QFrame::Panel | QFrame::Plain);
-    this->setFrameShadow(QFrame::Plain);
-    this->setLineWidth(1);
-
     hide();
-}
-
-void KakouneInfoBox::resizeToFitParent()
-{
-    int width = this->width();
-    int height = this->height();
-
-    if (width > parentWidget()->width())
-    {
-        width = parentWidget()->width();
-        height = heightForWidth(width);
-    }
-
-    resize(width, height);
 }
 
 void KakouneInfoBox::applyPromptStyle()
@@ -131,13 +111,9 @@ void KakouneInfoBox::showInfoBox()
     m_content->setContent(m_client->getInfoContent());
     m_title->setDefaultFace(m_client->getInfoFace());
     m_content->setDefaultFace(m_client->getInfoFace());
+    setFace(m_client->getInfoFace());
 
-    QPalette pal;
-    pal.setColor(QPalette::WindowText, m_client->getInfoFace().getFgAsQColor(ColorPalette()));
-    pal.setColor(QPalette::Window, m_client->getInfoFace().getBgAsQColor(ColorPalette()));
-    setPalette(pal);
-
-    resizeToFitParent();
+    updateOverlay();
 
     switch (style)
     {

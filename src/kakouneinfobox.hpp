@@ -5,6 +5,7 @@
 #include "kakouneclient.hpp"
 #include "kakounecontent.hpp"
 #include "kakounemenu.hpp"
+#include "kakouneoverlay.hpp"
 #include <QtWidgets>
 
 enum class InlineType
@@ -14,7 +15,7 @@ enum class InlineType
     BELOW,
 };
 
-class KakouneInfoBox : public QFrame
+class KakouneInfoBox : public KakouneOverlay
 {
     Q_OBJECT
   public:
@@ -31,8 +32,6 @@ class KakouneInfoBox : public QFrame
     KakouneContent *m_title;
     QFrame *m_title_separator;
     KakouneContent *m_content;
-
-    void resizeToFitParent();
 
     void applyPromptStyle();
     void applyInlineStyle(InlineType type);
