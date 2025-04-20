@@ -34,6 +34,7 @@ qt_add_executable(kak-qt
     src/kakouneinfobox.cpp
     src/kakounewidget.cpp
     src/kakounetextedit.cpp
+    src/verticalscrollarea.cpp
     src/statusbar.cpp
     src/mainwindow.cpp
     src/main.cpp

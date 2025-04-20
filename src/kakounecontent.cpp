@@ -1,6 +1,5 @@
 #include "kakounecontent.hpp"
 #include "rpc/face.hpp"
-#include <iostream>
 #include <qsizepolicy.h>
 
 KakouneContent::KakouneContent(DrawOptions *draw_options, RPC::Face default_face, QWidget *parent)
@@ -36,7 +35,6 @@ void KakouneContent::setContent(QList<RPC::Line> content)
 {
     m_content = content;
     updateGeometry();
-    parentWidget()->layout()->invalidate();
     parentWidget()->adjustSize();
 }
 
@@ -111,7 +109,7 @@ void KakouneContent::paintEvent(QPaintEvent *)
 
 QSize KakouneContent::minimumSizeHint() const
 {
-    return QSize(0, 0);
+    return m_draw_options->getCellSize();
 }
 
 bool KakouneContent::hasHeightForWidth() const

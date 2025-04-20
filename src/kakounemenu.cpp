@@ -1,12 +1,28 @@
 #include "kakounemenu.hpp"
+#include "kakounecontent.hpp"
 #include "rpc/line.hpp"
+#include "verticalscrollarea.hpp"
+#include <qboxlayout.h>
+#include <qnamespace.h>
+#include <qscrollarea.h>
 
 KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidget *parent)
-    : QWidget(parent), m_selected_item(-1), max_item_grid_columns(10), m_client(client), m_draw_options(draw_options)
+    : KakouneOverlay(parent), m_selected_item(-1), max_item_grid_columns(10), m_client(client), m_draw_options(draw_options)
 {
     connect(m_client, &KakouneClient::showMenu, this, &KakouneMenu::showMenu);
     connect(m_client, &KakouneClient::hideMenu, this, &KakouneMenu::hide);
     connect(m_client, &KakouneClient::selectMenuItem, this, &KakouneMenu::selectItem);
+
+    m_items = new KakouneContent(m_draw_options, m_client->getMenuFace());
+
+    // m_scroll_area = new VerticalScrollArea;
+    // m_scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // m_scroll_area->setWidget(m_items);
+    // m_scroll_area->setWidgetResizable(true);
+
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(m_items);
+    layout->setContentsMargins(2, 2, 2, 2);
 
     hide();
 }
@@ -53,7 +69,7 @@ void KakouneMenu::applyInlineStyle()
     }
 
     move(menu_position);
-    resize(item_width, item_grid_height);
+    // resize(item_width, item_grid_height);
 }
 
 void KakouneMenu::applyPromptStyle()
@@ -68,13 +84,17 @@ void KakouneMenu::applyPromptStyle()
     int item_grid_height = m_item_grid_columns * m_draw_options->getCellSize().height();
 
     move(parentWidget()->x(), parentWidget()->y() + parentWidget()->height() - item_grid_height);
-    resize(parentWidget()->width(), item_grid_height);
+    // resize(parentWidget()->width(), item_grid_height);
 }
 
 void KakouneMenu::showMenu()
 {
-    show();
     m_selected_item = -1;
+    m_items->setContent(m_client->getMenuItems());
+    m_items->setDefaultFace(m_client->getMenuFace());
+    setFace(m_client->getMenuFace());
+
+    updateOverlay();
 
     if (m_client->getMenuStyle() == RPC::MenuStyle::INLINE)
     {
@@ -84,6 +104,8 @@ void KakouneMenu::showMenu()
     {
         applyPromptStyle();
     }
+
+    show();
 }
 
 void KakouneMenu::selectItem(int selected)
@@ -95,41 +117,6 @@ void KakouneMenu::selectItem(int selected)
     else
     {
         m_selected_item = selected;
-    }
-}
-
-void KakouneMenu::paintEvent(QPaintEvent *ev)
-{
-    QPainter painter(this);
-    painter.setFont(m_draw_options->getFont());
-
-    DrawContext context{painter, m_draw_options->getColorPalette(), m_draw_options->getCellSize()};
-
-    painter.fillRect(0, 0, width(), height(), m_client->getMenuFace().getBgAsQColor(context.color_palette));
-
-    QList<RPC::Line> items = m_client->getMenuItems();
-
-    int item_grid_capacity = m_item_grid_rows * m_item_grid_columns;
-    int scrolling_index_offset =
-        m_selected_item == -1 ? 0 : (m_selected_item / item_grid_capacity) * item_grid_capacity;
-
-    for (int i = 0; i < qMin(items.size() - scrolling_index_offset, item_grid_capacity); ++i)
-    {
-        int index = scrolling_index_offset + i;
-        int item_width = width() / m_item_grid_rows;
-        int item_height = m_draw_options->getCellSize().height();
-
-        QPoint position(i / m_item_grid_columns * item_width, (i % m_item_grid_columns) * item_height);
-
-        if (m_selected_item == index)
-        {
-            painter.fillRect(position.x(), position.y(), item_width, item_height,
-                             m_client->getSelectedMenuItemFace().getBgAsQColor(context.color_palette));
-            items[index].draw(context, position, m_client->getSelectedMenuItemFace());
-        }
-        else
-        {
-            items[index].draw(context, position, m_client->getMenuFace());
-        }
+        // m_scroll_area->ensureVisible(0, (m_selected_item + 0.5f) * m_draw_options->getCellSize().height(), m_draw_options->getCellSize().width(), m_draw_options->getCellSize().height() / 2.0f);
     }
 }
