@@ -22,6 +22,7 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(m_items);
+    layout->addWidget(new QScrollBar());
     layout->setContentsMargins(2, 2, 2, 2);
 
     hide();

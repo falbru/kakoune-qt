@@ -1,11 +1,12 @@
 #ifndef KAKOUNECONTENT_HPP
 #define KAKOUNECONTENT_HPP
 
+#include "abstractkakounecontent.hpp"
 #include "drawoptions.hpp"
 #include "rpc/line.hpp"
 #include <QtWidgets>
 
-class KakouneContent : public QWidget
+class KakouneContent : public AbstractKakouneContent
 {
     Q_OBJECT
 
@@ -18,11 +19,11 @@ class KakouneContent : public QWidget
     bool hasHeightForWidth() const override;
     int heightForWidth(int width) const override;
 
-    void setContent(QList<RPC::Line> content);
-    const QList<RPC::Line> &getContent() const;
+    void setContent(QList<RPC::Line> content) override;
+    const QList<RPC::Line> &getContent() const override;
 
-    void setDefaultFace(RPC::Face default_face);
-    const RPC::Face &getDefaultFace() const;
+    void setDefaultFace(RPC::Face default_face) override;
+    const RPC::Face &getDefaultFace() const override;
 
   protected:
     void paintEvent(QPaintEvent *ev) override;

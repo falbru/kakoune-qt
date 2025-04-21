@@ -1,9 +1,10 @@
 #include "kakounecontent.hpp"
+#include "abstractkakounecontent.hpp"
 #include "rpc/face.hpp"
 #include <qsizepolicy.h>
 
 KakouneContent::KakouneContent(DrawOptions *draw_options, RPC::Face default_face, QWidget *parent)
-    : QWidget(parent), m_draw_options(draw_options), m_default_face(default_face)
+    : AbstractKakouneContent(parent), m_draw_options(draw_options), m_default_face(default_face)
 {
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     policy.setHeightForWidth(true);
