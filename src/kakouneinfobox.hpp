@@ -8,13 +8,6 @@
 #include "kakouneoverlay.hpp"
 #include <QtWidgets>
 
-enum class InlineType
-{
-    ANY,
-    ABOVE,
-    BELOW,
-};
-
 class KakouneInfoBox : public KakouneOverlay
 {
     Q_OBJECT
@@ -34,7 +27,7 @@ class KakouneInfoBox : public KakouneOverlay
     KakouneContent *m_content;
 
     void applyPromptStyle();
-    void applyInlineStyle(InlineType type);
+    void applyInlineStyle(int type);
     void applyMenuDocStyle();
     void applyModalStyle();
 };
