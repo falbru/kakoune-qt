@@ -1,4 +1,5 @@
 #include "kakounecontent.hpp"
+#include "kakounecontentscroller.hpp"
 #include "rpc/face.hpp"
 #include <qsizepolicy.h>
 
@@ -36,6 +37,7 @@ void KakouneContent::setContent(QList<RPC::Line> content)
     m_content = content;
     updateGeometry();
     parentWidget()->adjustSize();
+    repaint();
 }
 
 const QList<RPC::Line> &KakouneContent::getContent() const

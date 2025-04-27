@@ -3,7 +3,7 @@
 
 #include "drawoptions.hpp"
 #include "kakouneclient.hpp"
-#include "kakounecontent.hpp"
+#include "kakounecontentscroller.hpp"
 #include "kakouneoverlay.hpp"
 #include <QtWidgets>
 #include <qscrollarea.h>
@@ -21,7 +21,7 @@ class KakouneMenu : public KakouneOverlay
 
   private:
     int m_selected_item;
-    KakouneContent* m_items;
+    KakouneContentScroller* m_items;
     QScrollArea* m_scroll_area;
 
     const int max_item_grid_columns;

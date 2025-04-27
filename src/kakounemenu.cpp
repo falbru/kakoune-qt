@@ -1,7 +1,5 @@
 #include "kakounemenu.hpp"
-#include "kakounecontent.hpp"
 #include "rpc/line.hpp"
-#include "verticalscrollarea.hpp"
 #include <qboxlayout.h>
 #include <qnamespace.h>
 #include <qscrollarea.h>
@@ -13,12 +11,8 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
     connect(m_client, &KakouneClient::hideMenu, this, &KakouneMenu::hide);
     connect(m_client, &KakouneClient::selectMenuItem, this, &KakouneMenu::selectItem);
 
-    m_items = new KakouneContent(m_draw_options, m_client->getMenuFace());
-
-    // m_scroll_area = new VerticalScrollArea;
-    // m_scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // m_scroll_area->setWidget(m_items);
-    // m_scroll_area->setWidgetResizable(true);
+    m_items = new KakouneContentScroller(m_draw_options, m_client->getMenuFace());
+    m_items->setMaximumItems(4);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(m_items);
@@ -118,5 +112,6 @@ void KakouneMenu::selectItem(int selected)
     {
         m_selected_item = selected;
         // m_scroll_area->ensureVisible(0, (m_selected_item + 0.5f) * m_draw_options->getCellSize().height(), m_draw_options->getCellSize().width(), m_draw_options->getCellSize().height() / 2.0f);
+        m_items->ensureVisible(m_selected_item);
     }
 }
