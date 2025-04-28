@@ -8,7 +8,8 @@ KakouneContentScroller::KakouneContentScroller(DrawOptions *draw_options,
     : QWidget(parent), m_draw_options(draw_options) {
   m_kakoune_content = new KakouneContent(draw_options, default_face);
   m_scroll_bar = new QScrollBar();
-  connect(m_scroll_bar, &QScrollBar::valueChanged, this, &KakouneContentScroller::scrollBarValueChanged);
+  connect(m_scroll_bar, &QScrollBar::valueChanged, this,
+          &KakouneContentScroller::scrollBarValueChanged);
 
   QHBoxLayout *layout = new QHBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -24,8 +25,8 @@ void KakouneContentScroller::setContent(QList<RPC::Line> content) {
   m_content = content;
   m_scroll_offset = 0;
 
-  updateScrollBar();
   updateScrolledContent();
+  updateScrollBar();
 }
 
 const QList<RPC::Line> &KakouneContentScroller::getContent() const {
@@ -54,8 +55,8 @@ void KakouneContentScroller::ensureVisible(int item_index) {
     m_scroll_offset = item_index;
   }
 
-  updateScrollBar();
   updateScrolledContent();
+  updateScrollBar();
 }
 
 void KakouneContentScroller::updateScrolledContent() {
@@ -63,8 +64,9 @@ void KakouneContentScroller::updateScrolledContent() {
   m_scroll_offset = qMin(m_scroll_offset, m_content.size() - m_max_items);
 
   m_kakoune_content->setContent(
-      m_content.size() > m_max_items ?
-          m_content.sliced(m_scroll_offset, qMin(m_max_items, m_content.size()))
+      m_content.size() > m_max_items
+          ? m_content.sliced(m_scroll_offset,
+                             qMin(m_max_items, m_content.size()))
           : m_content);
   updateGeometry();
   parentWidget()->adjustSize();
@@ -74,42 +76,44 @@ void KakouneContentScroller::updateScrollBar() {
   m_scroll_offset = qMax(m_scroll_offset, 0);
   m_scroll_offset = qMin(m_scroll_offset, m_content.size() - m_max_items);
 
-  m_scroll_bar->setValue(m_scroll_offset);
-  m_scroll_bar->setMinimum(0);
-  m_scroll_bar->setMaximum(m_kakoune_content->getContent().size());
-  m_scroll_bar->setPageStep(m_max_items);
-  m_scroll_bar->setSingleStep(1);
+  if (m_content.size() <= m_max_items) {
+    m_scroll_bar->hide();
+  } else {
+    m_scroll_bar->setValue(m_scroll_offset);
+    m_scroll_bar->setMinimum(0);
+    m_scroll_bar->setMaximum(m_content.size() - m_max_items);
+    m_scroll_bar->setPageStep(m_max_items);
+    m_scroll_bar->setSingleStep(1);
+
+    m_scroll_bar->show();
+  }
 }
 
 void KakouneContentScroller::scrollBarValueChanged(int value) {
-    m_scroll_offset = value;
+  m_scroll_offset = value;
 
-    updateScrollBar();
-    updateScrolledContent();
+  updateScrolledContent();
+  updateScrollBar();
 }
 
 void KakouneContentScroller::wheelEvent(QWheelEvent *ev) {
-    static int scroll = 0;
-    static constexpr int scroll_sensitivity = 120;
-    static constexpr int scroll_threshold = 4;
+  static int scroll = 0;
+  static constexpr int scroll_sensitivity = 120;
+  static constexpr int scroll_threshold = 4;
 
-    const QPoint num_degrees = ev->angleDelta() / 8;
+  const QPoint num_degrees = ev->angleDelta() / 8;
 
-    if (!num_degrees.isNull())
-    {
-        const int scroll_amount = num_degrees.y() * 120 / scroll_sensitivity;
-        scroll += scroll_amount;
+  if (!num_degrees.isNull()) {
+    const int scroll_amount = num_degrees.y() * 120 / scroll_sensitivity;
+    scroll += scroll_amount;
 
-        if (std::abs(scroll) >= scroll_threshold)
-        {
-            m_scroll_offset += -scroll/scroll_threshold;
-            updateScrollBar();
-            updateScrolledContent();
-            scroll %= scroll_threshold;
-        }
+    if (std::abs(scroll) >= scroll_threshold) {
+      m_scroll_offset += -scroll / scroll_threshold;
+      updateScrolledContent();
+      updateScrollBar();
+      scroll %= scroll_threshold;
     }
-    else
-    {
-        scroll = 0;
-    }
+  } else {
+    scroll = 0;
+  }
 }

@@ -12,7 +12,7 @@ KakouneMenu::KakouneMenu(KakouneClient *client, DrawOptions *draw_options, QWidg
     connect(m_client, &KakouneClient::selectMenuItem, this, &KakouneMenu::selectItem);
 
     m_items = new KakouneContentScroller(m_draw_options, m_client->getMenuFace());
-    m_items->setMaximumItems(4);
+    m_items->setMaximumItems(10);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(m_items);
