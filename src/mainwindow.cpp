@@ -31,8 +31,17 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
     m_draw_options = new DrawOptions();
     m_draw_options->setFont("monospace", 11);
 
+    m_tab_bar = new QTabBar();
     m_root = new SplitContainer(Qt::Horizontal, this);
-    setCentralWidget(m_root);
+
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_tab_bar);
+    layout->addWidget(m_root);
+
+    QWidget* centralWidget = new QWidget(this);
+    centralWidget->setLayout(layout);
+    setCentralWidget(centralWidget);
 
     KakouneWidget *kak_widget = createKakouneWidget(client_arguments);
     m_root->addWidget(kak_widget);
@@ -212,6 +221,11 @@ void MainWindow::renameSession(const QString &session_name)
 {
     m_session->setSessionId(session_name);
     updateWindowTitle();
+}
+
+void MainWindow::createBuffer(const QString &client_name)
+{
+    m_tab_bar->addTab(client_name);
 }
 
 void MainWindow::renameClient(const QString &client_name, const QString &new_client_name)

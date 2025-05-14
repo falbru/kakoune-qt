@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
+    void createBuffer(const QString &client_name);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
@@ -49,6 +50,7 @@ class MainWindow : public QMainWindow
     void ensureOneVisibleKakouneWidget();
     void focusLastFocusedVisibleKakouneWidget();
 
+    QTabBar *m_tab_bar;
     SplitContainer *m_root;
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;

@@ -91,6 +91,12 @@ int main(int argc, char *argv[])
                 return 1;
             ipc.send("renameSession", {{"session_name", positional_arguments[1]}});
         }
+        else if (subcommand == "set-tabs")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+            ipc.send("setTabs", {{"tabs", positional_arguments.sliced(1)}});
+        }
         else
         {
             return 1;

@@ -8,6 +8,10 @@ hook global SessionRenamed .*:.* %{
     }
 }
 
+hook global BufCreate .* %{
+    nop %sh{ KAKQT_CLIENT_ID=$kak_client_env_KAKQT_CLIENT_ID KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli create-buffer '*scratch*' }
+}
+
 hook global ClientCreate .* %{
     nop %sh{ KAKQT_CLIENT_ID=$kak_client_env_KAKQT_CLIENT_ID KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli rename-client $kak_client }
 }
