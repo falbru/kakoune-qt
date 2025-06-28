@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
         MainWindow main_window(session, client_arguments);
         KakouneIPC::IPCServer server(main_window.getID().toString());
-        server.bind(&main_window);
+        main_window.bind(&server);
 
         main_window.show();
 

@@ -1,6 +1,8 @@
 #include "mainwindow.hpp"
 #include "container.hpp"
+#include "ipc.hpp"
 #include "kakounesession.hpp"
+#include "kakounetabbar.hpp"
 #include "kakounewidget.hpp"
 #include "keybindings.hpp"
 #include "lastfocusedfilter.hpp"
@@ -35,9 +37,10 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
 
     QWidget* w = new QWidget();
 
-    m_tab_bar = new QTabBar();
-    m_tab_bar->setFocusPolicy(Qt::NoFocus);
-    connect(m_tab_bar, &QTabBar::tabBarClicked, this, &MainWindow::setTabIndex);
+    m_tab_bar = new KakouneTabBar(session);
+    connect(m_tab_bar, &KakouneTabBar::tabBarClicked, this, [=](int index) {
+        switchBufferInFocusedWidget(m_tab_bar->tabText(index));
+    });
 
     m_root = new SplitContainer(Qt::Horizontal, this);
 
@@ -67,6 +70,17 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 QUuid MainWindow::getID()
 {
     return m_id;
+}
+
+void MainWindow::bind(KakouneIPC::IPCServer *server)
+{
+    connect(server, &KakouneIPC::IPCServer::newSplit, this, &MainWindow::newSplit);
+    connect(server, &KakouneIPC::IPCServer::setWindowVisible, this, &MainWindow::setWindowVisible);
+    connect(server, &KakouneIPC::IPCServer::getWindowVisible, this, &MainWindow::getWindowVisible);
+    connect(server, &KakouneIPC::IPCServer::focusWindow, this, &MainWindow::focusWindow);
+    connect(server, &KakouneIPC::IPCServer::renameSession, this, &MainWindow::renameSession);
+    connect(server, &KakouneIPC::IPCServer::renameClient, this, &MainWindow::renameClient);
+    m_tab_bar->bind(server);
 }
 
 void MainWindow::newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation)
@@ -229,54 +243,6 @@ void MainWindow::renameSession(const QString &session_name)
     updateWindowTitle();
 }
 
-void MainWindow::setTabs(const QList<QString> &tabs)
-{
-    m_tabs = tabs;
-
-    bool selected_in_tabs = false;
-    for (int i = 0; i < tabs.size(); ++i) {
-        if (i < m_tab_bar->count()) {
-            m_tab_bar->setTabText(i, tabs[i]);
-        } else {
-            m_tab_bar->addTab(tabs[i]);
-        }
-        m_tab_bar->setTabTextColor(i, Qt::white);
-
-        if (tabs[i] == m_selected_tab) {
-            selected_in_tabs = true;
-        }
-    }
-
-    while (m_tab_bar->count() > tabs.size() + !selected_in_tabs ? 1 : 0) {
-        m_tab_bar->removeTab(m_tab_bar->count() - 1);
-    }
-}
-
-void MainWindow::setSelectedTab(const QString &bufname)
-{
-    m_selected_tab = bufname;
-
-    for (int i = 0; i < m_tab_bar->count(); i++) {
-        if (m_tab_bar->tabText(i) == bufname) {
-            m_tab_bar->setCurrentIndex(i);
-
-            while (m_tab_bar->count() > m_tabs.size()) {
-                m_tab_bar->removeTab(m_tab_bar->count() - 1);
-            }
-            return;
-        }
-
-    }
-
-    if (m_tab_bar->count() == m_tabs.size()) {
-        m_tab_bar->addTab(bufname);
-    }else {
-        m_tab_bar->setTabText(m_tab_bar->count()-1, bufname);
-    }
-    m_tab_bar->setTabTextColor(m_tab_bar->count()-1, Qt::darkGray);
-    m_tab_bar->setCurrentIndex(m_tab_bar->count()-1);
-}
-
 void MainWindow::renameClient(const QString &client_name, const QString &new_client_name)
 {
     KakouneWidget *kak_widget = findKakouneWidget(client_name);
@@ -373,6 +339,22 @@ void MainWindow::focusLastFocusedVisibleKakouneWidget()
     }
 }
 
+void MainWindow::switchBufferInFocusedWidget(const QString& bufname) {
+    KakouneWidget* focused_kak_widget = findFocusedKakouneWidget();
+    if (!focused_kak_widget) {
+        return;
+    }
+    QString command = QString("eval -client %1 %{ buffer %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
+
+    QProcess change_tabs;
+    change_tabs.start("kak", {"-p", m_session->getSessionId()});
+    change_tabs.waitForStarted();
+    change_tabs.write(command.toLocal8Bit());
+    change_tabs.closeWriteChannel();
+    change_tabs.waitForFinished();
+    change_tabs.close();
+}
+
 void MainWindow::installLastFocusedFilter(QWidget *widget)
 {
     widget->installEventFilter(m_last_focused_filter);
@@ -385,23 +367,6 @@ void MainWindow::installLastFocusedFilter(QWidget *widget)
             installLastFocusedFilter(childWidget);
         }
     }
-}
-
-void MainWindow::setTabIndex(int index)
-{
-    KakouneWidget* focused_kak_widget = findFocusedKakouneWidget();
-    if (!focused_kak_widget) {
-        return;
-    }
-    QString command = QString("eval -client %1 %{ buffer %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(m_tab_bar->tabText(index));
-
-    QProcess change_tabs;
-    change_tabs.start("kak", {"-p", m_session->getSessionId()});
-    change_tabs.waitForStarted();
-    change_tabs.write(command.toLocal8Bit());
-    change_tabs.closeWriteChannel();
-    change_tabs.waitForFinished();
-    change_tabs.close();
 }
 
 KakouneWidget *MainWindow::findFocusedKakouneWidget()

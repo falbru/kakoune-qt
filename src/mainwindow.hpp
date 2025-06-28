@@ -2,7 +2,9 @@
 #define MAINWINDOW_HPP
 
 #include "drawoptions.hpp"
+#include "ipc.hpp"
 #include "kakounesession.hpp"
+#include "kakounetabbar.hpp"
 #include "kakounewidget.hpp"
 #include "lastfocusedfilter.hpp"
 #include "splitcontainer.hpp"
@@ -26,6 +28,8 @@ class MainWindow : public QMainWindow
     void focusDown();
     void focusInDirection(std::function<bool(const QRect &, const QRect &)> isWithinBounds);
 
+    void bind(KakouneIPC::IPCServer *server);
+
     QUuid getID();
 
   public slots:
@@ -35,9 +39,7 @@ class MainWindow : public QMainWindow
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
-    void setTabs(const QList<QString> &tabs);
-    void setSelectedTab(const QString &bufname);
-    void setTabIndex(int index);
+    void switchBufferInFocusedWidget(const QString& bufname);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
@@ -55,9 +57,7 @@ class MainWindow : public QMainWindow
     void focusLastFocusedVisibleKakouneWidget();
 
     SplitContainer *m_root;
-    QTabBar* m_tab_bar;
-    QList<QString> m_tabs;
-    QString m_selected_tab;
+    KakouneTabBar* m_tab_bar;
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
 

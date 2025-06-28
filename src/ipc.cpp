@@ -2,6 +2,7 @@
 #include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qnamespace.h>
+#include <qprocess.h>
 
 namespace KakouneIPC
 {
@@ -64,18 +65,6 @@ IPCServer::~IPCServer()
     m_server->close();
     QLocalServer::removeServer(m_server->serverName());
     delete m_server;
-}
-
-void IPCServer::bind(MainWindow *main_window)
-{
-    connect(this, &IPCServer::newSplit, main_window, &MainWindow::newSplit);
-    connect(this, &IPCServer::setWindowVisible, main_window, &MainWindow::setWindowVisible);
-    connect(this, &IPCServer::getWindowVisible, main_window, &MainWindow::getWindowVisible);
-    connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
-    connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
-    connect(this, &IPCServer::renameClient, main_window, &MainWindow::renameClient);
-    connect(this, &IPCServer::setTabs, main_window, &MainWindow::setTabs);
-    connect(this, &IPCServer::setSelectedTab, main_window, &MainWindow::setSelectedTab);
 }
 
 void IPCServer::handleConnection()
