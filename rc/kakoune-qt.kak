@@ -16,23 +16,23 @@ hook global SessionRenamed .*:.* %{
 hook global WinDisplay .* %{
     nop %sh{
         KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID \
-        ~/code/github.com/falbru/kakoune-qt/build/kak-qt --cli set-selected-tab $kak_bufname
+        kak-qt --cli set-selected-tab $kak_bufname
     }
 }
 
 hook global FocusIn .* %{
     nop %sh{
         KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID \
-        ~/code/github.com/falbru/kakoune-qt/build/kak-qt --cli set-selected-tab $kak_bufname
+        kak-qt --cli set-selected-tab $kak_bufname
     }
 }
 
 hook global GlobalSetOption harpoon_files=.* %{
     evaluate-commands %sh{
         for client in $kak_client_list; do
-            printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID ~/code/github.com/falbru/kakoune-qt/build/kak-qt --cli set-tabs $kak_opt_harpoon_files }}\n' $client
+            printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli set-tabs $kak_opt_harpoon_files }}\n' $client
         done
-        printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID ~/code/github.com/falbru/kakoune-qt/build/kak-qt --cli set-selected-tab $kak_bufname }}\n' $kak_opt_focused_client
+        printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli set-selected-tab $kak_bufname }}\n' $kak_opt_focused_client
     }
 }
 
