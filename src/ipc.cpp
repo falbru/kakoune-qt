@@ -1,4 +1,5 @@
 #include "ipc.hpp"
+#include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qnamespace.h>
 
@@ -73,6 +74,8 @@ void IPCServer::bind(MainWindow *main_window)
     connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
     connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
     connect(this, &IPCServer::renameClient, main_window, &MainWindow::renameClient);
+    connect(this, &IPCServer::setTabs, main_window, &MainWindow::setTabs);
+    connect(this, &IPCServer::setSelectedTab, main_window, &MainWindow::setSelectedTab);
 }
 
 void IPCServer::handleConnection()
@@ -101,6 +104,7 @@ void IPCServer::handleConnection()
 QString IPCServer::handleCommand(QJsonObject request)
 {
     const QString method = request["method"].toString();
+    qDebug() << "IPC:" << method;
     if (method == "newSplit")
     {
         emit newSplit(request["client_name"].toString(), request["args"].isString() ? request["args"].toString() : "",
@@ -114,6 +118,21 @@ QString IPCServer::handleCommand(QJsonObject request)
     {
         bool visible = emit getWindowVisible(request["client_name"].toString());
         return visible ? "true" : "false";
+    }
+    else if (method == "setTabs")
+    {
+        QJsonArray tabsJsonArray = request["tabs"].toArray();
+        QList<QString> tabs;
+
+        for (const QJsonValue& value : tabsJsonArray) {
+            tabs.append(value.toString());
+        }
+
+        emit setTabs(tabs);
+    }
+    else if (method == "setSelectedTab")
+    {
+        emit setSelectedTab(request["bufname"].toString());
     }
     else if (method == "focusWindow")
     {

@@ -8,6 +8,7 @@
 #include <qcoreapplication.h>
 #include <qdebug.h>
 #include <qhashfunctions.h>
+#include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qnamespace.h>
 #include <qprocess.h>
@@ -62,6 +63,20 @@ int main(int argc, char *argv[])
 
             bool visible = subcommand == "show";
             ipc.send("setWindowVisible", {{"client_name", positional_arguments[1]}, {"visible", visible}});
+        }
+        else if (subcommand == "set-tabs")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+
+            ipc.send("setTabs", {{"tabs", QJsonArray::fromStringList(positional_arguments.sliced(1)) }});
+        }
+        else if (subcommand == "set-selected-tab")
+        {
+            if (positional_arguments.size() < 2)
+                return 1;
+
+            ipc.send("setSelectedTab", {{"bufname", positional_arguments[1]}});
         }
         else if (subcommand == "get-visible")
         {

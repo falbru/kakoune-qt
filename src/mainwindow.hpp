@@ -8,6 +8,7 @@
 #include "splitcontainer.hpp"
 #include <QMainWindow>
 #include <QtWidgets>
+#include <qtabbar.h>
 #include <quuid.h>
 
 class MainWindow : public QMainWindow
@@ -34,6 +35,9 @@ class MainWindow : public QMainWindow
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
+    void setTabs(const QList<QString> &tabs);
+    void setSelectedTab(const QString &bufname);
+    void setTabIndex(int index);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
@@ -46,10 +50,14 @@ class MainWindow : public QMainWindow
 
     KakouneWidget *createKakouneWidget(const QString &arguments = "");
     KakouneWidget *findKakouneWidget(const QString &client_name);
+    KakouneWidget *findFocusedKakouneWidget();
     void ensureOneVisibleKakouneWidget();
     void focusLastFocusedVisibleKakouneWidget();
 
     SplitContainer *m_root;
+    QTabBar* m_tab_bar;
+    QList<QString> m_tabs;
+    QString m_selected_tab;
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
 

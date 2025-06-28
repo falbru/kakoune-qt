@@ -40,6 +40,8 @@ class IPCServer : public QObject
     void focusWindow(const QString &client_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
     void renameSession(const QString &session_name);
+    void setTabs(const QList<QString> &tabs);
+    void setSelectedTab(const QString &selected);
 
   protected:
     void handleConnection();
