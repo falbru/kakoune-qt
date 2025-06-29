@@ -4,6 +4,7 @@
 #include "ipc.hpp"
 #include "kakounesession.hpp"
 #include <QtWidgets>
+#include <qnamespace.h>
 
 class KakouneTabBar : public QTabBar
 {
@@ -19,14 +20,16 @@ class KakouneTabBar : public QTabBar
         void selectTab(const QString& selectedTab);
 
     public slots:
-        void setTabs(const QList<QString> &tabs);
+        void setPersistentTabs(const QList<QString> &persistent_tabs);
         void setSelectedTab(const QString &bufname);
 
     private:
         KakouneSession* m_session;
+
+        const QColor m_temporary_tab_color = Qt::darkGray;
         QColor m_default_text_color;
 
-        QList<QString> m_tabs;
+        QList<QString> m_persistent_tabs;
         QString m_selected_tab;
 };
 

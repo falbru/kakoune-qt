@@ -3,6 +3,9 @@
 KakouneTabBar::KakouneTabBar(KakouneSession* session, QWidget *parent) : QTabBar(parent), m_session(session) {
     setFocusPolicy(Qt::NoFocus);
     setTabsClosable(false);
+    setAutoHide(false);
+    setDocumentMode(true);
+    setExpanding(false);
 }
 
 KakouneTabBar::~KakouneTabBar() {
@@ -10,55 +13,61 @@ KakouneTabBar::~KakouneTabBar() {
 }
 
 void KakouneTabBar::bind(KakouneIPC::IPCServer* server) {
-    connect(server, &KakouneIPC::IPCServer::setTabs, this, &KakouneTabBar::setTabs);
+    connect(server, &KakouneIPC::IPCServer::setTabs, this, &KakouneTabBar::setPersistentTabs);
     connect(server, &KakouneIPC::IPCServer::setSelectedTab, this, &KakouneTabBar::setSelectedTab);
 }
 
-void KakouneTabBar::setTabs(const QList<QString> &tabs) {
-    m_tabs = tabs;
+void KakouneTabBar::setPersistentTabs(const QList<QString> &persistent_tabs) {
+    m_persistent_tabs = persistent_tabs;
 
-    bool selected_in_tabs = false;
-    for (int i = 0; i < tabs.size(); ++i) {
+    bool is_selected_tab_persistent = false;
+
+    for (int i = 0; i < persistent_tabs.size(); ++i) {
         if (i < count()) {
-            setTabText(i, tabs[i]);
+            setTabText(i, persistent_tabs[i]);
             setTabTextColor(i, m_default_text_color);
         } else {
-            addTab(tabs[i]);
+            addTab(persistent_tabs[i]);
             m_default_text_color = tabTextColor(i);
         }
 
-        if (tabs[i] == m_selected_tab) {
-            selected_in_tabs = true;
+        if (persistent_tabs[i] == m_selected_tab) {
+            is_selected_tab_persistent = true;
         }
     }
 
-    while (count() > tabs.size() + !selected_in_tabs ? 1 : 0) {
+    int tabCount = persistent_tabs.size();
+    if (!is_selected_tab_persistent) tabCount++;
+
+    while (count() > tabCount) {
         removeTab(count() - 1);
     }
 
 }
 
 void KakouneTabBar::setSelectedTab(const QString &bufname) {
-    qDebug() << "SELECT:" << bufname;
     m_selected_tab = bufname;
 
-    for (int i = 0; i < count(); i++) {
-        if (tabText(i) == bufname) {
+    for (int i = 0; i < m_persistent_tabs.size(); i++) {
+        if (m_persistent_tabs[i] == bufname) {
             setCurrentIndex(i);
 
-            while (count() > m_tabs.size()) {
+            while (count() > m_persistent_tabs.size()) {
                 removeTab(count() - 1);
             }
+
             return;
         }
 
     }
 
-    if (count() == m_tabs.size()) {
-        addTab(bufname);
+    int temporary_tab_index = count()-1;
+    if (count() == m_persistent_tabs.size()) {
+        temporary_tab_index = addTab(bufname);
     }else {
-        setTabText(count()-1, bufname);
+        setTabText(temporary_tab_index, bufname);
     }
-    setTabTextColor(count()-1, Qt::darkGray);
-    setCurrentIndex(count()-1);
+
+    setTabTextColor(temporary_tab_index, m_temporary_tab_color);
+    setCurrentIndex(temporary_tab_index);
 }
