@@ -1,8 +1,8 @@
 provide-module kakoune-qt %{
-declare-option str focused_client
+declare-option -hidden str kakqt_focused_client
 
 hook global FocusIn .* %{
-    set-option global focused_client %val{client}
+    set-option global kakqt_focused_client %val{client}
 }
 
 hook global SessionRenamed .*:.* %{
@@ -32,7 +32,7 @@ hook global GlobalSetOption harpoon_files=.* %{
         for client in $kak_client_list; do
             printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli set-tabs $kak_opt_harpoon_files }}\n' $client
         done
-        printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli set-selected-tab $kak_bufname }}\n' $kak_opt_focused_client
+        printf 'evaluate-commands -client "%s" %%{ nop %%sh{ KAKQT_SESSION_ID=$kak_client_env_KAKQT_SESSION_ID kak-qt --cli set-selected-tab $kak_bufname }}\n' $kak_opt_kakqt_focused_client
     }
 }
 
