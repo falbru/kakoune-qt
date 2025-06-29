@@ -39,7 +39,7 @@ class MainWindow : public QMainWindow
     void focusWindow(const QString &client_name);
     void renameSession(const QString &session_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
-    void switchBufferInFocusedWidget(const QString& bufname);
+    void switchBufferInFocusedWidget(const QString &bufname);
 
   protected:
     void closeEvent(QCloseEvent *ev) override;
@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
     void focusLastFocusedVisibleKakouneWidget();
 
     SplitContainer *m_root;
-    KakouneTabBar* m_tab_bar;
+    KakouneTabBar *m_tab_bar;
     QList<KakouneWidget *> m_windows;
     DrawOptions *m_draw_options;
 

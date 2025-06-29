@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
             if (positional_arguments.size() < 2)
                 return 1;
 
-            ipc.send("setTabs", {{"tabs", QJsonArray::fromStringList(positional_arguments.sliced(1)) }});
+            ipc.send("setTabs", {{"tabs", QJsonArray::fromStringList(positional_arguments.sliced(1))}});
         }
         else if (subcommand == "set-selected-tab")
         {

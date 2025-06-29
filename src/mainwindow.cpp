@@ -35,12 +35,11 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
     m_draw_options = new DrawOptions();
     m_draw_options->setFont("monospace", 11);
 
-    QWidget* w = new QWidget();
+    QWidget *w = new QWidget();
 
     m_tab_bar = new KakouneTabBar(session);
-    connect(m_tab_bar, &KakouneTabBar::tabBarClicked, this, [=](int index) {
-        switchBufferInFocusedWidget(m_tab_bar->tabText(index));
-    });
+    connect(m_tab_bar, &KakouneTabBar::tabBarClicked, this,
+            [=](int index) { switchBufferInFocusedWidget(m_tab_bar->tabText(index)); });
 
     m_root = new SplitContainer(Qt::Horizontal, this);
 
@@ -339,12 +338,15 @@ void MainWindow::focusLastFocusedVisibleKakouneWidget()
     }
 }
 
-void MainWindow::switchBufferInFocusedWidget(const QString& bufname) {
-    KakouneWidget* focused_kak_widget = findFocusedKakouneWidget();
-    if (!focused_kak_widget) {
+void MainWindow::switchBufferInFocusedWidget(const QString &bufname)
+{
+    KakouneWidget *focused_kak_widget = findFocusedKakouneWidget();
+    if (!focused_kak_widget)
+    {
         return;
     }
-    QString command = QString("eval -client %1 %{ buffer %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
+    QString command =
+        QString("eval -client %1 %{ buffer %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
 
     QProcess change_tabs;
     change_tabs.start("kak", {"-p", m_session->getSessionId()});

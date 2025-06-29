@@ -113,7 +113,8 @@ QString IPCServer::handleCommand(QJsonObject request)
         QJsonArray tabsJsonArray = request["tabs"].toArray();
         QList<QString> tabs;
 
-        for (const QJsonValue& value : tabsJsonArray) {
+        for (const QJsonValue &value : tabsJsonArray)
+        {
             tabs.append(value.toString());
         }
 
