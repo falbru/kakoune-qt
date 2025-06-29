@@ -1,7 +1,6 @@
 #ifndef KAKOUNEIPC_HPP_INCLUDED
 #define KAKOUNEIPC_HPP_INCLUDED
 
-#include "mainwindow.hpp"
 #include <qjsonobject.h>
 #include <qlocalserver.h>
 #include <qlocalsocket.h>
@@ -32,7 +31,6 @@ class IPCServer : public QObject
     IPCServer(const QString &session_id);
     ~IPCServer();
 
-    void bind(MainWindow *main_window);
   signals:
     void newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation);
     void setWindowVisible(const QString &client_name, bool visible);
@@ -40,6 +38,8 @@ class IPCServer : public QObject
     void focusWindow(const QString &client_name);
     void renameClient(const QString &client_name, const QString &new_client_name);
     void renameSession(const QString &session_name);
+    void setTabs(const QList<QString> &tabs);
+    void setSelectedTab(const QString &selected);
 
   protected:
     void handleConnection();
