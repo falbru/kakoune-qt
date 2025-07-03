@@ -39,7 +39,7 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
 
     m_tab_bar = new KakouneTabBar(session);
     connect(m_tab_bar, &KakouneTabBar::tabBarClicked, this,
-            [=](int index) { switchBufferInFocusedWidget(m_tab_bar->tabText(index)); });
+            [=](int index) { switchBufferInFocusedWidget(m_tab_bar->getBufnameAtIndex(index)); });
 
     m_root = new SplitContainer(Qt::Horizontal, this);
 
@@ -346,7 +346,7 @@ void MainWindow::switchBufferInFocusedWidget(const QString &bufname)
         return;
     }
     QString command =
-        QString("eval -client %1 %{ buffer %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
+        QString("eval -client %1 %{ edit %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
 
     QProcess change_tabs;
     change_tabs.start("kak", {"-p", m_session->getSessionId()});

@@ -15,6 +15,7 @@ class KakouneTabBar : public QTabBar
     ~KakouneTabBar();
 
     void bind(KakouneIPC::IPCServer *server);
+    QString getBufnameAtIndex(int index);
 
   signals:
     void selectTab(const QString &selectedTab);
@@ -31,6 +32,8 @@ class KakouneTabBar : public QTabBar
 
     QList<QString> m_persistent_tabs;
     QString m_selected_tab;
+
+    void updateTabs();
 };
 
 #endif

@@ -93,7 +93,6 @@ void IPCServer::handleConnection()
 QString IPCServer::handleCommand(QJsonObject request)
 {
     const QString method = request["method"].toString();
-    qDebug() << "IPC:" << method;
     if (method == "newSplit")
     {
         emit newSplit(request["client_name"].toString(), request["args"].isString() ? request["args"].toString() : "",
