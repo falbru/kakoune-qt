@@ -1,15 +1,19 @@
 #include "mainwindow.hpp"
 #include "container.hpp"
+#include "ipc.hpp"
 #include "kakounesession.hpp"
+#include "kakounetabbar.hpp"
 #include "kakounewidget.hpp"
 #include "keybindings.hpp"
 #include "lastfocusedfilter.hpp"
 #include <climits>
 #include <qaccessible_base.h>
+#include <qboxlayout.h>
 #include <qglobal.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
 #include <qpainter.h>
+#include <qtabbar.h>
 #include <quuid.h>
 #include <qwidget.h>
 
@@ -31,8 +35,21 @@ MainWindow::MainWindow(KakouneSession *session, QString client_arguments, QWidge
     m_draw_options = new DrawOptions();
     m_draw_options->setFont("monospace", 11);
 
+    QWidget *w = new QWidget();
+
+    m_tab_bar = new KakouneTabBar(session);
+    connect(m_tab_bar, &KakouneTabBar::tabBarClicked, this,
+            [=](int index) { switchBufferInFocusedWidget(m_tab_bar->getBufnameAtIndex(index)); });
+
     m_root = new SplitContainer(Qt::Horizontal, this);
-    setCentralWidget(m_root);
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_tab_bar);
+    layout->addWidget(m_root);
+    w->setLayout(layout);
+
+    setCentralWidget(w);
 
     KakouneWidget *kak_widget = createKakouneWidget(client_arguments);
     m_root->addWidget(kak_widget);
@@ -52,6 +69,17 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 QUuid MainWindow::getID()
 {
     return m_id;
+}
+
+void MainWindow::bind(KakouneIPC::IPCServer *server)
+{
+    connect(server, &KakouneIPC::IPCServer::newSplit, this, &MainWindow::newSplit);
+    connect(server, &KakouneIPC::IPCServer::setWindowVisible, this, &MainWindow::setWindowVisible);
+    connect(server, &KakouneIPC::IPCServer::getWindowVisible, this, &MainWindow::getWindowVisible);
+    connect(server, &KakouneIPC::IPCServer::focusWindow, this, &MainWindow::focusWindow);
+    connect(server, &KakouneIPC::IPCServer::renameSession, this, &MainWindow::renameSession);
+    connect(server, &KakouneIPC::IPCServer::renameClient, this, &MainWindow::renameClient);
+    m_tab_bar->bind(server);
 }
 
 void MainWindow::newSplit(const QString &client_name, const QString &arguments, const Qt::Orientation &orientation)
@@ -310,6 +338,25 @@ void MainWindow::focusLastFocusedVisibleKakouneWidget()
     }
 }
 
+void MainWindow::switchBufferInFocusedWidget(const QString &bufname)
+{
+    KakouneWidget *focused_kak_widget = findFocusedKakouneWidget();
+    if (!focused_kak_widget)
+    {
+        return;
+    }
+    QString command =
+        QString("eval -client %1 %{ edit %2 }").arg(focused_kak_widget->getClient()->getClientName()).arg(bufname);
+
+    QProcess change_tabs;
+    change_tabs.start("kak", {"-p", m_session->getSessionId()});
+    change_tabs.waitForStarted();
+    change_tabs.write(command.toLocal8Bit());
+    change_tabs.closeWriteChannel();
+    change_tabs.waitForFinished();
+    change_tabs.close();
+}
+
 void MainWindow::installLastFocusedFilter(QWidget *widget)
 {
     widget->installEventFilter(m_last_focused_filter);
@@ -322,4 +369,19 @@ void MainWindow::installLastFocusedFilter(QWidget *widget)
             installLastFocusedFilter(childWidget);
         }
     }
+}
+
+KakouneWidget *MainWindow::findFocusedKakouneWidget()
+{
+    QWidget *parent_widget = focusWidget()->parentWidget();
+    while (parent_widget)
+    {
+        KakouneWidget *kak_widget = qobject_cast<KakouneWidget *>(parent_widget);
+        if (kak_widget)
+        {
+            return kak_widget;
+        }
+        parent_widget = parent_widget->parentWidget();
+    }
+    return nullptr;
 }

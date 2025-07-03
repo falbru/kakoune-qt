@@ -1,6 +1,8 @@
 #include "ipc.hpp"
+#include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qnamespace.h>
+#include <qprocess.h>
 
 namespace KakouneIPC
 {
@@ -65,16 +67,6 @@ IPCServer::~IPCServer()
     delete m_server;
 }
 
-void IPCServer::bind(MainWindow *main_window)
-{
-    connect(this, &IPCServer::newSplit, main_window, &MainWindow::newSplit);
-    connect(this, &IPCServer::setWindowVisible, main_window, &MainWindow::setWindowVisible);
-    connect(this, &IPCServer::getWindowVisible, main_window, &MainWindow::getWindowVisible);
-    connect(this, &IPCServer::focusWindow, main_window, &MainWindow::focusWindow);
-    connect(this, &IPCServer::renameSession, main_window, &MainWindow::renameSession);
-    connect(this, &IPCServer::renameClient, main_window, &MainWindow::renameClient);
-}
-
 void IPCServer::handleConnection()
 {
     QLocalSocket *client_socket = m_server->nextPendingConnection();
@@ -114,6 +106,22 @@ QString IPCServer::handleCommand(QJsonObject request)
     {
         bool visible = emit getWindowVisible(request["client_name"].toString());
         return visible ? "true" : "false";
+    }
+    else if (method == "setTabs")
+    {
+        QJsonArray tabsJsonArray = request["tabs"].toArray();
+        QList<QString> tabs;
+
+        for (const QJsonValue &value : tabsJsonArray)
+        {
+            tabs.append(value.toString());
+        }
+
+        emit setTabs(tabs);
+    }
+    else if (method == "setSelectedTab")
+    {
+        emit setSelectedTab(request["bufname"].toString());
     }
     else if (method == "focusWindow")
     {
