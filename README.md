@@ -1,5 +1,8 @@
 # Kakoune Qt
 
+> [!WARNING]
+> Deprecated. Use [Kakodemon](https://github.com/falbru/kakodemon), an OpenGL-based GUI for Kakoune.
+
 Kakoune Qt is a Qt-based GUI for Kakoune written in C++
 
 ![screenshot](https://github.com/user-attachments/assets/8bdba0c8-3921-4b37-94a4-0a599819c58b)
