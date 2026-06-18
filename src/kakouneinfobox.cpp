@@ -7,6 +7,10 @@ KakouneInfoBox::KakouneInfoBox(KakouneClient *client, KakouneMenu *menu, DrawOpt
 {
     connect(m_client, &KakouneClient::showInfoBox, this, &KakouneInfoBox::showInfoBox);
     connect(m_client, &KakouneClient::hideInfoBox, this, &KakouneInfoBox::hide);
+    connect(m_client, &KakouneClient::refresh, this, [=]() {
+        adjustSize();
+        repaint();
+    });
 
     m_content = new KakouneContent(draw_options, client->getInfoFace());
     m_title = new KakouneContent(draw_options, client->getInfoFace());

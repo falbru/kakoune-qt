@@ -1,10 +1,9 @@
 #include "kakounecontent.hpp"
 #include "rpc/face.hpp"
-#include <iostream>
 #include <qsizepolicy.h>
 
 KakouneContent::KakouneContent(DrawOptions *draw_options, RPC::Face default_face, QWidget *parent)
-    : QWidget(parent), m_draw_options(draw_options), m_default_face(default_face)
+    : QWidget(parent), m_draw_options(draw_options), m_default_face(default_face), m_preferred_size(QSize(-1, -1))
 {
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     policy.setHeightForWidth(true);
@@ -29,15 +28,14 @@ QSize KakouneContent::sizeHint() const
     int width = max_item_contentsize * m_draw_options->getCellSize().width();
     int height = lines.size() * m_draw_options->getCellSize().height();
 
-    return QSize(width, height);
+    return QSize(m_preferred_size.width() <= 0 ? width : m_preferred_size.width(),
+                 m_preferred_size.height() <= 0 ? height : m_preferred_size.height());
 }
 
 void KakouneContent::setContent(QList<RPC::Line> content)
 {
     m_content = content;
     updateGeometry();
-    parentWidget()->layout()->invalidate();
-    parentWidget()->adjustSize();
 }
 
 const QList<RPC::Line> &KakouneContent::getContent() const
@@ -111,10 +109,20 @@ void KakouneContent::paintEvent(QPaintEvent *)
 
 QSize KakouneContent::minimumSizeHint() const
 {
-    return QSize(0, 0);
+    return m_draw_options->getCellSize();
 }
 
 bool KakouneContent::hasHeightForWidth() const
 {
     return true;
+}
+
+void KakouneContent::setPreferredSize(QSize preferred_size)
+{
+    m_preferred_size = preferred_size;
+}
+
+const QSize &KakouneContent::getPreferredSize() const
+{
+    return m_preferred_size;
 }

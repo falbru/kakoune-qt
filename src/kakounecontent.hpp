@@ -24,13 +24,17 @@ class KakouneContent : public QWidget
     void setDefaultFace(RPC::Face default_face);
     const RPC::Face &getDefaultFace() const;
 
+    void setPreferredSize(QSize preferred_size);
+    const QSize &getPreferredSize() const;
+
   protected:
     void paintEvent(QPaintEvent *ev) override;
 
-  private:
     QList<RPC::Line> m_content;
     DrawOptions *m_draw_options;
     RPC::Face m_default_face;
+
+    QSize m_preferred_size;
 };
 
 #endif
